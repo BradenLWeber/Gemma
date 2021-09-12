@@ -1,5 +1,15 @@
 Vision statement:
 
+Our app, Gemma, will help people navigate the natural world. Like Google Maps, Gemma locates users and lets them save specific locations. 
+Unlike Google Maps, though, it focuses on "trail territory”—fields, forests, and other open spaces that aren’t marked by roads. Users can 
+save their current location or other coordinates as “pins,” along with notes and pictures as desired. (Gemma also displays as many pins 
+as a user can drop, something Google Maps does not do.) 
+
+Although Evernote’s Atlas feature offers a similar functionality, Atlas records only the user’s location when the note was made, rather 
+than other locations for later trips. Evernote also doesn’t let users make “pins” public... but Gemma does. Users can choose to see public 
+pins (the area’s most popular/upvoted locations) or their own private ones. With Gemma, you can save trailheads, kayak launches, picnic 
+spots, unofficial skate parks... the possibilities are as endless as your exploring. Where will you go with Gemma? 
+
 Meet the team: 
 
 ***Becca***
