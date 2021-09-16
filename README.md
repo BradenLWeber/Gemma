@@ -1,14 +1,8 @@
 ------ Vision statement ------
 
-Our app, Gemma, will help people navigate the natural world. Like Google Maps, Gemma locates users and lets them save specific locations. 
-Unlike Google Maps, though, it focuses on "trail territory”—fields, forests, and other open spaces that aren’t marked by roads. Users can 
-save their current location or other coordinates as “pins,” along with notes and pictures as desired. (Gemma also displays as many pins 
-as a user can drop, something Google Maps does not do.) 
+	Today, navigation is easier than ever before. Apps like Google and Apple Maps locate users, find destinations, and plot routes in a flash. They can even “drop pins” to save locations for later visits. But there’s one catch: all these places must be on (or near) the beaten path. GPS apps know streets and buildings just fine. When it comes to the outdoors, though—places to hike, kayak, picnic, or just sit and birdwatch—these concrete-focused apps come up empty.  
 
-Although Evernote’s Atlas feature offers a similar functionality, Atlas records only the user’s location when the note was made, rather 
-than other locations for later trips. Evernote also doesn’t let users make “pins” public... but Gemma does. Users can choose to see public 
-pins (the area’s most popular/upvoted locations) or their own private ones. With Gemma, you can save trailheads, kayak launches, picnic 
-spots, unofficial skate parks... the possibilities are as endless as your exploring. Where will you go with Gemma? 
+That’s why we’re building Gemma. Gemma is a geolocator app designed for “trail territory”: natural spaces that aren’t marked by roads. Users can save their current location, or other coordinates, as “pins.” They can also add notes and pictures to pins as they desire. Gemma allows users to toggle between public pins (the area’s most popular/upvoted locations) or their own private ones. With Gemma as a resource, young digital natives are empowered to join the outdoor adventure. Scenic walks, bike paths, unofficial skate parks... the possibilities are as endless as your exploring. Where will you go with Gemma? 
 
 ------ Meet the team ------
 
