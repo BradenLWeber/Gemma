@@ -20,7 +20,8 @@ That’s why we’re building Gemma. Gemma is a geolocator app designed for “t
 - Contact (email/phone):
 
 ***Eleanor***
-- Bio:
+- Bio: Yo yo! I'm a Writing and CS+Linguistics double major. I was born in Boston, MA, but I grew up in Charleston, SC. I love chocolate and running, and I need coffee to function. If I'm not in class, I'm probably wrangling data, cooking, vacuuming, or doing other "housewife things."
+- Big 5 traits: O - 79% | C - 65% | E - 56% | A - 65% | N - 58%
 - Calvin email: ehl6@students.calvin.edu
 - Cell phone: (843) 870-3796
 - Contact (email/phone): phone... might not answer, but text me
