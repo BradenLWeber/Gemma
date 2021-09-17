@@ -14,10 +14,11 @@ That’s why we’re building Gemma. Gemma is a geolocator app designed for “t
 - Contact (email/phone): text is always more reliable!
 
 ***Oscar***
-- Bio:
-- Calvin email:
-- Cell phone:
-- Contact (email/phone):
+- Bio: Driven by passion, and danger. Physics and CS double major, but mostly a complete dork. I will do whatever is necessary to reach my goals, even lift a car (did that one time). The problem is that my goals don't always align with what's actually important; for example: spending a semester developing electromyography circuits for muscle-to-servo control, while I really should have been in class (it WAS pretty sweet tho).
+- Big 5 traits:  O - 96% | C - 1% | E - 93% | A - 76% | N - 26%
+- Calvin email: ots3@students.calvin.edu
+- Cell phone: 415-686-2021
+- Contact (email/phone): Email por favor
 
 ***Eleanor***
 - Bio: Yo yo! I'm a Writing and CS+Linguistics double major. I was born in Boston, MA, but I grew up in Charleston, SC. I love chocolate and running, and I need coffee to function. If I'm not in class, I'm probably wrangling data, cooking, vacuuming, or doing other "housewife things."
