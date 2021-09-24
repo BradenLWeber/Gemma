@@ -5,9 +5,11 @@ const UserBar = (props) => {
     return (
         <View style={styles.userBar}>
         <>
+            {/*User icon*/}
             <View style={styles.userIcon}>
                 {/* user image */}
             </View>
+            {/*Search for pins input*/}
             <KeyboardAvoidingView
                 behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
                 style={styles.userInput}
@@ -16,6 +18,7 @@ const UserBar = (props) => {
 
                 </TextInput>
             </KeyboardAvoidingView>
+            {/*Options icon*/}
             <View style={styles.userOptions}>
                 <Text>- - -</Text>
             </View>
