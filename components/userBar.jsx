@@ -1,7 +1,9 @@
-import React from 'react';
-import { View, Text, StyleSheet, Image, KeyboardAvoidingView, TextInput } from 'react-native'
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, KeyboardAvoidingView, TextInput } from 'react-native'
 
 const UserBar = (props) => {
+    const [hover, setHover] = useState(false);
+
     return (
         <View style={styles.userBar}>
         <>
@@ -19,9 +21,14 @@ const UserBar = (props) => {
                 </TextInput>
             </KeyboardAvoidingView>
             {/*Options icon*/}
-            <View style={styles.userOptions}>
-                <Text>- - -</Text>
-            </View>
+            <TouchableOpacity
+                style={[styles.userOptions, hover ? styles.userOptionsHover : {}]}
+                onMouseEnter={() => setHover(true)}
+                onMouseLeave={() => setHover(false)}
+                onPress={() => setHover(hover ? false : true)}
+            >
+                <Text style={styles.userOptionsText}>- - -</Text>
+            </TouchableOpacity>
         </>
         </View>
     )
@@ -36,7 +43,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'flex-start',
-    },
+        elevation: 20,
+},
     userIcon: {
         width: 46,
         height: 46,
@@ -68,6 +76,13 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
+    userOptionsHover: {
+        backgroundColor: '#D4D8E5',
+    },
+    userOptionsText: {
+        color: 'black',
+        fontSize: 16,
+    }
 });
 
 export default UserBar;
