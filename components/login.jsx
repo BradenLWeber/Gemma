@@ -27,7 +27,7 @@ const Login = (props) => {
                 if (type === 'success') {
                     const { email, name, photoUrl } = user;
                     alert('Google signin successful');
-                    setTimeout(() => {props.navigator.navigate('Map', {email, name, photoUrl});}, 3000);
+                    setTimeout(() => {props.navigator.navigate('Map', {email, name, photoUrl});}, 1500);
                 } else {
                     alert('Google login failed');
                 }

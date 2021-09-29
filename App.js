@@ -21,7 +21,6 @@ export default function App() {
   function mapScreen({ route, navigation }) {
     const { email, name, photoUrl } = route.params;
     const userPhoto = photoUrl ? {uri: photoUrl} : require('./assets/favicon.png');
-    // const userPhoto = require('./assets/favicon.png');
 
     return (
       <View style={styles.container}>
