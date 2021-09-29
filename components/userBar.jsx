@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, KeyboardAvoidingView, TextInput } from 'react-native'
+import { View, Text, Image, StyleSheet, TouchableOpacity, KeyboardAvoidingView, TextInput, Platform } from 'react-native'
 
 const UserBar = (props) => {
     const [hover, setHover] = useState(false);
@@ -9,7 +9,7 @@ const UserBar = (props) => {
         <>
             {/*User icon*/}
             <View style={styles.userIcon}>
-                {/* user image */}
+                <Image source={props.userPhoto} style={styles.userImage}/>
             </View>
             {/*Search for pins input*/}
             <KeyboardAvoidingView
@@ -53,6 +53,13 @@ const styles = StyleSheet.create({
         borderColor: '#393B48',
         borderWidth: 2,
         margin: 7,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    userImage: {
+        width: 44,
+        height: 44,
+        borderRadius: 22,
     },
     userInput: {
         flex: 1,
