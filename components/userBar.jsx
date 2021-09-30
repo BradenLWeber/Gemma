@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, Image, StyleSheet, TouchableOpacity, KeyboardAvoidingView, TextInput, Platform } from 'react-native'
+import { Platform, View, Text, StyleSheet, TouchableOpacity, KeyboardAvoidingView, TextInput } from 'react-native'
 
 const UserBar = (props) => {
     const [hover, setHover] = useState(false);
