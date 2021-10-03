@@ -2,12 +2,15 @@ import React, { useState } from 'react';
 import UserBar from './components/userBar';
 import PublicPrivateBar from './components/publicPrivateBar';
 import Login from './components/login';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import PinNote from './components/pinNote';
+import { Button, StyleSheet, Text, TextInput, View, TouchableOpacity } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import Modal from 'react-native-modal';
 
 export default function App() {
   const [publicOrPrivate, setPublicOrPrivate] = useState('Private');
+  const [isModalVisible, setisModalVisible] = useState(false);
 
   // Function handles a click on the public/private bar
   const clickPublicOrPrivate = () => {
@@ -16,6 +19,11 @@ export default function App() {
     } else {
       setPublicOrPrivate('Public');
     }
+  }
+
+  // Function handles displaying, hiding a pin's notes
+  const handleModal = () => {
+    setisModalVisible(() => !isModalVisible);
   }
 
   function mapScreen({ route, navigation }) {
@@ -38,6 +46,13 @@ export default function App() {
     return (
       <View>
         <Login navigator={navigation}/>
+
+        <TouchableOpacity style={styles.PinButton} onPress={handleModal}>
+          <View style={styles.addWrapper}>
+          <Text> + </Text>
+          </View>
+          </TouchableOpacity>
+          <PinNote state={isModalVisible} onClick={() => setisModalVisible()}/>
       </View>
     )
   };
@@ -55,9 +70,23 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
+  addWrapper: {
+    width: 30,
+    height: 30,
+    backgroundColor: '#FFF',
+    borderRadius: 30,
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderWidth: 1
+  },
   container: {
     flex: 1,
     backgroundColor: '#fff',
     alignItems: 'center',
   },
+  PinButton: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingTop: 10
+  }
 });
