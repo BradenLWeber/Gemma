@@ -2,32 +2,32 @@ import React, { useState } from 'react';
 import { Platform, Image, View, Text, StyleSheet, TouchableOpacity, KeyboardAvoidingView, TextInput } from 'react-native'
 
 const UserBar = (props) => {
-    const [hover, setHover] = useState(false);
-
     return (
         <View style={styles.userBar}>
         <>
             {/*User icon*/}
-            <View style={styles.userIcon}>
+            <TouchableOpacity style={styles.userIcon} onPress={props.pressUser}>
                 <Image source={props.userPhoto} style={styles.userImage}/>
-            </View>
+            </TouchableOpacity>
             {/*Search for pins input*/}
-            <KeyboardAvoidingView
-                behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-                style={styles.userInput}
-            >
-                <TextInput style={styles.input} placeholder={'Search for a pin...'}>
-
-                </TextInput>
-            </KeyboardAvoidingView>
+            <View style={styles.userInput}>
+                {/* This extra view wrapper allows me to specificy the width I want the textInput */}
+                <View style={styles.userInputWidth}>
+                    <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+                        <TextInput style={styles.input} placeholder={'Search for ' + props.searchType + '...'}/>
+                    </KeyboardAvoidingView>
+                </View>
+                {/* Search options icon */}
+                <TouchableOpacity style={styles.searchDropdown} onPress={props.pressSearchOptions}>
+                    <Text style={styles.searchDropdownText}>{props.searchMenuShowing ? '\u02c6' : '\u02c7'}</Text>
+                </TouchableOpacity>
+            </View>
             {/*Options icon*/}
             <TouchableOpacity
-                style={[styles.userOptions, hover ? styles.userOptionsHover : {}]}
-                onMouseEnter={() => setHover(true)}
-                onMouseLeave={() => setHover(false)}
-                onPress={() => setHover(hover ? false : true)}
+                style={[styles.userOptions, props.optionsMenuShowing ? styles.userOptionsPressed : {}]}
+                onPress={() => props.pressOptions()}
             >
-                <Text style={styles.userOptionsText}>- - -</Text>
+                <Text style={styles.userOptionsText}>. . .</Text>
             </TouchableOpacity>
         </>
         </View>
@@ -63,10 +63,6 @@ const styles = StyleSheet.create({
     },
     userInput: {
         flex: 1,
-        height: 40,
-    },
-    input: {
-        flex: 1,
         borderRadius: 10,
         backgroundColor: '#FFFFFF',
         paddingLeft: 10,
@@ -74,6 +70,28 @@ const styles = StyleSheet.create({
         borderColor: 'black',
         borderWidth: 1,
         fontSize: 20,
+        flexDirection: 'row',
+        height: 40,
+        justifyContent: 'space-between',
+        alignItems: 'center',
+    },
+    userInputWidth: {
+        flex: 1,
+    },
+    input: {
+        fontSize: 20,
+    },
+    searchDropdown: {
+        right: 0,
+        marginLeft: 10,
+    },
+    searchDropdownText: {
+        width: 30,
+        height: 30,
+        fontSize: 60,
+        bottom: 6,
+        color: 'gray',
+        right: 0,
     },
     userOptions: {
         width: 46,
@@ -83,12 +101,14 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
-    userOptionsHover: {
+    userOptionsPressed: {
         backgroundColor: '#D4D8E5',
     },
     userOptionsText: {
         color: 'black',
-        fontSize: 16,
+        fontSize: 20,
+        bottom: 6,
+        left: 1,
     }
 });
 

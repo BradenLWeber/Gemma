@@ -28,13 +28,15 @@ const PublicPrivateBar = (props) => {
 
 const styles = StyleSheet.create({
     publicPrivateBar: {
+        flexDirection: 'row',
         alignSelf: 'flex-start',
+        position: 'absolute',
+        bottom: 15,
         width: 140,
         height: 40,
         marginLeft: 15,
         backgroundColor: '#BCBCBC',
         borderRadius: 20,
-        flexDirection: 'row',
         elevation: 8,
     },
     textPrivate: {
