@@ -26,8 +26,8 @@ const Login = (props) => {
                 const { type, user } = result;
                 if (type === 'success') {
                     const { email, name, photoUrl } = user;
-                    alert('Google signin successful');
-                    setTimeout(() => {props.navigator.navigate('Map', {email, name, photoUrl});}, 1500);
+                    props.setUserInfo(name, email, photoUrl);
+                    setTimeout(() => {props.navigator.navigate('Map');}, 500);
                 } else {
                     alert('Google login failed');
                 }
@@ -38,7 +38,7 @@ const Login = (props) => {
                 setGoogleSubmitting(false);
             });
     }
-    
+
     return (
         <View>
             <Button onPress={handleLogin} title={googleSubmitting ? 'Working' : 'Login'} style={{backgroundColor: 'yellow', height: 34}} />
