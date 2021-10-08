@@ -70,6 +70,7 @@ const styles = StyleSheet.create({
         width: 200,
         marginTop: 20,
         padding: 10,
+        borderRadius: 10,
     },
     buttonText: {
         fontSize: 30,
@@ -79,8 +80,9 @@ const styles = StyleSheet.create({
         alignItems: "center",
         backgroundColor: "#6CC071",
         width: 200,
-        marginTop: 20,
+        marginTop: 10,
         padding: 10,
+        borderRadius: 10,
     },
 });
 
