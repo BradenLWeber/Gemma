@@ -9,7 +9,7 @@ const PublicPrivateBar = (props) => {
             <TouchableOpacity style={styles.publicPrivateBar} onPress={props.onClick}>
                 <Text style={styles.textPrivate}>Private</Text>
                 <View style={styles.privateSliderBox}>
-                    <Text style={{marginLeft: 8}}>.  .  .  .</Text>
+                    <Text style={{ marginLeft: 8 }}>.  .  .  .</Text>
                 </View>
             </TouchableOpacity>
         )
@@ -18,7 +18,7 @@ const PublicPrivateBar = (props) => {
         return (
             <TouchableOpacity style={styles.publicPrivateBar} onPress={props.onClick}>
                 <View style={styles.publicSliderBox}>
-                    <Text style={{marginLeft: 12}}>.  .  .  .</Text>
+                    <Text style={{ marginLeft: 12 }}>.  .  .  .</Text>
                 </View>
                 <Text style={styles.textPublic}>Public</Text>
             </TouchableOpacity>
@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
         width: 140,
         height: 40,
         marginLeft: 15,
-        backgroundColor: '#BCBCBC',
+        backgroundColor: '#F9D01E',
         borderRadius: 20,
         elevation: 8,
     },

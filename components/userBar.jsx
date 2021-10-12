@@ -2,20 +2,20 @@ import React, { useState } from 'react';
 import { Platform, Image, View, Text, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, KeyboardAvoidingView, TextInput } from 'react-native'
 
 const UserBar = (props) => {
-    const [showUserMenu, setShowUserMenu] = useState(false);
-    const [showSearchMenu, setShowSearchMenu] = useState(false);
-    const [showOptionsMenu, setShowOptionsMenu] = useState(false);
-    // Initial state depends on whether it is on the map screen or the board screen
-    const [searchType, setSearchType] = useState(props.boardScreen ? 'board' : 'pin');
+  const [showUserMenu, setShowUserMenu] = useState(false);
+  const [showSearchMenu, setShowSearchMenu] = useState(false);
+  const [showOptionsMenu, setShowOptionsMenu] = useState(false);
+  // Initial state depends on whether it is on the map screen or the board screen
+  const [searchType, setSearchType] = useState(props.boardScreen ? 'board' : 'pin');
 
-     // The popup when pressing the user icon
+  // The popup when pressing the user icon
   const userMenu = (navigator) => {
     return (
       <View style={styles.userMenu}>
         <TouchableOpacity style={styles.menuButton}>
           <Text style={styles.menuButtonText}>Settings</Text>
         </TouchableOpacity>
-        <View style={styles.menuDivider}/>
+        <View style={styles.menuDivider} />
         <TouchableOpacity style={styles.menuButton}>
           <Text style={styles.menuButtonText}>Logout</Text>
         </TouchableOpacity>
@@ -29,28 +29,28 @@ const UserBar = (props) => {
     if (props.boardScreen) {
       return (
         <View style={styles.searchMenuBoards}>
-          <TouchableOpacity style={styles.menuButton} onPress={() => {setSearchType('board'); setShowSearchMenu(false);}}>
+          <TouchableOpacity style={styles.menuButton} onPress={() => { setSearchType('board'); setShowSearchMenu(false); }}>
             <Text style={styles.menuButtonText}>Board name</Text>
           </TouchableOpacity>
-          <View style={styles.menuDivider}/>
-          <TouchableOpacity style={styles.menuButton} onPress={() => {setSearchType('creator'); setShowSearchMenu(false);}}>
+          <View style={styles.menuDivider} />
+          <TouchableOpacity style={styles.menuButton} onPress={() => { setSearchType('creator'); setShowSearchMenu(false); }}>
             <Text style={styles.menuButtonText}>Creator name</Text>
           </TouchableOpacity>
         </View>
       )
-    // If on the main screen
+      // If on the main screen
     } else {
       return (
         <View style={styles.searchMenu}>
-          <TouchableOpacity style={styles.menuButton} onPress={() => {setSearchType('pin'); setShowSearchMenu(false);}}>
+          <TouchableOpacity style={styles.menuButton} onPress={() => { setSearchType('pin'); setShowSearchMenu(false); }}>
             <Text style={styles.menuButtonText}>Pin name</Text>
           </TouchableOpacity>
-          <View style={styles.menuDivider}/>
-          <TouchableOpacity style={styles.menuButton} onPress={() => {setSearchType('creator'); setShowSearchMenu(false);}}>
+          <View style={styles.menuDivider} />
+          <TouchableOpacity style={styles.menuButton} onPress={() => { setSearchType('creator'); setShowSearchMenu(false); }}>
             <Text style={styles.menuButtonText}>Creator name</Text>
           </TouchableOpacity>
-          <View style={styles.menuDivider}/>
-          <TouchableOpacity style={styles.menuButton} onPress={() => {setSearchType('tag'); setShowSearchMenu(false);}}>
+          <View style={styles.menuDivider} />
+          <TouchableOpacity style={styles.menuButton} onPress={() => { setSearchType('tag'); setShowSearchMenu(false); }}>
             <Text style={styles.menuButtonText}>Tag name</Text>
           </TouchableOpacity>
         </View>
@@ -65,7 +65,7 @@ const UserBar = (props) => {
         <TouchableOpacity style={styles.menuButton} onPress={() => clickBoards('My', navigator)}>
           <Text style={styles.menuButtonText}>My boards</Text>
         </TouchableOpacity>
-        <View style={styles.menuDivider}/>
+        <View style={styles.menuDivider} />
         <TouchableOpacity style={styles.menuButton} onPress={() => clickBoards('Public', navigator)}>
           <Text style={styles.menuButtonText}>Public boards</Text>
         </TouchableOpacity>
@@ -103,7 +103,7 @@ const UserBar = (props) => {
   const invisibleBackground = () => {
     return (
       <TouchableWithoutFeedback onPress={closeMenu}>
-        <View style={{width: '100%', height: '100%', position: 'absolute', left: 0, top: 0}} />
+        <View style={{ width: '100%', height: '100%', position: 'absolute', left: 0, top: 0 }} />
       </TouchableWithoutFeedback>
     )
   }
@@ -113,14 +113,14 @@ const UserBar = (props) => {
       <View style={styles.userBar}>
         {/*User icon*/}
         <TouchableOpacity style={styles.userIcon} onPress={() => setShowUserMenu(true)}>
-          <Image source={props.userPhoto} style={styles.userImage}/>
+          <Image source={props.userPhoto} style={styles.userImage} />
         </TouchableOpacity>
         {/*Search for pins input*/}
         <View style={styles.userInput}>
           {/* This extra view wrapper allows me to specificy the width I want the textInput */}
           <View style={styles.userInputWidth}>
             <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-              <TextInput style={styles.inputText} placeholder={'Search for ' + searchType + '...'}/>
+              <TextInput style={styles.inputText} placeholder={'Search for ' + searchType + '...'} />
             </KeyboardAvoidingView>
           </View>
           {/* Search options icon */}
@@ -147,134 +147,139 @@ const UserBar = (props) => {
 }
 
 const styles = StyleSheet.create({
-    userBar: {
-        width: '90%',
-        height: 60,
-        borderRadius: 30,
-        backgroundColor: '#BCBCBC',
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'flex-start',
-        elevation: 20,
-        top: 0,
-        position: 'absolute',
-    },
-    userIcon: {
-        width: 46,
-        height: 46,
-        borderRadius: 23,
-        backgroundColor: '#D4D8E5',
-        borderColor: '#393B48',
-        borderWidth: 2,
-        margin: 7,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    userImage: {
-        width: 44,
-        height: 44,
-        borderRadius: 22,
-    },
-    userInput: {
-        flex: 1,
-        borderRadius: 10,
-        backgroundColor: '#FFFFFF',
-        paddingLeft: 10,
-        paddingRight: 10,
-        borderColor: 'black',
-        borderWidth: 1,
-        fontSize: 20,
-        flexDirection: 'row',
-        height: 40,
-        justifyContent: 'space-between',
-        alignItems: 'center',
-    },
-    userInputWidth: {
-        flex: 1,
-    },
-    inputText: {
-        fontSize: 19,
-    },
-    searchDropdown: {
-        right: 0,
-        marginLeft: 10,
-    },
-    searchDropdownText: {
-        width: 30,
-        height: 30,
-        fontSize: 60,
-        bottom: 6,
-        color: 'gray',
-        right: 0,
-    },
-    userOptions: {
-        width: 46,
-        height: 46,
-        borderRadius: 23,
-        margin: 7,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    userOptionsPressed: {
-        backgroundColor: '#D4D8E5',
-    },
-    userOptionsText: {
-        color: 'black',
-        fontSize: 20,
-        bottom: 6,
-        left: 1,
-    },
-    userMenu: {
-        position: 'absolute',
-        left: 20,
-        top: 75,
-        width: 110,
-        height: 100,
-        backgroundColor: '#c4c4c4',
-        alignItems: 'center',
-    },
-    searchMenu: {
-        position: 'absolute',
-        right: '20%',
-        top: 75,
-        width: 150,
-        height: 150,
-        backgroundColor: '#c4c4c4',
-        alignItems: 'center',
-    },
-    searchMenuBoards: {
-      position: 'absolute',
-      right: '20%',
-      top: 75,
-      width: 150,
-      height: 100,
-      backgroundColor: '#c4c4c4',
-      alignItems: 'center',
-    },
-    optionsMenu: {
-        position: 'absolute',
-        right: 20,
-        top: 75,
-        width: 153,
-        height: 100,
-        backgroundColor: '#c4c4c4',
-        alignItems: 'center',
-    },
-    menuButton: {
-        borderColor: 'black',
-        justifyContent: 'center',
-        marginTop: 10,
-        marginBottom: 10,
-    },
-    menuButtonText: {
-        color: 'black',
-        fontSize: 20,
-    },
-    menuDivider: {
-        width: '80%',
-        height: 2,
-        backgroundColor: 'black',
-    },
+  userBar: {
+    width: '90%',
+    height: 60,
+    borderRadius: 15,
+    backgroundColor: '#F9D01E',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    elevation: 20,
+    top: 0,
+    position: 'absolute',
+    marginTop: 20,
+  },
+  userIcon: {
+    width: 46,
+    height: 46,
+    borderRadius: 23,
+    backgroundColor: '#D4D8E5',
+    borderColor: '#393B48',
+    borderWidth: 2,
+    margin: 7,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  userImage: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+  },
+  userInput: {
+    flex: 1,
+    borderRadius: 10,
+    backgroundColor: '#FFFFFF',
+    paddingLeft: 10,
+    paddingRight: 10,
+    borderColor: 'black',
+    borderWidth: 1,
+    fontSize: 20,
+    flexDirection: 'row',
+    height: 40,
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  userInputWidth: {
+    flex: 1,
+  },
+  inputText: {
+    fontSize: 19,
+  },
+  searchDropdown: {
+    right: 0,
+    marginLeft: 10,
+  },
+  searchDropdownText: {
+    width: 30,
+    height: 30,
+    fontSize: 60,
+    bottom: 6,
+    color: 'gray',
+    right: 0,
+  },
+  userOptions: {
+    width: 46,
+    height: 46,
+    borderRadius: 23,
+    margin: 7,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  userOptionsPressed: {
+    backgroundColor: '#D4D8E5',
+  },
+  userOptionsText: {
+    color: '#201E3C',
+    fontSize: 20,
+    bottom: 6,
+    left: 1,
+  },
+  userMenu: {
+    position: 'absolute',
+    left: 20,
+    top: 75,
+    width: 110,
+    height: 100,
+    backgroundColor: '#F9D01E',
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  searchMenu: {
+    position: 'absolute',
+    right: '20%',
+    top: 75,
+    width: 150,
+    height: 150,
+    backgroundColor: '#F9D01E',
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  searchMenuBoards: {
+    position: 'absolute',
+    right: '20%',
+    top: 75,
+    width: 150,
+    height: 100,
+    backgroundColor: '#F9D01E',
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  optionsMenu: {
+    position: 'absolute',
+    right: 20,
+    top: 75,
+    width: 153,
+    height: 100,
+    backgroundColor: '#F9D01E',
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  menuButton: {
+    borderColor: '#201E3C',
+    justifyContent: 'center',
+    marginTop: 10,
+    marginBottom: 10,
+  },
+  menuButtonText: {
+    color: '#201E3C',
+    fontSize: 20,
+  },
+  menuDivider: {
+    width: '80%',
+    height: 2,
+    backgroundColor: '#201E3C',
+  },
 });
 
 export default UserBar;

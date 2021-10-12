@@ -41,13 +41,13 @@ export default function App() {
     return (
       <View style={styles.container}>
         {/* Makes sure the top bar is placed well */}
-        <View style={{height: 10}} />
+        <View style={{ height: 10 }} />
         {/* Public/private bar at the bottom of the screen */}
         <PublicPrivateBar type={publicOrPrivate} onClick={clickPublicOrPrivate} />
 
         {/* User bar at top of the screen */}
         <UserBar
-          userPhoto={{uri: userPhoto}}
+          userPhoto={{ uri: userPhoto }}
           navigator={navigation}
           setBoardsType={(type) => setBoardsType(type)}
           boardScreen={false}
@@ -56,35 +56,35 @@ export default function App() {
     );
   };
 
-  function loginScreen({navigation}) {
+  function loginScreen({ navigation }) {
     return (
       <View>
-        <Login navigator={navigation} setUserInfo={setUserInfo}/>
+        <Login navigator={navigation} setUserInfo={setUserInfo} />
 
         <TouchableOpacity style={styles.PinButton} onPress={handleModal}>
           <View style={styles.addWrapper}>
-          <Text> + </Text>
+            <Text> + </Text>
           </View>
-          </TouchableOpacity>
-          <PinNote state={isModalVisible} onClick={() => setisModalVisible()}/>
+        </TouchableOpacity>
+        <PinNote state={isModalVisible} onClick={() => setisModalVisible()} />
       </View>
     )
   };
 
-  function boardsScreen({navigation}) {
+  function boardsScreen({ navigation }) {
     return (
       <>
-        <View style={{alignItems: 'center', top: 12}}>
+        <View style={{ alignItems: 'center', top: 12 }}>
           <View style={styles.boardContainer}>
             <View style={styles.screenTitleView}>
               <Text style={styles.screenTitleText}>{boardsType} boards</Text>
             </View>
           </View>
-          <Board boardType={boardsType} navigator={navigation}/>
-          <Board boardType={boardsType} navigator={navigation}v/>
-          <Board boardType={boardsType} navigator={navigation}/>
+          <Board boardType={boardsType} navigator={navigation} />
+          <Board boardType={boardsType} navigator={navigation} v />
+          <Board boardType={boardsType} navigator={navigation} />
           <UserBar
-            userPhoto={{uri: userPhoto}}
+            userPhoto={{ uri: userPhoto }}
             navigator={navigation}
             setBoardsType={(type) => setBoardsType(type)}
             boardScreen={true}
@@ -99,7 +99,7 @@ export default function App() {
   return (
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Map">
-        <Stack.Screen name="Login" component={loginScreen}/>
+        <Stack.Screen name="Login" component={loginScreen} />
         <Stack.Screen name="Map" component={mapScreen} />
         <Stack.Screen name="Boards" component={boardsScreen} />
       </Stack.Navigator>

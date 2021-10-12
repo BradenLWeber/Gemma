@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, Button } from 'react-native';
+import { View, Text, StyleSheet, Button, TouchableOpacity } from 'react-native';
 import * as Google from 'expo-google-app-auth';
 
 // Here's the youtube video that taught me how to login: https://www.youtube.com/watch?v=FSMrzYpBeDM
@@ -14,7 +14,7 @@ const Login = (props) => {
 
         const config = {
             // These are gotten from my console.cloud.google account that I set up
-            iosClientId : `282320214945-agg9q4c7vaakcickd2eivuo63fm14ouo.apps.googleusercontent.com`,
+            iosClientId: `282320214945-agg9q4c7vaakcickd2eivuo63fm14ouo.apps.googleusercontent.com`,
             androidClientId: `282320214945-e9oa9ldi6veroi1gj5bemmednrlfumo4.apps.googleusercontent.com`,
             scopes: ['profile', 'email']
         };
@@ -27,7 +27,7 @@ const Login = (props) => {
                 if (type === 'success') {
                     const { email, name, photoUrl } = user;
                     props.setUserInfo(name, email, photoUrl);
-                    setTimeout(() => {props.navigator.navigate('Map');}, 500);
+                    setTimeout(() => { props.navigator.navigate('Map'); }, 500);
                 } else {
                     alert('Google login failed');
                 }
@@ -40,10 +40,52 @@ const Login = (props) => {
     }
 
     return (
-        <View>
-            <Button onPress={handleLogin} title={googleSubmitting ? 'Working' : 'Login'} style={{backgroundColor: 'yellow', height: 34}} />
+        <View style={styles.loginView}>
+            <Text style={styles.loginTitle}>Gemma</Text>
+            <TouchableOpacity style={styles.signupButton}>
+                <Text style={styles.buttonText}>'Sign Up'</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handleLogin} style={styles.loginButton}>
+                <Text style={styles.buttonText}>{googleSubmitting ? 'Working' : 'Login'}</Text>
+            </TouchableOpacity>
         </View>
     )
 };
+
+const styles = StyleSheet.create({
+    loginView: {
+        flexDirection: 'column',
+        alignItems: 'center',
+    },
+    loginTitle: {
+        textAlign: 'center',
+        fontWeight: 'bold',
+        fontSize: 60,
+        marginTop: 80,
+        color: '#201E3C',
+    },
+    signupButton: {
+        alignItems: "center",
+        backgroundColor: "#97CCEE",
+        width: 200,
+        marginTop: 20,
+        padding: 10,
+        borderRadius: 10,
+    },
+    buttonText: {
+        fontSize: 30,
+        color: '#201E3C',
+    },
+    loginButton: {
+        alignItems: "center",
+        backgroundColor: "#6CC071",
+        width: 200,
+        marginTop: 10,
+        padding: 10,
+        borderRadius: 10,
+    },
+});
+
+
 
 export default Login;
