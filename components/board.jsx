@@ -41,6 +41,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'lightgray',
         flexDirection: 'row',
         justifyContent: 'space-between',
+        elevation: 20,
     },
     boardText: {
         flexDirection: 'column',

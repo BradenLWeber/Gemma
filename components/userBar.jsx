@@ -234,6 +234,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F9D01E',
     alignItems: 'center',
     marginTop: 20,
+    elevation: 21,
   },
   searchMenu: {
     position: 'absolute',
@@ -244,6 +245,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F9D01E',
     alignItems: 'center',
     marginTop: 20,
+    elevation: 21,
   },
   searchMenuBoards: {
     position: 'absolute',
@@ -253,6 +255,7 @@ const styles = StyleSheet.create({
     height: 100,
     backgroundColor: '#c4c4c4',
     alignItems: 'center',
+    elevation: 21,
   },
   optionsMenu: {
     position: 'absolute',
@@ -263,6 +266,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F9D01E',
     alignItems: 'center',
     marginTop: 20,
+    elevation: 21,
   },
   menuButton: {
     borderColor: '#201E3C',
