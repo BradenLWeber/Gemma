@@ -35,12 +35,12 @@ const Board = (props) => {
 const styles = StyleSheet.create({
     boardView: {
         width: '91%',
+        position: 'relative',
         height: 180,
         marginBottom: 20,
         backgroundColor: 'lightgray',
         flexDirection: 'row',
         justifyContent: 'space-between',
-        elevation: 20,
     },
     boardText: {
         flexDirection: 'column',
