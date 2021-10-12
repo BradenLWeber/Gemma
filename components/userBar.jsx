@@ -251,8 +251,9 @@ const styles = StyleSheet.create({
     top: 75,
     width: 150,
     height: 100,
-    backgroundColor: '#c4c4c4',
+    backgroundColor: '#F9D01E',
     alignItems: 'center',
+    marginTop: 20,
   },
   optionsMenu: {
     position: 'absolute',
