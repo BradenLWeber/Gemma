@@ -250,7 +250,7 @@ const styles = StyleSheet.create({
   searchMenuBoards: {
     position: 'absolute',
     right: '20%',
-    top: 98,
+    top: 75,
     width: 150,
     height: 100,
     backgroundColor: '#F9D01E',
