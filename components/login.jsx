@@ -43,7 +43,7 @@ const Login = (props) => {
         <View style={styles.loginView}>
             <Text style={styles.loginTitle}>Gemma</Text>
             <TouchableOpacity style={styles.signupButton}>
-                <Text style={styles.buttonText}>{googleSubmitting ? 'Working' : 'Sign Up'}</Text>
+                <Text style={styles.buttonText}>'Sign Up'</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={handleLogin} style={styles.loginButton}>
                 <Text style={styles.buttonText}>{googleSubmitting ? 'Working' : 'Login'}</Text>

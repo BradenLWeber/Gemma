@@ -253,9 +253,10 @@ const styles = StyleSheet.create({
     top: 98,
     width: 150,
     height: 100,
-    backgroundColor: '#c4c4c4',
+    backgroundColor: '#F9D01E',
     alignItems: 'center',
     elevation: 21,
+    marginTop: 20,
   },
   optionsMenu: {
     position: 'absolute',
