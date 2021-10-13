@@ -1,52 +1,30 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Button, TouchableOpacity } from 'react-native';
-import * as Google from 'expo-google-app-auth';
 
-// Here's the youtube video that taught me how to login: https://www.youtube.com/watch?v=FSMrzYpBeDM
-// Note: This video has a followup that explains how to stay logged in even after exitting the app
 const Login = (props) => {
 
-    // This can be used to trigger certain things on the screen while google is authenticating
-    const [googleSubmitting, setGoogleSubmitting] = useState(false);
-
     const handleLogin = () => {
-        setGoogleSubmitting(true);
+        alert('Login will be implemented soon...');
+    }
 
-        const config = {
-            // These are gotten from my console.cloud.google account that I set up
-            iosClientId: `282320214945-agg9q4c7vaakcickd2eivuo63fm14ouo.apps.googleusercontent.com`,
-            androidClientId: `282320214945-e9oa9ldi6veroi1gj5bemmednrlfumo4.apps.googleusercontent.com`,
-            scopes: ['profile', 'email']
-        };
-
-        // Login and share the user information with the map screen
-        Google
-            .logInAsync(config)
-            .then((result) => {
-                const { type, user } = result;
-                if (type === 'success') {
-                    const { email, name, photoUrl } = user;
-                    props.setUserInfo(name, email, photoUrl);
-                    setTimeout(() => { props.navigator.navigate('Map'); }, 500);
-                } else {
-                    alert('Google login failed');
-                }
-                setGoogleSubmitting(false);
-            })
-            .catch((error) => {
-                console.log(error);
-                setGoogleSubmitting(false);
-            });
+    const handleSignup = () => {
+        alert('Sign in will also be implemented soon...');
     }
 
     return (
         <View style={styles.loginView}>
             <Text style={styles.loginTitle}>Gemma</Text>
-            <TouchableOpacity style={styles.signupButton}>
-                <Text style={styles.buttonText}>'Sign Up'</Text>
+            {/* Sign up button */}
+            <TouchableOpacity onPress={handleSignup} style={styles.signupButton}>
+                <Text style={styles.buttonText}>Sign Up</Text>
             </TouchableOpacity>
+            {/* Login button */}
             <TouchableOpacity onPress={handleLogin} style={styles.loginButton}>
-                <Text style={styles.buttonText}>{googleSubmitting ? 'Working' : 'Login'}</Text>
+                <Text style={styles.buttonText}>Login</Text>
+            </TouchableOpacity>
+            {/* Continue as guest button */}
+            <TouchableOpacity onPress={() => props.navigator.navigate('Map')} style={styles.guestButton}>
+                <Text style={styles.guestButtonText}>Continue as guest</Text>
             </TouchableOpacity>
         </View>
     )
@@ -76,6 +54,10 @@ const styles = StyleSheet.create({
         fontSize: 30,
         color: '#201E3C',
     },
+    guestButtonText: {
+        fontSize: 20,
+        color: "black",
+    },
     loginButton: {
         alignItems: "center",
         backgroundColor: "#6CC071",
@@ -84,6 +66,13 @@ const styles = StyleSheet.create({
         padding: 10,
         borderRadius: 10,
     },
+    guestButton: {
+        alignItems: 'center',
+        width: 200,
+        marginTop: 10,
+        padding: 10,
+        borderRadius: 10,
+    }
 });
 
 
