@@ -3,7 +3,7 @@ import UserBar from './components/userBar';
 import PublicPrivateBar from './components/publicPrivateBar';
 import Login from './components/login';
 import PinNote from './components/pinNote';
-import Board from './components/board';
+import BoardScreen from './screens/boards';
 import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -56,6 +56,17 @@ export default function App() {
     );
   };
 
+  function boardScreen({navigation}) {
+    return (
+      <BoardScreen
+        boardsType={boardsType}
+        setBoardsType={setBoardsType}
+        navigator={navigation}
+        userPhoto={userPhoto}
+      />
+    )
+  }
+
   function loginScreen({ navigation }) {
     return (
       <View>
@@ -71,29 +82,6 @@ export default function App() {
     )
   };
 
-  function boardsScreen({ navigation }) {
-    return (
-      <>
-        <View style={{ alignItems: 'center', position: 'relative' }}>
-          <View style={styles.boardContainer}>
-            <View style={styles.screenTitleView}>
-              <Text style={styles.screenTitleText}>{boardsType} boards</Text>
-            </View>
-          </View>
-          <Board boardType={boardsType} navigator={navigation} />
-          <Board boardType={boardsType} navigator={navigation} />
-          <Board boardType={boardsType} navigator={navigation} />
-          <UserBar
-            userPhoto={{ uri: userPhoto }}
-            navigator={navigation}
-            setBoardsType={(type) => setBoardsType(type)}
-            boardScreen={true}
-          />
-        </View>
-      </>
-    )
-  }
-
   const Stack = createNativeStackNavigator();
 
   return (
@@ -101,7 +89,7 @@ export default function App() {
       <Stack.Navigator initialRouteName="Login">
         <Stack.Screen name="Login" component={loginScreen} />
         <Stack.Screen name="Map" component={mapScreen} />
-        <Stack.Screen name="Boards" component={boardsScreen} />
+        <Stack.Screen name="Boards" component={boardScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
@@ -126,17 +114,5 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     paddingTop: 10
-  },
-  screenTitleView: {
-    marginBottom: 10,
-  },
-  screenTitleText: {
-    fontSize: 25,
-    marginBottom: 5,
-  },
-  boardContainer: {
-    marginTop: 95,
-    width: '90%',
-    alignSelf: 'center'
   },
 });
