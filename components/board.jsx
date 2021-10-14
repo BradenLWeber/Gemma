@@ -35,6 +35,7 @@ const Board = (props) => {
 const styles = StyleSheet.create({
     boardView: {
         width: '91%',
+        position: 'relative',
         height: 180,
         marginBottom: 20,
         backgroundColor: 'lightgray',

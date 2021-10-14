@@ -74,14 +74,14 @@ export default function App() {
   function boardsScreen({ navigation }) {
     return (
       <>
-        <View style={{ alignItems: 'center', top: 12 }}>
+        <View style={{ alignItems: 'center', position: 'relative' }}>
           <View style={styles.boardContainer}>
             <View style={styles.screenTitleView}>
               <Text style={styles.screenTitleText}>{boardsType} boards</Text>
             </View>
           </View>
           <Board boardType={boardsType} navigator={navigation} />
-          <Board boardType={boardsType} navigator={navigation} v />
+          <Board boardType={boardsType} navigator={navigation} />
           <Board boardType={boardsType} navigator={navigation} />
           <UserBar
             userPhoto={{ uri: userPhoto }}
@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   boardContainer: {
-    marginTop: 75,
+    marginTop: 95,
     width: '90%',
     alignSelf: 'center'
   },
