@@ -4,11 +4,11 @@ import { View, Text, StyleSheet, Button, TouchableOpacity } from 'react-native';
 const Login = (props) => {
 
     const handleLogin = () => {
-        alert('Login will be implemented soon...');
+        props.navigator.navigate('User Login');
     }
 
     const handleSignup = () => {
-        alert('Sign in will also be implemented soon...');
+        props.navigator.navigate('User Sign Up');
     }
 
     return (
