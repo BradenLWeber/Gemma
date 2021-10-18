@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import Login from './components/login';
+import Login from './screens/login';
 import BoardScreen from './screens/boards';
 import mapScreen from './screens/map';
 import UserLoginScreen from './screens/userLogin';
@@ -35,9 +35,7 @@ export default function App() {
 
   function loginScreen({ navigation }) {
     return (
-      <View>
-        <Login navigator={navigation} />
-      </View>
+      <Login navigator={navigation} />
     )
   };
 

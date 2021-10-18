@@ -1,9 +1,5 @@
 import React, { useState } from 'react';
 import { Text, View, TouchableOpacity, StyleSheet, KeyboardAvoidingView, TextInput } from 'react-native';
-// import PublicPrivateBar from '../components/publicPrivateBar';
-// import UserBar from '../components/userBar';
-// import PinNote from '../components/pinNote';
-//import { globalStyles } from '../styles/global';
 
 const UserLoginScreen = (props) => {
 

@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, Button, TouchableOpacity } from 'react-native';
+import React from 'react';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
 const Login = (props) => {
 
@@ -22,7 +22,6 @@ const Login = (props) => {
             <TouchableOpacity onPress={handleLogin} style={styles.loginButton}>
                 <Text style={styles.buttonText}>Login</Text>
             </TouchableOpacity>
-            {/* Continue as guest button */}
             <TouchableOpacity onPress={() => props.navigator.navigate('Map')} style={styles.guestButton}>
                 <Text style={styles.guestButtonText}>Continue as guest</Text>
             </TouchableOpacity>
