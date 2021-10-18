@@ -6,10 +6,9 @@ import PinNote from '../components/pinNote';
 import { globalStyles } from '../styles/global';
 import ImageZoom from 'react-native-image-pan-zoom';
 
-const mapScreen = ({ navigation }) => {
+const MapScreen = ({ route, navigation }) => {
 
   const [publicOrPrivate, setPublicOrPrivate] = useState('Private');
-  const [userPhoto, setUserPhoto] = useState('https://scontent-ort2-1.xx.fbcdn.net/v/t1.6435-1/p148x148/66809435_10156811580748462_298237271994269696_n.jpg?_nc_cat=100&ccb=1-5&_nc_sid=1eb0c7&_nc_ohc=3sDvYWe41uQAX9uBr7l&_nc_ht=scontent-ort2-1.xx&oh=94344cfc8b679f337a5480004463abb7&oe=61836442');
   const [isModalVisible, setisModalVisible] = useState(false);
   const [boardsType, setBoardsType] = useState('My');
 
@@ -52,7 +51,7 @@ const mapScreen = ({ navigation }) => {
 
       {/* User bar at top of the screen */}
       <UserBar
-        userPhoto={{ uri: userPhoto }}
+        userPhoto={{ uri: route.params }}
         navigator={navigation}
         setBoardsType={(type) => setBoardsType(type)}
         boardScreen={false}
@@ -77,4 +76,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default mapScreen;
+export default MapScreen;
