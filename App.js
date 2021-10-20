@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 
-import Login from './components/login';
+import Login from './screens/login';
 import BoardScreen from './screens/boards';
-import mapScreen from './screens/map';
+import MapScreen from './screens/map';
+import UserLoginScreen from './screens/userLogin';
+import UserSignupScreen from './screens/userSignup';
 import { StyleSheet, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -11,9 +13,6 @@ export default function App() {
   const [username, setUsername] = useState('FuriousFive5');
   const [userEmail, setUserEmail] = useState('abc123@mail');
   const [boardsType, setBoardsType] = useState('My');
-  const [userPhoto, setUserPhoto] = useState('https://scontent-ort2-1.xx.fbcdn.net/v/t1.6435-1/p148x148/66809435_10156811580748462_298237271994269696_n.jpg?_nc_cat=100&ccb=1-5&_nc_sid=1eb0c7&_nc_ohc=3sDvYWe41uQAX9uBr7l&_nc_ht=scontent-ort2-1.xx&oh=94344cfc8b679f337a5480004463abb7&oe=61836442');
- 
-  
 
   // Used to store information from the google login
   const setUserInfo = (name, email, photo) => {
@@ -22,8 +21,7 @@ export default function App() {
     setUserPhoto(photo);
   }
 
-
-  function boardScreen({navigation}) {
+  function boardScreen({ navigation }) {
     return (
       <BoardScreen
         boardsType={boardsType}
@@ -36,9 +34,25 @@ export default function App() {
 
   function loginScreen({ navigation }) {
     return (
-      <View>
-        <Login navigator={navigation} setUserInfo={setUserInfo} />
-      </View>
+      <Login navigator={navigation}/>
+    )
+  };
+
+  function userLoginScreen({ navigation }) {
+    return (
+      <UserLoginScreen
+        navigator={navigation}
+      //setUserInfo={setUserInfo}
+      />
+    )
+  };
+
+  function userSignupScreen({ navigation }) {
+    return (
+      <UserSignupScreen
+        navigator={navigation}
+      //setUserInfo={setUserInfo}
+      />
     )
   };
 
@@ -48,8 +62,10 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Login">
         <Stack.Screen name="Login" component={loginScreen} />
-        <Stack.Screen name="Map" component={mapScreen} />
+        <Stack.Screen name="Map" component={MapScreen} />
         <Stack.Screen name="Boards" component={boardScreen} />
+        <Stack.Screen name="User Login" component={userLoginScreen} />
+        <Stack.Screen name="User Sign Up" component={userSignupScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
