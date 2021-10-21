@@ -1,17 +1,56 @@
-import React, { useState } from 'react';
-import { Text, View, TouchableOpacity, StyleSheet, KeyboardAvoidingView, TextInput } from 'react-native';
+import React, { useState, useRef, createRef } from 'react';
+import { Text, View, TouchableOpacity, StyleSheet, KeyboardAvoidingView, TextInput, Keyboard } from 'react-native';
 
 const UserLoginScreen = (props) => {
+  //const [username, setUsername] = useState('');
+  const [userEmail, setUserEmail] = useState('');
+  const [userPassword, setUserPassword] = useState('');
   const [userPhoto, setUserPhoto] = useState('https://scontent-ort2-1.xx.fbcdn.net/v/t1.6435-1/p148x148/66809435_10156811580748462_298237271994269696_n.jpg?_nc_cat=100&ccb=1-5&_nc_sid=1eb0c7&_nc_ohc=3sDvYWe41uQAX9uBr7l&_nc_ht=scontent-ort2-1.xx&oh=94344cfc8b679f337a5480004463abb7&oe=61836442');
+
+  const passwordInputRef = createRef();
+
+  const handleLoginDone = () => {
+    if (!userEmail) {
+      alert('Please fill Email');
+      return;
+    }
+    if (!userPassword) {
+      alert('Please fill Password');
+      return;
+    }
+    props.navigator.navigate('Map', userPhoto);
+  }
 
   return (
     <View style={styles.userLoginView}>
       <Text style={styles.userLoginTitle}>Login</Text>
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-        <TextInput style={styles.emailInputText} placeholder={'User email'} />
-        <TextInput style={styles.passwordInputText} placeholder={'Password'} />
+        <TextInput
+          style={styles.emailInputText}
+          onChangeText={(email) => setUserEmail(email)}
+          keyboardType="email-address"
+          placeholder={'User email'}
+          returnKeyType="next"
+          onSubmitEditing={() =>
+            passwordInputRef.current &&
+            passwordInputRef.current.focus()
+          }
+          blurOnSubmit={false}
+        />
+        <TextInput
+          secureTextEntry={true}
+          style={styles.passwordInputText}
+          onChangeText={(password) => setUserPassword(password)}
+          placeholder={'Password'}
+          ref={passwordInputRef}
+          returnKeyType="next"
+          onSubmitEditing={() =>
+            passwordCheckInputRef.current &&
+            passwordCheckInputRef.current.focus()
+          }
+          blurOnSubmit={false} />
       </KeyboardAvoidingView>
-      <TouchableOpacity onPress={() => props.navigator.navigate('Map', userPhoto)} style={styles.doneButton}>
+      <TouchableOpacity onPress={handleLoginDone} style={styles.doneButton}>
         <Text style={styles.buttonText}>Done</Text>
       </TouchableOpacity>
     </View>
@@ -33,18 +72,18 @@ const styles = StyleSheet.create({
     paddingLeft: 10,
   },
   emailInputText: {
-    paddingTop: 60,
+    paddingTop: 40,
     fontSize: 30,
   },
   passwordInputText: {
-    paddingTop: 40,
+    paddingTop: 30,
     fontSize: 30,
   },
   doneButton: {
     alignItems: "center",
     backgroundColor: "#6CC071",
     width: 120,
-    marginTop: 60,
+    marginTop: 50,
     padding: 10,
     borderRadius: 10,
   },

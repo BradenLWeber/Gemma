@@ -12,9 +12,9 @@ const Login = (props) => {
 
         const config = {
             // These are gotten from my console.cloud.google account that I set up
-            iosClientId : `282320214945-agg9q4c7vaakcickd2eivuo63fm14ouo.apps.googleusercontent.com`,
+            iosClientId: `282320214945-agg9q4c7vaakcickd2eivuo63fm14ouo.apps.googleusercontent.com`,
             androidClientId: `282320214945-e9oa9ldi6veroi1gj5bemmednrlfumo4.apps.googleusercontent.com`,
-            scopes: ['profile', 'email']
+            scopes: ['profile', 'email'],
         };
 
         // Login and share the user information with the map screen
@@ -58,8 +58,8 @@ const Login = (props) => {
             <TouchableOpacity onPress={() => props.navigator.navigate('Map', userPhoto)} style={styles.guestButton}>
                 <Text style={styles.guestButtonText}>Continue as guest</Text>
             </TouchableOpacity>
-            {demo && <TouchableOpacity onPress={handleGoogleLogin} style={[styles.loginButton, {marginTop: 200}]}>
-                <Text style={[styles.buttonText, {fontSize: 20}]}>{googleSubmitting ? 'Working' : 'Login with Google'}</Text>
+            {demo && <TouchableOpacity onPress={handleGoogleLogin} style={[styles.loginButton, { marginTop: 200 }]}>
+                <Text style={[styles.buttonText, { fontSize: 20 }]}>{googleSubmitting ? 'Working' : 'Login with Google'}</Text>
             </TouchableOpacity>}
         </View>
     )
