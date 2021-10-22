@@ -7,6 +7,7 @@ const UserBar = (props) => {
   const [showOptionsMenu, setShowOptionsMenu] = useState(false);
   // Initial state depends on whether it is on the map screen or the board screen
   const [searchType, setSearchType] = useState(props.boardScreen ? 'board' : 'pin');
+  const [userPhotoList, setUserPhotoList] = useState({default : require('../assets/defaultAvatar.png')})
 
   // The popup when pressing the user icon
   const userMenu = (navigator) => {
@@ -113,7 +114,7 @@ const UserBar = (props) => {
       <View style={styles.userBar}>
         {/*User icon*/}
         <TouchableOpacity style={styles.userIcon} onPress={() => setShowUserMenu(true)}>
-          <Image source={require('../assets/defaultAvatar.png')} style={styles.userImage} />
+          <Image source={userPhotoList[props.userPhoto]} style={styles.userImage} />
         </TouchableOpacity>
         {/*Search for pins input*/}
         <View style={styles.userInput}>
