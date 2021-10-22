@@ -51,7 +51,7 @@ const MapScreen = ({ route, navigation }) => {
 
       {/* User bar at top of the screen */}
       <UserBar
-        userPhoto={{ uri: route.params }}
+        userPhoto={'../assets/defaultAvatar.png'}
         navigator={navigation}
         setBoardsType={(type) => setBoardsType(type)}
         boardScreen={false}

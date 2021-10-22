@@ -113,7 +113,7 @@ const UserBar = (props) => {
       <View style={styles.userBar}>
         {/*User icon*/}
         <TouchableOpacity style={styles.userIcon} onPress={() => setShowUserMenu(true)}>
-          <Image source={props.userPhoto} style={styles.userImage} />
+          <Image source={require('../assets/defaultAvatar.png')} style={styles.userImage} />
         </TouchableOpacity>
         {/*Search for pins input*/}
         <View style={styles.userInput}>
@@ -174,6 +174,7 @@ const styles = StyleSheet.create({
   userImage: {
     width: 44,
     height: 44,
+    resizeMode: 'cover',
     borderRadius: 22,
   },
   userInput: {
