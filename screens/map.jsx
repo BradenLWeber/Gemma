@@ -11,6 +11,7 @@ const MapScreen = ({ route, navigation }) => {
   const [publicOrPrivate, setPublicOrPrivate] = useState('Private');
   const [isModalVisible, setisModalVisible] = useState(false);
   const [boardsType, setBoardsType] = useState('My');
+  const [userPhoto, setUserPhoto] = useState('default');
 
 
   // Function handles a click on the public/private bar
@@ -51,7 +52,7 @@ const MapScreen = ({ route, navigation }) => {
 
       {/* User bar at top of the screen */}
       <UserBar
-        userPhoto={{ uri: route.params }}
+        userPhoto={userPhoto}
         navigator={navigation}
         setBoardsType={(type) => setBoardsType(type)}
         boardScreen={false}

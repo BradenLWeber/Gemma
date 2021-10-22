@@ -9,7 +9,7 @@ const UserSignupScreen = (props) => {
   const [userEmail, setUserEmail] = useState('');
   const [userPassword, setUserPassword] = useState('');
   const [userCheckPassword, setUserCheckPassword] = useState('');
-  const [userPhoto, setUserPhoto] = useState('https://scontent-ort2-1.xx.fbcdn.net/v/t1.6435-1/p148x148/66809435_10156811580748462_298237271994269696_n.jpg?_nc_cat=100&ccb=1-5&_nc_sid=1eb0c7&_nc_ohc=3sDvYWe41uQAX9uBr7l&_nc_ht=scontent-ort2-1.xx&oh=94344cfc8b679f337a5480004463abb7&oe=61836442');
+  const [userPhoto, setUserPhoto] = useState('../assets/defaultAvatar.png');
 
   const emailInputRef = createRef();
   const passwordInputRef = createRef();
