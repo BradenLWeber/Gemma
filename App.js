@@ -27,7 +27,7 @@ export default function App() {
         boardsType={boardsType}
         setBoardsType={setBoardsType}
         navigator={navigation}
-        userPhoto={userPhoto}
+        userPhoto={'default'}
       />
     )
   }

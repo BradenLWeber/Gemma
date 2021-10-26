@@ -92,10 +92,10 @@ const BoardScreen = (props) => {
         </ScrollView>
       </SafeAreaView>
       <UserBar
-        userPhoto={{ uri: props.userPhoto }}
         navigator={props.navigator}
         setBoardsType={(type) => props.setBoardsType(type)}
         boardScreen={true}
+        userPhoto={props.userPhoto}
       />
     </View>
   )
