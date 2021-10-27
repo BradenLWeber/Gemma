@@ -1,9 +1,23 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Board from '../components/board';
 import UserBar from '../components/userBar';
+import PublicPrivateBar from '../components/publicPrivateBar';
 import { StyleSheet, Text, View, TouchableOpacity, Image, ScrollView, SafeAreaView } from 'react-native';
 
 const BoardScreen = (props) => {
+  const [publicOrPrivate, setPublicOrPrivate] = useState('Private');
+  const [boardsType, setBoardsType] = useState('My');
+
+    // Function handles a click on the public/private bar
+    const clickPublicOrPrivate = () => {
+      if (publicOrPrivate === 'Public') {
+        setPublicOrPrivate('Private');
+        setBoardsType('My');
+      } else {
+        setPublicOrPrivate('Public');
+        setBoardsType('Public');
+      }
+    }
 
   const handleAddBoard = () => {
     alert('Pressed add board');
@@ -71,32 +85,34 @@ const BoardScreen = (props) => {
     <View style={{ alignItems: 'center', position: 'relative' }}>
       <View style={styles.boardHeadingContainer}>
         <View style={styles.screenTitleView}>
-          <Text style={styles.screenTitleText}>{props.boardsType} boards</Text>
+          {/* <Text style={styles.screenTitleText}>{props.boardsType} boards</Text> */}
         </View>
-        {props.boardsType === 'My' && addBoardIcon()}
-        {props.boardsType === 'My' && deleteBoardIcon()}
+        {boardsType === 'My' && addBoardIcon()}
+        {boardsType === 'My' && deleteBoardIcon()}
         {copyBoardIcon()}
-        {props.boardsType === 'Public' && upvoteIcon()}
-        {props.boardsType === 'Public' && reportIcon()}
+        {boardsType === 'Public' && upvoteIcon()}
+        {boardsType === 'Public' && reportIcon()}
       </View>
       <SafeAreaView style={{ height: 536 }}>
         <ScrollView style={styles.boardScrollContainer}>
           <View style={styles.boardContainer}>
-            <Board boardType={props.boardsType} navigator={props.navigator} />
-            <Board boardType={props.boardsType} navigator={props.navigator} />
-            <Board boardType={props.boardsType} navigator={props.navigator} />
-            <Board boardType={props.boardsType} navigator={props.navigator} />
-            <Board boardType={props.boardsType} navigator={props.navigator} />
-            <Board boardType={props.boardsType} navigator={props.navigator} />
+            <Board boardType={boardsType} navigator={props.navigator} />
+            <Board boardType={boardsType} navigator={props.navigator} />
+            <Board boardType={boardsType} navigator={props.navigator} />
+            <Board boardType={boardsType} navigator={props.navigator} />
+            <Board boardType={boardsType} navigator={props.navigator} />
+            <Board boardType={boardsType} navigator={props.navigator} />
           </View>
         </ScrollView>
       </SafeAreaView>
       <UserBar
         navigator={props.navigator}
-        setBoardsType={(type) => props.setBoardsType(type)}
+        setBoardsType={(type) => setBoardsType(type)}
         boardScreen={true}
         userPhoto={props.userPhoto}
       />
+      {/* Public/private bar at the top of the screen */}
+      <PublicPrivateBar type={publicOrPrivate} onClick={clickPublicOrPrivate} /> 
     </View>
   )
 }
