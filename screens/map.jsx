@@ -32,6 +32,10 @@ const MapScreen = ({ route, navigation }) => {
     setisModalVisible(() => !isModalVisible);
   }
 
+  const handleX = () => {
+    setSettingPin(false);
+  }
+
   const handlePlacePin = () => {
     setSettingPin(true);
   }
@@ -46,13 +50,20 @@ const MapScreen = ({ route, navigation }) => {
     )
   }
 
-  const checkButton = () => {
+  const checkAndXButton = () => {
     return (
-      <TouchableOpacity style={globalStyles.PinButton} onPress={handleCheck}>
-        <View style={globalStyles.addWrapper}>
-          <Image source={require('../assets/blue-check.png')} style={styles.checkIcon} />
+        <View style={globalStyles.PinButton}>
+          <TouchableOpacity style={styles.xButton} onPress={handleX}>
+            <View style={globalStyles.addWrapper}>
+              <Image source={require('../assets/blue-x.png')} style={styles.checkIcon} />
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handleCheck}>
+            <View style={globalStyles.addWrapper}>
+              <Image source={require('../assets/blue-check.png')} style={styles.checkIcon} />
+            </View>
+          </TouchableOpacity>
         </View>
-      </TouchableOpacity>
     )
   }
 
@@ -97,8 +108,8 @@ const MapScreen = ({ route, navigation }) => {
       <ImageZoom
         cropWidth={Dimensions.get('window').width}
         cropHeight={Dimensions.get('window').height}
-        imageWidth={1500}
-        imageHeight={1500}
+        imageWidth={1500 + Dimensions.get('window').width}
+        imageHeight={1500 + Dimensions.get('window').height}
         pinchToZoom={true}
         panToMove={true}
         minScale={0.4}
@@ -123,7 +134,7 @@ const MapScreen = ({ route, navigation }) => {
       />
 
       {/* Drop pin button on map */}
-      {settingPin ? checkButton() : pinButton()}
+      {settingPin ? checkAndXButton() : pinButton()}
       {settingPin && ghostPin()}
 
       {pins.map((pin) => showPin(pin))}
@@ -140,6 +151,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
     height: 1500,
     width: 1500,
+    left: 195,
+    top: 365,
   },
   pinIcon: {
     width: 30,
@@ -160,6 +173,10 @@ const styles = StyleSheet.create({
   },
   mapPin: {
     position: 'absolute'
+  },
+  xButton: {
+    position: 'absolute',
+    right: 70,
   }
 });
 
