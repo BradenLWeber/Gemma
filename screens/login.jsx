@@ -48,7 +48,7 @@ const Login = (props) => {
         props.navigator.navigate('User Sign Up');
     }
 
-    const handleGeoPermissions = () => {
+    const handleGeoPermissions = async () => {
         let { status } = await Permissions.askAsync(Permissions.LOCATION);
         if (status !== 'granted') {
             alert("Location Permission has not been granted!");
