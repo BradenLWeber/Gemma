@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Button } from 'react-native';
+import * as Location from 'expo-location';
+import * as Permissions from 'expo-permissions';
 import * as Google from 'expo-google-app-auth';
 
 const Login = (props) => {
@@ -37,11 +39,20 @@ const Login = (props) => {
     }
 
     const handleLogin = () => {
+        handleGeoPermissions();
         props.navigator.navigate('User Login');
     }
 
     const handleSignup = () => {
+        handleGeoPermissions();
         props.navigator.navigate('User Sign Up');
+    }
+
+    const handleGeoPermissions = () => {
+        let { status } = await Permissions.askAsync(Permissions.LOCATION);
+        if (status !== 'granted') {
+            alert("Location Permission has not been granted!");
+        }
     }
 
     return (
