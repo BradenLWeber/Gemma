@@ -123,6 +123,14 @@ const MapScreen = ({ route, navigation }) => {
     setMapPosition({x: event.positionX, y: event.positionY, zoom: event.scale});
   }
 
+  const getMapCoordinates = () => {
+    actualCoordinates = {
+      latitude: mapCorners.NW.latitude + (mapPosition.x / 1500) * (mapCorners.NE.latitude - mapCorners.SW.latitude),
+      longitude: mapCorners.SW.longitude + (mapPosition.y / 1500) * (mapCorners.SE.longitude - mapCorners.SW.longitude),
+    };
+    return actualCoordinates;
+  }
+
   return (
     <View style={globalStyles.container} onResponderReject>
       {/* The map */}
@@ -158,7 +166,10 @@ const MapScreen = ({ route, navigation }) => {
       {showLocation && <Text style={{position: 'absolute', bottom: 100, fontSize: 20, backgroundColor: 'white', padding: 5,}}>
         Your location:{'\n'}
         Latitude: {myLocation.latitude}{'\n'}
-        Longitude: {myLocation.longitude}
+        Longitude: {myLocation.longitude}{'\n\n'}
+        Map location{'\n'}
+        Latitude: {getMapCoordinates().latitude}{'\n'}
+        Longitude: {getMapCoordinates().longitude}{'\n'}
       </Text>}
 
       {/* Drop pin button on map */}
