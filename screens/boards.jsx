@@ -1,15 +1,36 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Board from '../components/board';
 import UserBar from '../components/userBar';
+import PublicPrivateBar from '../components/publicPrivateBar';
+import BoardMenu from '../components/boardMenu';
 import { StyleSheet, Text, View, TouchableOpacity, Image, ScrollView, SafeAreaView } from 'react-native';
 
 const BoardScreen = (props) => {
+  const [publicOrPrivate, setPublicOrPrivate] = useState('Private');
+  const [boardsType, setBoardsType] = useState('My');
+  const [isModalVisible, setisModalVisible] = useState(false);
 
-  const handleAddBoard = () => {
+    // Function handles a click on the public/private bar
+    const clickPublicOrPrivate = () => {
+      if (publicOrPrivate === 'Public') {
+        setPublicOrPrivate('Private');
+        setBoardsType('My');
+      } else {
+        setPublicOrPrivate('Public');
+        setBoardsType('Public');
+      }
+    }
+
+     // Function handles displaying, hiding a menu of board options
+    const handleModal = () => {
+    setisModalVisible(() => !isModalVisible);
+    }
+
+   const handleAddBoard = () => {
     alert('Pressed add board');
   }
 
-  const handleDeleteBoard = () => {
+  {/*const handleDeleteBoard = () => {
     alert('Pressed delete board');
   }
 
@@ -23,9 +44,9 @@ const BoardScreen = (props) => {
 
   const handleReportBoard = () => {
     alert('Pressed report board');
-  }
+  } */}
 
-  const addBoardIcon = () => {
+ const addBoardIcon = () => {
     return (
       <TouchableOpacity onPress={handleAddBoard}>
         <View style={styles.addBoard}>
@@ -35,7 +56,7 @@ const BoardScreen = (props) => {
     )
   }
 
-  const deleteBoardIcon = () => {
+  {/* const deleteBoardIcon = () => {
     return (
       <TouchableOpacity onPress={handleDeleteBoard}>
         <Image source={require('../assets/trash.bmp')} style={styles.imageIcon}></Image>
@@ -65,43 +86,89 @@ const BoardScreen = (props) => {
         <Image source={require('../assets/report.bmp')} style={styles.reportIcon}></Image>
       </TouchableOpacity>
     )
-  }
+  } */}
 
   return (
     <View style={{ alignItems: 'center', position: 'relative' }}>
       <View style={styles.boardHeadingContainer}>
         <View style={styles.screenTitleView}>
-          <Text style={styles.screenTitleText}>{props.boardsType} boards</Text>
+          {/* <Text style={styles.screenTitleText}>{props.boardsType} boards</Text> */}
         </View>
-        {props.boardsType === 'My' && addBoardIcon()}
-        {props.boardsType === 'My' && deleteBoardIcon()}
+        {boardsType === 'My' && addBoardIcon()}
+        {/*{boardsType === 'My' && deleteBoardIcon()}
         {copyBoardIcon()}
-        {props.boardsType === 'Public' && upvoteIcon()}
-        {props.boardsType === 'Public' && reportIcon()}
+        {boardsType === 'Public' && upvoteIcon()}
+  {boardsType === 'Public' && reportIcon()} */}
       </View>
       <SafeAreaView style={{ height: 536 }}>
         <ScrollView style={styles.boardScrollContainer}>
           <View style={styles.boardContainer}>
-            <Board boardType={props.boardsType} navigator={props.navigator} />
-            <Board boardType={props.boardsType} navigator={props.navigator} />
-            <Board boardType={props.boardsType} navigator={props.navigator} />
-            <Board boardType={props.boardsType} navigator={props.navigator} />
-            <Board boardType={props.boardsType} navigator={props.navigator} />
-            <Board boardType={props.boardsType} navigator={props.navigator} />
+            <TouchableOpacity onPress={handleModal}>
+              <Board boardType={boardsType} navigator={props.navigator} />
+              </TouchableOpacity>
+              <BoardMenu state={isModalVisible} boardsType={boardsType} 
+              onClick={() => setisModalVisible()} />
+            
+            <TouchableOpacity onPress={handleModal}>
+              <Board boardType={boardsType} navigator={props.navigator} />
+              </TouchableOpacity>
+              <BoardMenu state={isModalVisible} boardsType={boardsType} 
+              onClick={() => setisModalVisible()} />
+              
+            <TouchableOpacity onPress={handleModal}>
+              <Board boardType={boardsType} navigator={props.navigator} />
+              </TouchableOpacity>
+              <BoardMenu state={isModalVisible} boardsType={boardsType} 
+              onClick={() => setisModalVisible()} />
+
+            <TouchableOpacity onPress={handleModal}>
+              <Board boardType={boardsType} navigator={props.navigator} />
+              </TouchableOpacity>
+              <BoardMenu state={isModalVisible} boardsType={boardsType} 
+              onClick={() => setisModalVisible()} />
+
+            <TouchableOpacity onPress={handleModal}>
+              <Board boardType={boardsType} navigator={props.navigator} />
+              </TouchableOpacity>
+              <BoardMenu state={isModalVisible} boardsType={boardsType} 
+              onClick={() => setisModalVisible()} />
+
+            <TouchableOpacity onPress={handleModal}>
+              <Board boardType={boardsType} navigator={props.navigator} />
+              </TouchableOpacity>
+              <BoardMenu state={isModalVisible} boardsType={boardsType} 
+              onClick={() => setisModalVisible()} />
           </View>
         </ScrollView>
       </SafeAreaView>
       <UserBar
         navigator={props.navigator}
-        setBoardsType={(type) => props.setBoardsType(type)}
+        setBoardsType={(type) => setBoardsType(type)}
         boardScreen={true}
         userPhoto={props.userPhoto}
       />
+      {/* Public/private bar at the top of the screen */}
+      <PublicPrivateBar type={publicOrPrivate} onClick={clickPublicOrPrivate} /> 
     </View>
   )
 }
 
 const styles = StyleSheet.create({
+  addBoard: {
+    marginLeft: 300,
+    marginTop: 2,
+    marginBottom: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'white',
+    width: 30,
+    height: 30,
+    borderWidth: 1.5,
+    borderRadius: 15,
+  },
+  addBoardText: {
+    fontSize: 20,
+  },
   screenTitleView: {
     marginBottom: 10,
     marginRight: 5,
@@ -115,38 +182,6 @@ const styles = StyleSheet.create({
     width: '90%',
     alignSelf: 'center',
     flexDirection: 'row',
-  },
-  addBoard: {
-    marginLeft: 20,
-    marginTop: 2,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'white',
-    width: 30,
-    height: 30,
-    borderWidth: 1.5,
-    borderRadius: 15,
-  },
-  addBoardText: {
-    fontSize: 20,
-  },
-  imageIcon: {
-    height: 40,
-    width: 40,
-    bottom: 3,
-    marginLeft: 12,
-  },
-  reportIcon: {
-    height: 36,
-    width: 36,
-    bottom: 1,
-    marginLeft: 12,
-  },
-  copyIcon: {
-    height: 35,
-    width: 35,
-    bottom: 1,
-    marginLeft: 12,
   },
   boardScrollContainer: {
     height: '100%',

@@ -9,7 +9,7 @@ import ImageZoom from 'react-native-image-pan-zoom';
 
 const MapScreen = ({ route, navigation }) => {
 
-  const [publicOrPrivate, setPublicOrPrivate] = useState('Private');
+  // const [publicOrPrivate, setPublicOrPrivate] = useState('Private');
   const [isModalVisible, setisModalVisible] = useState(false);
   const [boardsType, setBoardsType] = useState('My');
   const [userPhoto, setUserPhoto] = useState('default');
@@ -21,14 +21,14 @@ const MapScreen = ({ route, navigation }) => {
   const [pins, setPins] = useState([]);
 
 
-  // Function handles a click on the public/private bar
+ {/*} // Function handles a click on the public/private bar
   const clickPublicOrPrivate = () => {
     if (publicOrPrivate === 'Public') {
       setPublicOrPrivate('Private');
     } else {
       setPublicOrPrivate('Public');
     }
-  }
+  } */}
 
   const getLocationPermissions = async () => {
     const response = await Location.getForegroundPermissionsAsync();
@@ -138,8 +138,8 @@ const MapScreen = ({ route, navigation }) => {
         />
       </ImageZoom>
 
-      {/* Public/private bar at the bottom of the screen */}
-      <PublicPrivateBar type={publicOrPrivate} onClick={clickPublicOrPrivate} />
+      {/* Public/private bar at the bottom of the screen 
+      <PublicPrivateBar type={publicOrPrivate} onClick={clickPublicOrPrivate} /> */}
 
       {/* User bar at top of the screen */}
       <UserBar
