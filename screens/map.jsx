@@ -19,6 +19,12 @@ const MapScreen = ({ route, navigation }) => {
   const [mapPosition, setMapPosition] = useState({x: 0, y: 0, zoom: 1});
   const [debug, setDebug] = useState();
   const [pins, setPins] = useState([]);
+  const [mapCorners, nil] = useState({
+    NW: {latitude: 42.938471, longitude: -85.584682},
+    NE: {latitude: 42.938471, longitude: -85.572594},
+    SW: {latitude: 42.929547, longitude: -85.584682},
+    SE: {latitude: 42.929547, longitude: -85.572594},
+  });
 
 
  {/*} // Function handles a click on the public/private bar
