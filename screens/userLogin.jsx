@@ -18,6 +18,7 @@ const UserLoginScreen = (props) => {
       alert('Please fill Password');
       return;
     }
+    props.geoPermissions();
     props.navigator.navigate('Map', userPhoto);
   }
 

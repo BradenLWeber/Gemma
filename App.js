@@ -38,20 +38,20 @@ export default function App() {
     )
   };
 
-  function userLoginScreen({ navigation }) {
+  function userLoginScreen({ route, navigation }) {
     return (
       <UserLoginScreen
         navigator={navigation}
-      //setUserInfo={setUserInfo}
+        geoPermissions={route.params.geoPermissions}
       />
     )
   };
 
-  function userSignupScreen({ navigation }) {
+  function userSignupScreen({ route, navigation }) {
     return (
       <UserSignupScreen
         navigator={navigation}
-      //setUserInfo={setUserInfo}
+        geoPermissions={route.params.geoPermissions}
       />
     )
   };
