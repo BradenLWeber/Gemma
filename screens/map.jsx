@@ -15,6 +15,10 @@ const MapScreen = ({ route, navigation }) => {
   const [userPhoto, setUserPhoto] = useState('default');
   const [myLocation, setMyLocation] = useState({});
   const [showLocation, setShowLocation] = useState(false);
+  const [settingPin, setSettingPin] = useState(false);
+  const [mapPosition, setMapPosition] = useState({x: 0, y: 0, zoom: 1});
+  const [debug, setDebug] = useState();
+  const [pins, setPins] = useState([]);
 
 
   // Function handles a click on the public/private bar
@@ -39,8 +43,78 @@ const MapScreen = ({ route, navigation }) => {
   }
 
   // Function handles displaying, hiding a pin's notes
-  const handleModal = () => {
+  const handleCheck = () => {
     setisModalVisible(() => !isModalVisible);
+  }
+
+  const handleX = () => {
+    setSettingPin(false);
+  }
+
+  const handlePlacePin = () => {
+    setSettingPin(true);
+  }
+
+  const pinButton = () => {
+    return (
+      <TouchableOpacity style={globalStyles.PinButton} onPress={handlePlacePin}>
+        <View style={globalStyles.addWrapper}>
+          <Image source={require('../assets/blue-pin.png')} style={styles.pinIcon} />
+        </View>
+      </TouchableOpacity>
+    )
+  }
+
+  const checkAndXButton = () => {
+    return (
+        <View style={globalStyles.PinButton}>
+          <TouchableOpacity style={styles.xButton} onPress={handleX}>
+            <View style={globalStyles.addWrapper}>
+              <Image source={require('../assets/blue-x.png')} style={styles.checkIcon} />
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity onPress={handleCheck}>
+            <View style={globalStyles.addWrapper}>
+              <Image source={require('../assets/blue-check.png')} style={styles.checkIcon} />
+            </View>
+          </TouchableOpacity>
+        </View>
+    )
+  }
+
+  const createPin = (button) => {
+    setisModalVisible(false);
+    setSettingPin(false);
+    if (button === 'create') {
+      setPins(pins.concat({
+        x: -mapPosition.x,
+        y: -mapPosition.y,
+        title: button.title,
+        tags: button.tags,
+        notes: button.notes
+      }));
+    }
+  }
+
+  const ghostPin = () => {
+    return(
+      <View style={styles.ghostPin}>
+        <Image source={require('../assets/blue-pin.png')} style={styles.pinImage} />
+      </View>
+    )
+  }
+
+  const showPin = (pin) => {
+    const pinPosition = {left: pin.x + mapPosition.x, top: pin.y + mapPosition.y + 315};
+    return (
+      <View style={styles.mapPin} key={pin.title}>
+        <Image source={require('../assets/blue-pin.png')} style={[styles.pinImage, pinPosition]} />
+      </View>
+    )
+  }
+
+  const handleSetMapPosition = (event) => {
+    setMapPosition({x: event.positionX, y: event.positionY, zoom: event.scale});
   }
 
   return (
@@ -49,13 +123,14 @@ const MapScreen = ({ route, navigation }) => {
       <ImageZoom
         cropWidth={Dimensions.get('window').width}
         cropHeight={Dimensions.get('window').height}
-        imageWidth={1500}
-        imageHeight={1500}
+        imageWidth={1500 + Dimensions.get('window').width}
+        imageHeight={1500 + Dimensions.get('window').height}
         pinchToZoom={true}
         panToMove={true}
         minScale={0.4}
         onClick={() => {getLocation(); setShowLocation(!showLocation);}}
         enableCenterFocus={false}
+        onMove={(event) => handleSetMapPosition(event)}
       >
         <Image
           source={require('../assets/mapEcoPreserve.png')}
@@ -81,12 +156,14 @@ const MapScreen = ({ route, navigation }) => {
       </Text>}
 
       {/* Drop pin button on map */}
-      <TouchableOpacity style={globalStyles.PinButton} onPress={handleModal}>
-        <View style={globalStyles.addWrapper}>
-          <Text> + </Text>
-        </View>
-      </TouchableOpacity>
-      <PinNote state={isModalVisible} onClick={() => setisModalVisible()} />
+      {settingPin ? checkAndXButton() : pinButton()}
+      {settingPin && ghostPin()}
+
+      {pins.map((pin) => showPin(pin))}
+
+      {/* <Text style={{top: 200, fontSize: 30, position: 'absolute'}}>Debug: {pins[0].x}</Text> */}
+
+      <PinNote state={isModalVisible} onClick={(button) => createPin(button)} />
     </View>
   );
 }
@@ -96,6 +173,32 @@ const styles = StyleSheet.create({
     position: 'absolute',
     height: 1500,
     width: 1500,
+    left: 195,
+    top: 365,
+  },
+  pinIcon: {
+    width: 30,
+    height: 30,
+  },
+  checkIcon: {
+    width: 30,
+    height: 30
+  },
+  pinImage: {
+    width: 50,
+    height: 50,
+  },
+  ghostPin: {
+    position: 'absolute',
+    top: Dimensions.get('window').height / 2.4,
+    alignSelf: 'center',
+  },
+  mapPin: {
+    position: 'absolute'
+  },
+  xButton: {
+    position: 'absolute',
+    right: 70,
   }
 });
 
