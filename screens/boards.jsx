@@ -33,15 +33,12 @@ const BoardScreen = (props) => {
   {/*const handleDeleteBoard = () => {
     alert('Pressed delete board');
   }
-
   const handleCopyBoard = () => {
     alert('Pressed copy board');
   }
-
   const handleUpvoteBoard = () => {
     alert('Pressed upvote board');
   }
-
   const handleReportBoard = () => {
     alert('Pressed report board');
   } */}
@@ -63,7 +60,6 @@ const BoardScreen = (props) => {
       </TouchableOpacity>
     )
   }
-
   const copyBoardIcon = () => {
     return (
       <TouchableOpacity onPress={handleCopyBoard}>
@@ -71,7 +67,6 @@ const BoardScreen = (props) => {
       </TouchableOpacity>
     )
   }
-
   const upvoteIcon = () => {
     return (
       <TouchableOpacity onPress={handleUpvoteBoard}>
@@ -79,7 +74,6 @@ const BoardScreen = (props) => {
       </TouchableOpacity>
     )
   }
-
   const reportIcon = () => {
     return (
       <TouchableOpacity onPress={handleReportBoard}>
@@ -187,7 +181,7 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   boardContainer: {
-    alignItems: 'center'
+    alignItems: 'center',
   }
 });
 
