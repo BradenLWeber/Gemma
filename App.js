@@ -9,6 +9,13 @@ import SettingScreen from './screens/settings';
 import { StyleSheet, View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { LogBox } from 'react-native';
+
+// This gets rid of the non-serialized warning when passing a function
+// through route.params
+LogBox.ignoreLogs([
+ 'Non-serializable values were found in the navigation state',
+]);
 
 export default function App() {
   const [username, setUsername] = useState('FuriousFive5');

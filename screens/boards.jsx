@@ -156,15 +156,15 @@ const BoardScreen = (props) => {
 const styles = StyleSheet.create({
   addBoard: {
     marginLeft: 300,
-    marginTop: 2,
+    marginTop: 3,
     marginBottom: 10,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'white',
-    width: 30,
-    height: 30,
+    width: 36,
+    height: 36,
     borderWidth: 1.5,
-    borderRadius: 15,
+    borderRadius: 18,
   },
   addBoardText: {
     fontSize: 20,
@@ -172,6 +172,7 @@ const styles = StyleSheet.create({
   screenTitleView: {
     marginBottom: 10,
     marginRight: 5,
+    height: 45,
   },
   screenTitleText: {
     fontSize: 25,

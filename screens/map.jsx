@@ -19,6 +19,7 @@ const MapScreen = ({ route, navigation }) => {
   const [mapPosition, setMapPosition] = useState({x: 0, y: 0, zoom: 1});
   const [debug, setDebug] = useState();
   const [pins, setPins] = useState([]);
+  const [key, setKey] = useState(0);
   const [mapCorners, nil] = useState({
     NW: {latitude: 42.938471, longitude: -85.584682},
     NE: {latitude: 42.938471, longitude: -85.572594},
@@ -91,13 +92,15 @@ const MapScreen = ({ route, navigation }) => {
   const createPin = (button) => {
     setisModalVisible(false);
     setSettingPin(false);
+    setKey(key + 1);
     if (button === 'create') {
       setPins(pins.concat({
         x: -mapPosition.x,
         y: -mapPosition.y,
-        title: button.title,
+        title: button.title || 'untitled',
         tags: button.tags,
-        notes: button.notes
+        notes: button.notes,
+        key: key,
       }));
     }
   }
@@ -113,7 +116,7 @@ const MapScreen = ({ route, navigation }) => {
   const showPin = (pin) => {
     const pinPosition = {left: pin.x + mapPosition.x, top: pin.y + mapPosition.y + 315};
     return (
-      <View style={styles.mapPin} key={pin.title}>
+      <View style={styles.mapPin} key={pin.title + String(pin.key)}>
         <Image source={require('../assets/blue-pin.png')} style={[styles.pinImage, pinPosition]} />
       </View>
     )

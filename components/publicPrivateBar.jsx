@@ -34,10 +34,11 @@ const styles = StyleSheet.create({
         top: 90,
         width: 140,
         height: 40,
-        marginLeft: 230,
+        marginLeft: 20,
         backgroundColor: '#F9D01E',
         borderRadius: 20,
         elevation: 8,
+        marginTop: 5,
     },
     textPrivate: {
         paddingTop: 8,
