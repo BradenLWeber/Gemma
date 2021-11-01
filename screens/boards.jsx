@@ -2,30 +2,13 @@ import React, { useState } from 'react';
 import Board from '../components/board';
 import UserBar from '../components/userBar';
 import PublicPrivateBar from '../components/publicPrivateBar';
-<<<<<<< HEAD
 import BoardMenu from '../components/boardMenu';
-=======
->>>>>>> cca438b6f04f33777cf067f798142f3006fbddcc
 import { StyleSheet, Text, View, TouchableOpacity, Image, ScrollView, SafeAreaView } from 'react-native';
 
 const BoardScreen = (props) => {
   const [publicOrPrivate, setPublicOrPrivate] = useState('Private');
   const [boardsType, setBoardsType] = useState('My');
-<<<<<<< HEAD
   const [isModalVisible, setisModalVisible] = useState(false);
-=======
-
-    // Function handles a click on the public/private bar
-    const clickPublicOrPrivate = () => {
-      if (publicOrPrivate === 'Public') {
-        setPublicOrPrivate('Private');
-        setBoardsType('My');
-      } else {
-        setPublicOrPrivate('Public');
-        setBoardsType('Public');
-      }
-    }
->>>>>>> cca438b6f04f33777cf067f798142f3006fbddcc
 
     // Function handles a click on the public/private bar
     const clickPublicOrPrivate = () => {
@@ -112,65 +95,49 @@ const BoardScreen = (props) => {
           {/* <Text style={styles.screenTitleText}>{props.boardsType} boards</Text> */}
         </View>
         {boardsType === 'My' && addBoardIcon()}
-<<<<<<< HEAD
         {/*{boardsType === 'My' && deleteBoardIcon()}
         {copyBoardIcon()}
         {boardsType === 'Public' && upvoteIcon()}
   {boardsType === 'Public' && reportIcon()} */}
-=======
-        {boardsType === 'My' && deleteBoardIcon()}
-        {copyBoardIcon()}
-        {boardsType === 'Public' && upvoteIcon()}
-        {boardsType === 'Public' && reportIcon()}
->>>>>>> cca438b6f04f33777cf067f798142f3006fbddcc
       </View>
       <SafeAreaView style={{ height: 536 }}>
         <ScrollView style={styles.boardScrollContainer}>
           <View style={styles.boardContainer}>
-<<<<<<< HEAD
             <TouchableOpacity onPress={handleModal}>
               <Board boardType={boardsType} navigator={props.navigator} />
               </TouchableOpacity>
-              <BoardMenu state={isModalVisible} boardsType={boardsType} 
-              onClick={() => setisModalVisible()} />
-            
-            <TouchableOpacity onPress={handleModal}>
-              <Board boardType={boardsType} navigator={props.navigator} />
-              </TouchableOpacity>
-              <BoardMenu state={isModalVisible} boardsType={boardsType} 
-              onClick={() => setisModalVisible()} />
-              
-            <TouchableOpacity onPress={handleModal}>
-              <Board boardType={boardsType} navigator={props.navigator} />
-              </TouchableOpacity>
-              <BoardMenu state={isModalVisible} boardsType={boardsType} 
+              <BoardMenu state={isModalVisible} boardsType={boardsType}
               onClick={() => setisModalVisible()} />
 
             <TouchableOpacity onPress={handleModal}>
               <Board boardType={boardsType} navigator={props.navigator} />
               </TouchableOpacity>
-              <BoardMenu state={isModalVisible} boardsType={boardsType} 
+              <BoardMenu state={isModalVisible} boardsType={boardsType}
               onClick={() => setisModalVisible()} />
 
             <TouchableOpacity onPress={handleModal}>
               <Board boardType={boardsType} navigator={props.navigator} />
               </TouchableOpacity>
-              <BoardMenu state={isModalVisible} boardsType={boardsType} 
+              <BoardMenu state={isModalVisible} boardsType={boardsType}
               onClick={() => setisModalVisible()} />
 
             <TouchableOpacity onPress={handleModal}>
               <Board boardType={boardsType} navigator={props.navigator} />
               </TouchableOpacity>
-              <BoardMenu state={isModalVisible} boardsType={boardsType} 
+              <BoardMenu state={isModalVisible} boardsType={boardsType}
               onClick={() => setisModalVisible()} />
-=======
-            <Board boardType={boardsType} navigator={props.navigator} />
-            <Board boardType={boardsType} navigator={props.navigator} />
-            <Board boardType={boardsType} navigator={props.navigator} />
-            <Board boardType={boardsType} navigator={props.navigator} />
-            <Board boardType={boardsType} navigator={props.navigator} />
-            <Board boardType={boardsType} navigator={props.navigator} />
->>>>>>> cca438b6f04f33777cf067f798142f3006fbddcc
+
+            <TouchableOpacity onPress={handleModal}>
+              <Board boardType={boardsType} navigator={props.navigator} />
+              </TouchableOpacity>
+              <BoardMenu state={isModalVisible} boardsType={boardsType}
+              onClick={() => setisModalVisible()} />
+
+            <TouchableOpacity onPress={handleModal}>
+              <Board boardType={boardsType} navigator={props.navigator} />
+              </TouchableOpacity>
+              <BoardMenu state={isModalVisible} boardsType={boardsType}
+              onClick={() => setisModalVisible()} />
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -181,7 +148,7 @@ const BoardScreen = (props) => {
         userPhoto={props.userPhoto}
       />
       {/* Public/private bar at the top of the screen */}
-      <PublicPrivateBar type={publicOrPrivate} onClick={clickPublicOrPrivate} /> 
+      <PublicPrivateBar type={publicOrPrivate} onClick={clickPublicOrPrivate} />
     </View>
   )
 }

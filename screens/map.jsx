@@ -35,7 +35,6 @@ const MapScreen = ({ route, navigation }) => {
       setPublicOrPrivate('Public');
     }
   } */}
-<<<<<<< HEAD
 
   const getLocationPermissions = async () => {
     const response = await Location.getForegroundPermissionsAsync();
@@ -48,8 +47,6 @@ const MapScreen = ({ route, navigation }) => {
     setMyLocation({ latitude: location.latitude, longitude: location.longitude});
     return location;
   }
-=======
->>>>>>> cca438b6f04f33777cf067f798142f3006fbddcc
 
   // Function handles displaying, hiding a pin's notes
   const handleCheck = () => {
@@ -155,7 +152,7 @@ const MapScreen = ({ route, navigation }) => {
         />
       </ImageZoom>
 
-      {/* Public/private bar at the bottom of the screen 
+      {/* Public/private bar at the bottom of the screen
       <PublicPrivateBar type={publicOrPrivate} onClick={clickPublicOrPrivate} /> */}
 
       {/* User bar at top of the screen */}
