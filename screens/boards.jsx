@@ -119,6 +119,7 @@ const styles = StyleSheet.create({
     width: '90%',
     alignSelf: 'center',
     flexDirection: 'row',
+    height: 55,
   },
   boardScrollContainer: {
     height: '100%',
