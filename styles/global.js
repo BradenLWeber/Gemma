@@ -2,10 +2,10 @@ import {StyleSheet} from 'react-native';
 
 export const globalStyles = StyleSheet.create({
     addWrapper: {
-        width: 30,
-        height: 30,
+        width: 50,
+        height: 50,
         backgroundColor: '#FFF',
-        borderRadius: 30,
+        borderRadius: 25,
         justifyContent: 'center',
         alignItems: 'center',
         borderWidth: 1
@@ -19,7 +19,7 @@ export const globalStyles = StyleSheet.create({
     
     PinButton: {
       position: 'absolute',
-      bottom: 10,
-      right: 10,
+      bottom: 15,
+      right: 15,
     },
   });

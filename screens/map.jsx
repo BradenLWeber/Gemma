@@ -163,7 +163,8 @@ const MapScreen = ({ route, navigation }) => {
         boardScreen={false}
       />
 
-      {showLocation && <Text style={{position: 'absolute', bottom: 100, fontSize: 20, backgroundColor: 'white', padding: 5,}}>
+      {showLocation &&
+      <Text style={{position: 'absolute', bottom: 100, fontSize: 20, backgroundColor: 'white', padding: 5,}}>
         Your location:{'\n'}
         Latitude: {myLocation.latitude}{'\n'}
         Longitude: {myLocation.longitude}{'\n\n'}
