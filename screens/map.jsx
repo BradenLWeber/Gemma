@@ -14,18 +14,8 @@ const MapScreen = ({ route, navigation }) => {
   const [userPhoto, setUserPhoto] = useState('default');
   const [settingPin, setSettingPin] = useState(false);
   const [mapPosition, setMapPosition] = useState({x: 0, y: 0, zoom: 1});
-  const [debug, setDebug] = useState();
   const [pins, setPins] = useState([]);
 
-
- {/*} // Function handles a click on the public/private bar
-  const clickPublicOrPrivate = () => {
-    if (publicOrPrivate === 'Public') {
-      setPublicOrPrivate('Private');
-    } else {
-      setPublicOrPrivate('Public');
-    }
-  } */}
 
   // Function handles displaying, hiding a pin's notes
   const handleCheck = () => {
@@ -44,7 +34,7 @@ const MapScreen = ({ route, navigation }) => {
     return (
       <TouchableOpacity style={globalStyles.PinButton} onPress={handlePlacePin}>
         <View style={globalStyles.addWrapper}>
-          <Image source={require('../assets/blue-pin.png')} style={styles.pinIcon} />
+          <Image source={require('../assets/gem.png')} style={styles.pinIcon} />
         </View>
       </TouchableOpacity>
     )
@@ -84,7 +74,7 @@ const MapScreen = ({ route, navigation }) => {
   const ghostPin = () => {
     return(
       <View style={styles.ghostPin}>
-        <Image source={require('../assets/blue-pin.png')} style={styles.pinImage} />
+        <Image source={require('../assets/gem.png')} style={styles.pinImage} />
       </View>
     )
   }
@@ -93,7 +83,7 @@ const MapScreen = ({ route, navigation }) => {
     const pinPosition = {left: pin.x + mapPosition.x, top: pin.y + mapPosition.y + 315};
     return (
       <View style={styles.mapPin} key={pin.title}>
-        <Image source={require('../assets/blue-pin.png')} style={[styles.pinImage, pinPosition]} />
+        <Image source={require('../assets/gem.png')} style={[styles.pinImage, pinPosition]} />
       </View>
     )
   }
@@ -122,9 +112,6 @@ const MapScreen = ({ route, navigation }) => {
         />
       </ImageZoom>
 
-      {/* Public/private bar at the bottom of the screen 
-      <PublicPrivateBar type={publicOrPrivate} onClick={clickPublicOrPrivate} /> */}
-
       {/* User bar at top of the screen */}
       <UserBar
         userPhoto={userPhoto}
@@ -138,8 +125,6 @@ const MapScreen = ({ route, navigation }) => {
       {settingPin && ghostPin()}
 
       {pins.map((pin) => showPin(pin))}
-
-      {/* <Text style={{top: 200, fontSize: 30, position: 'absolute'}}>Debug: {pins[0].x}</Text> */}
 
       <PinNote state={isModalVisible} onClick={(button) => createPin(button)} />
     </View>
