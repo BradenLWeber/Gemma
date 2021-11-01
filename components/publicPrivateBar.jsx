@@ -34,7 +34,11 @@ const styles = StyleSheet.create({
         top: 90,
         width: 140,
         height: 40,
+<<<<<<< HEAD
         marginLeft: 20,
+=======
+        marginLeft: 230,
+>>>>>>> cca438b6f04f33777cf067f798142f3006fbddcc
         backgroundColor: '#F9D01E',
         borderRadius: 20,
         elevation: 8,

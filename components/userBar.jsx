@@ -7,13 +7,13 @@ const UserBar = (props) => {
   const [showOptionsMenu, setShowOptionsMenu] = useState(false);
   // Initial state depends on whether it is on the map screen or the board screen
   const [searchType, setSearchType] = useState(props.boardScreen ? 'board' : 'pin');
-  const [userPhotoList, setUserPhotoList] = useState({default : require('../assets/defaultAvatar.png')})
+  const [userPhotoList, setUserPhotoList] = useState({ default: require('../assets/defaultAvatar.png') })
 
   // The popup when pressing the user icon
   const userMenu = (navigator) => {
     return (
       <View style={styles.userMenu}>
-        <TouchableOpacity style={styles.menuButton}>
+        <TouchableOpacity style={styles.menuButton} onPress={() => props.navigator.navigate('Settings')}>
           <Text style={styles.menuButtonText}>Settings</Text>
         </TouchableOpacity>
         <View style={styles.menuDivider} />
