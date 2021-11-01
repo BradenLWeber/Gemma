@@ -3,11 +3,13 @@ import Board from '../components/board';
 import UserBar from '../components/userBar';
 import PublicPrivateBar from '../components/publicPrivateBar';
 import BoardMenu from '../components/boardMenu';
+import BoardMenu from '../components/boardMenu';
 import { StyleSheet, Text, View, TouchableOpacity, Image, ScrollView, SafeAreaView } from 'react-native';
 
 const BoardScreen = (props) => {
   const [publicOrPrivate, setPublicOrPrivate] = useState('Private');
   const [boardsType, setBoardsType] = useState('My');
+  const [isModalVisible, setisModalVisible] = useState(false);
   const [isModalVisible, setisModalVisible] = useState(false);
 
     // Function handles a click on the public/private bar
@@ -33,15 +35,12 @@ const BoardScreen = (props) => {
   {/*const handleDeleteBoard = () => {
     alert('Pressed delete board');
   }
-
   const handleCopyBoard = () => {
     alert('Pressed copy board');
   }
-
   const handleUpvoteBoard = () => {
     alert('Pressed upvote board');
   }
-
   const handleReportBoard = () => {
     alert('Pressed report board');
   } */}
@@ -63,7 +62,6 @@ const BoardScreen = (props) => {
       </TouchableOpacity>
     )
   }
-
   const copyBoardIcon = () => {
     return (
       <TouchableOpacity onPress={handleCopyBoard}>
@@ -71,7 +69,6 @@ const BoardScreen = (props) => {
       </TouchableOpacity>
     )
   }
-
   const upvoteIcon = () => {
     return (
       <TouchableOpacity onPress={handleUpvoteBoard}>
@@ -79,7 +76,6 @@ const BoardScreen = (props) => {
       </TouchableOpacity>
     )
   }
-
   const reportIcon = () => {
     return (
       <TouchableOpacity onPress={handleReportBoard}>
@@ -188,7 +184,7 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   boardContainer: {
-    alignItems: 'center'
+    alignItems: 'center',
   }
 });
 

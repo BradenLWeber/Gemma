@@ -32,6 +32,7 @@ const styles = StyleSheet.create({
         alignSelf: 'flex-start',
         position: 'absolute',
         top: 90,
+        //paddingBottom: 10,
         width: 140,
         height: 40,
         marginLeft: 20,
