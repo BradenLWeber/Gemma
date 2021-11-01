@@ -9,7 +9,6 @@ const BoardScreen = (props) => {
   const [publicOrPrivate, setPublicOrPrivate] = useState('Private');
   const [boardsType, setBoardsType] = useState('My');
   const [isModalVisible, setisModalVisible] = useState(false);
-
     // Function handles a click on the public/private bar
     const clickPublicOrPrivate = () => {
       if (publicOrPrivate === 'Public') {
@@ -43,14 +42,7 @@ const BoardScreen = (props) => {
   return (
     <View style={{ alignItems: 'center', position: 'relative' }}>
       <View style={styles.boardHeadingContainer}>
-        <View style={styles.screenTitleView}>
-          {/* <Text style={styles.screenTitleText}>{props.boardsType} boards</Text> */}
-        </View>
         {boardsType === 'My' && addBoardIcon()}
-        {/*{boardsType === 'My' && deleteBoardIcon()}
-        {copyBoardIcon()}
-        {boardsType === 'Public' && upvoteIcon()}
-  {boardsType === 'Public' && reportIcon()} */}
       </View>
       <SafeAreaView style={{ height: 536 }}>
         <ScrollView style={styles.boardScrollContainer}>
@@ -58,37 +50,37 @@ const BoardScreen = (props) => {
             <TouchableOpacity onPress={handleModal}>
               <Board boardType={boardsType} navigator={props.navigator} />
               </TouchableOpacity>
-              <BoardMenu state={isModalVisible} boardsType={boardsType} 
-              onClick={() => setisModalVisible()} />
-            
-            <TouchableOpacity onPress={handleModal}>
-              <Board boardType={boardsType} navigator={props.navigator} />
-              </TouchableOpacity>
-              <BoardMenu state={isModalVisible} boardsType={boardsType} 
-              onClick={() => setisModalVisible()} />
-              
-            <TouchableOpacity onPress={handleModal}>
-              <Board boardType={boardsType} navigator={props.navigator} />
-              </TouchableOpacity>
-              <BoardMenu state={isModalVisible} boardsType={boardsType} 
+              <BoardMenu state={isModalVisible} boardsType={boardsType}
               onClick={() => setisModalVisible()} />
 
             <TouchableOpacity onPress={handleModal}>
               <Board boardType={boardsType} navigator={props.navigator} />
               </TouchableOpacity>
-              <BoardMenu state={isModalVisible} boardsType={boardsType} 
+              <BoardMenu state={isModalVisible} boardsType={boardsType}
               onClick={() => setisModalVisible()} />
 
             <TouchableOpacity onPress={handleModal}>
               <Board boardType={boardsType} navigator={props.navigator} />
               </TouchableOpacity>
-              <BoardMenu state={isModalVisible} boardsType={boardsType} 
+              <BoardMenu state={isModalVisible} boardsType={boardsType}
               onClick={() => setisModalVisible()} />
 
             <TouchableOpacity onPress={handleModal}>
               <Board boardType={boardsType} navigator={props.navigator} />
               </TouchableOpacity>
-              <BoardMenu state={isModalVisible} boardsType={boardsType} 
+              <BoardMenu state={isModalVisible} boardsType={boardsType}
+              onClick={() => setisModalVisible()} />
+
+            <TouchableOpacity onPress={handleModal}>
+              <Board boardType={boardsType} navigator={props.navigator} />
+              </TouchableOpacity>
+              <BoardMenu state={isModalVisible} boardsType={boardsType}
+              onClick={() => setisModalVisible()} />
+
+            <TouchableOpacity onPress={handleModal}>
+              <Board boardType={boardsType} navigator={props.navigator} />
+              </TouchableOpacity>
+              <BoardMenu state={isModalVisible} boardsType={boardsType}
               onClick={() => setisModalVisible()} />
           </View>
         </ScrollView>
@@ -100,7 +92,7 @@ const BoardScreen = (props) => {
         userPhoto={props.userPhoto}
       />
       {/* Public/private bar at the top of the screen */}
-      <PublicPrivateBar type={publicOrPrivate} onClick={clickPublicOrPrivate} /> 
+      <PublicPrivateBar type={publicOrPrivate} onClick={clickPublicOrPrivate} />
     </View>
   )
 }
@@ -108,26 +100,18 @@ const BoardScreen = (props) => {
 const styles = StyleSheet.create({
   addBoard: {
     marginLeft: 300,
-    marginTop: 2,
+    marginTop: 3,
     marginBottom: 10,
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'white',
-    width: 30,
-    height: 30,
+    width: 36,
+    height: 36,
     borderWidth: 1.5,
-    borderRadius: 15,
+    borderRadius: 18,
   },
   addBoardText: {
     fontSize: 20,
-  },
-  screenTitleView: {
-    marginBottom: 10,
-    marginRight: 5,
-  },
-  screenTitleText: {
-    fontSize: 25,
-    marginBottom: 5,
   },
   boardHeadingContainer: {
     marginTop: 95,
