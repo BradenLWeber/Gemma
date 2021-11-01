@@ -11,7 +11,6 @@ const MapScreen = ({ route, navigation }) => {
 
   // const [publicOrPrivate, setPublicOrPrivate] = useState('Private');
   const [isModalVisible, setisModalVisible] = useState(false);
-  const [boardsType, setBoardsType] = useState('My');
   const [userPhoto, setUserPhoto] = useState('default');
   const [myLocation, setMyLocation] = useState({});
   const [showLocation, setShowLocation] = useState(false);
@@ -106,7 +105,7 @@ const MapScreen = ({ route, navigation }) => {
     const pinPosition = {left: pin.x + mapPosition.x, top: pin.y + mapPosition.y + 315};
     return (
       <View style={styles.mapPin} key={pin.title + String(pin.key)}>
-        <Image source={require('../assets/blue-pin.png')} style={[styles.pinImage, pinPosition]} />
+        <Image source={require('../assets/gem.png')} style={[styles.pinImage, pinPosition]} />
       </View>
     )
   }
@@ -148,7 +147,6 @@ const MapScreen = ({ route, navigation }) => {
       <UserBar
         userPhoto={userPhoto}
         navigator={navigation}
-        setBoardsType={(type) => setBoardsType(type)}
         boardScreen={false}
       />
 
