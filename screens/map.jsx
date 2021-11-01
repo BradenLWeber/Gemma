@@ -180,8 +180,8 @@ const styles = StyleSheet.create({
     top: 365,
   },
   pinIcon: {
-    width: 30,
-    height: 30,
+    width: 40,
+    height: 40,
   },
   checkIcon: {
     width: 30,
@@ -195,6 +195,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: Dimensions.get('window').height / 2.4,
     alignSelf: 'center',
+    elevation: 1,
   },
   mapPin: {
     position: 'absolute'

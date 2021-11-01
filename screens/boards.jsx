@@ -3,7 +3,7 @@ import Board from '../components/board';
 import UserBar from '../components/userBar';
 import PublicPrivateBar from '../components/publicPrivateBar';
 import BoardMenu from '../components/boardMenu';
-import { StyleSheet, Text, View, TouchableOpacity, Image, ScrollView, SafeAreaView } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, Image, ScrollView, SafeAreaView, Dimensions } from 'react-native';
 
 const BoardScreen = (props) => {
   const [publicOrPrivate, setPublicOrPrivate] = useState('Private');
@@ -44,7 +44,7 @@ const BoardScreen = (props) => {
       <View style={styles.boardHeadingContainer}>
         {boardsType === 'My' && addBoardIcon()}
       </View>
-      <SafeAreaView style={{ height: 536 }}>
+      <SafeAreaView style={{ height: Dimensions.get('window').height - 230 }}>
         <ScrollView style={styles.boardScrollContainer}>
           <View style={styles.boardContainer}>
             <TouchableOpacity onPress={handleModal}>
@@ -85,14 +85,14 @@ const BoardScreen = (props) => {
           </View>
         </ScrollView>
       </SafeAreaView>
+      {/* Public/private bar at the top of the screen */}
+      <PublicPrivateBar type={publicOrPrivate} onClick={clickPublicOrPrivate} />
       <UserBar
         navigator={props.navigator}
         setBoardsType={(type) => setBoardsType(type)}
         boardScreen={true}
         userPhoto={props.userPhoto}
       />
-      {/* Public/private bar at the top of the screen */}
-      <PublicPrivateBar type={publicOrPrivate} onClick={clickPublicOrPrivate} />
     </View>
   )
 }
@@ -118,6 +118,7 @@ const styles = StyleSheet.create({
     width: '90%',
     alignSelf: 'center',
     flexDirection: 'row',
+    height: 55,
   },
   boardScrollContainer: {
     height: '100%',
