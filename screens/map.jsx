@@ -27,16 +27,6 @@ const MapScreen = ({ route, navigation }) => {
     SE: {latitude: 42.929547, longitude: -85.572594},
   });
 
-
- {/*} // Function handles a click on the public/private bar
-  const clickPublicOrPrivate = () => {
-    if (publicOrPrivate === 'Public') {
-      setPublicOrPrivate('Private');
-    } else {
-      setPublicOrPrivate('Public');
-    }
-  } */}
-
   const getLocationPermissions = async () => {
     const response = await Location.getForegroundPermissionsAsync();
     return response.granted;
@@ -155,9 +145,6 @@ const MapScreen = ({ route, navigation }) => {
         />
       </ImageZoom>
 
-      {/* Public/private bar at the bottom of the screen
-      <PublicPrivateBar type={publicOrPrivate} onClick={clickPublicOrPrivate} /> */}
-
       {/* User bar at top of the screen */}
       <UserBar
         userPhoto={userPhoto}
@@ -181,8 +168,6 @@ const MapScreen = ({ route, navigation }) => {
       {settingPin && ghostPin()}
 
       {pins.map((pin) => showPin(pin))}
-
-      {/* <Text style={{top: 200, fontSize: 30, position: 'absolute'}}>Debug: {pins[0].x}</Text> */}
 
       <PinNote state={isModalVisible} onClick={(button) => createPin(button)} />
     </View>

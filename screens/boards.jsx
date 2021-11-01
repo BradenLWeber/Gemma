@@ -32,19 +32,6 @@ const BoardScreen = (props) => {
     alert('Pressed add board');
   }
 
-  {/*const handleDeleteBoard = () => {
-    alert('Pressed delete board');
-  }
-  const handleCopyBoard = () => {
-    alert('Pressed copy board');
-  }
-  const handleUpvoteBoard = () => {
-    alert('Pressed upvote board');
-  }
-  const handleReportBoard = () => {
-    alert('Pressed report board');
-  } */}
-
  const addBoardIcon = () => {
     return (
       <TouchableOpacity onPress={handleAddBoard}>
@@ -55,46 +42,10 @@ const BoardScreen = (props) => {
     )
   }
 
-  {/* const deleteBoardIcon = () => {
-    return (
-      <TouchableOpacity onPress={handleDeleteBoard}>
-        <Image source={require('../assets/trash.bmp')} style={styles.imageIcon}></Image>
-      </TouchableOpacity>
-    )
-  }
-  const copyBoardIcon = () => {
-    return (
-      <TouchableOpacity onPress={handleCopyBoard}>
-        <Image source={require('../assets/copy.bmp')} style={styles.copyIcon}></Image>
-      </TouchableOpacity>
-    )
-  }
-  const upvoteIcon = () => {
-    return (
-      <TouchableOpacity onPress={handleUpvoteBoard}>
-        <Image source={require('../assets/upvote.bmp')} style={styles.imageIcon}></Image>
-      </TouchableOpacity>
-    )
-  }
-  const reportIcon = () => {
-    return (
-      <TouchableOpacity onPress={handleReportBoard}>
-        <Image source={require('../assets/report.bmp')} style={styles.reportIcon}></Image>
-      </TouchableOpacity>
-    )
-  } */}
-
   return (
     <View style={{ alignItems: 'center', position: 'relative' }}>
       <View style={styles.boardHeadingContainer}>
-        <View style={styles.screenTitleView}>
-          {/* <Text style={styles.screenTitleText}>{props.boardsType} boards</Text> */}
-        </View>
         {boardsType === 'My' && addBoardIcon()}
-        {/*{boardsType === 'My' && deleteBoardIcon()}
-        {copyBoardIcon()}
-        {boardsType === 'Public' && upvoteIcon()}
-  {boardsType === 'Public' && reportIcon()} */}
       </View>
       <SafeAreaView style={{ height: 536 }}>
         <ScrollView style={styles.boardScrollContainer}>
@@ -164,15 +115,6 @@ const styles = StyleSheet.create({
   },
   addBoardText: {
     fontSize: 20,
-  },
-  screenTitleView: {
-    marginBottom: 10,
-    marginRight: 5,
-    height: 45,
-  },
-  screenTitleText: {
-    fontSize: 25,
-    marginBottom: 5,
   },
   boardHeadingContainer: {
     marginTop: 95,
