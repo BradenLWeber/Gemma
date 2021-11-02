@@ -11,13 +11,11 @@ const MapScreen = ({ route, navigation }) => {
 
   // const [publicOrPrivate, setPublicOrPrivate] = useState('Private');
   const [isModalVisible, setisModalVisible] = useState(false);
-  const [boardsType, setBoardsType] = useState('My');
   const [userPhoto, setUserPhoto] = useState('default');
   const [myLocation, setMyLocation] = useState({});
   const [showLocation, setShowLocation] = useState(false);
   const [settingPin, setSettingPin] = useState(false);
   const [mapPosition, setMapPosition] = useState({x: 0, y: 0, zoom: 1});
-  const [debug, setDebug] = useState();
   const [pins, setPins] = useState([]);
   const [key, setKey] = useState(0);
   const [mapCorners, nil] = useState({
@@ -56,7 +54,7 @@ const MapScreen = ({ route, navigation }) => {
     return (
       <TouchableOpacity style={globalStyles.PinButton} onPress={handlePlacePin}>
         <View style={globalStyles.addWrapper}>
-          <Image source={require('../assets/blue-pin.png')} style={styles.pinIcon} />
+          <Image source={require('../assets/gem.png')} style={styles.pinIcon} />
         </View>
       </TouchableOpacity>
     )
@@ -98,7 +96,7 @@ const MapScreen = ({ route, navigation }) => {
   const ghostPin = () => {
     return(
       <View style={styles.ghostPin}>
-        <Image source={require('../assets/blue-pin.png')} style={styles.pinImage} />
+        <Image source={require('../assets/gem.png')} style={styles.pinImage} />
       </View>
     )
   }
@@ -107,7 +105,7 @@ const MapScreen = ({ route, navigation }) => {
     const pinPosition = {left: pin.x + mapPosition.x, top: pin.y + mapPosition.y + 315};
     return (
       <View style={styles.mapPin} key={pin.title + String(pin.key)}>
-        <Image source={require('../assets/blue-pin.png')} style={[styles.pinImage, pinPosition]} />
+        <Image source={require('../assets/gem.png')} style={[styles.pinImage, pinPosition]} />
       </View>
     )
   }
@@ -149,7 +147,6 @@ const MapScreen = ({ route, navigation }) => {
       <UserBar
         userPhoto={userPhoto}
         navigator={navigation}
-        setBoardsType={(type) => setBoardsType(type)}
         boardScreen={false}
       />
 
@@ -183,8 +180,8 @@ const styles = StyleSheet.create({
     top: 365,
   },
   pinIcon: {
-    width: 30,
-    height: 30,
+    width: 40,
+    height: 40,
   },
   checkIcon: {
     width: 30,
@@ -198,6 +195,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: Dimensions.get('window').height / 2.4,
     alignSelf: 'center',
+    elevation: 1,
   },
   mapPin: {
     position: 'absolute'
