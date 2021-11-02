@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Button } from 'react-native';
+import * as Location from 'expo-location';
 import * as Google from 'expo-google-app-auth';
 
 const Login = (props) => {
@@ -37,11 +38,23 @@ const Login = (props) => {
     }
 
     const handleLogin = () => {
-        props.navigator.navigate('User Login');
+        props.navigator.navigate('User Login', {geoPermissions: handleGeoPermissions});
     }
 
     const handleSignup = () => {
-        props.navigator.navigate('User Sign Up');
+        props.navigator.navigate('User Sign Up', { geoPermissions: handleGeoPermissions});
+    }
+
+    const handleGeoPermissions = async () => {
+        let { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== 'granted') {
+            alert("Location Permission has not been granted!");
+        }
+    }
+
+    const handleGuestLogin = async () => {
+        handleGeoPermissions();
+        props.navigator.navigate('Map', userPhoto);
     }
 
     return (
@@ -55,7 +68,7 @@ const Login = (props) => {
             <TouchableOpacity onPress={handleLogin} style={styles.loginButton}>
                 <Text style={styles.buttonText}>Login</Text>
             </TouchableOpacity>
-            <TouchableOpacity onPress={() => props.navigator.navigate('Map', userPhoto)} style={styles.guestButton}>
+            <TouchableOpacity onPress={handleGuestLogin} style={styles.guestButton}>
                 <Text style={styles.guestButtonText}>Continue as guest</Text>
             </TouchableOpacity>
             {demo && <TouchableOpacity onPress={handleGoogleLogin} style={[styles.loginButton, { marginTop: 200 }]}>

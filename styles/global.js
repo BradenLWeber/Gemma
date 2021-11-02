@@ -6,7 +6,6 @@ export const globalStyles = StyleSheet.create({
         height: 50,
         backgroundColor: '#FFF',
         borderRadius: 25,
-        borderWidth: 6,
         justifyContent: 'center',
         alignItems: 'center',
         borderWidth: 1
@@ -20,7 +19,7 @@ export const globalStyles = StyleSheet.create({
     
     PinButton: {
       position: 'absolute',
-      bottom: 13,
-      right: 13,
+      bottom: 15,
+      right: 15,
     },
   });

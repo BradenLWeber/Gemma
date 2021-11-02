@@ -4,6 +4,7 @@ import PublicPrivateBar from '../components/publicPrivateBar';
 import UserBar from '../components/userBar';
 import PinNote from '../components/pinNote';
 import { globalStyles } from '../styles/global';
+import * as Location from 'expo-location';
 import ImageZoom from 'react-native-image-pan-zoom';
 
 const MapScreen = ({ route, navigation }) => {
@@ -12,20 +13,31 @@ const MapScreen = ({ route, navigation }) => {
   const [isModalVisible, setisModalVisible] = useState(false);
   const [boardsType, setBoardsType] = useState('My');
   const [userPhoto, setUserPhoto] = useState('default');
+  const [myLocation, setMyLocation] = useState({});
+  const [showLocation, setShowLocation] = useState(false);
   const [settingPin, setSettingPin] = useState(false);
   const [mapPosition, setMapPosition] = useState({x: 0, y: 0, zoom: 1});
   const [debug, setDebug] = useState();
   const [pins, setPins] = useState([]);
+  const [key, setKey] = useState(0);
+  const [mapCorners, nil] = useState({
+    NW: {latitude: 42.938471, longitude: -85.584682},
+    NE: {latitude: 42.938471, longitude: -85.572594},
+    SW: {latitude: 42.929547, longitude: -85.584682},
+    SE: {latitude: 42.929547, longitude: -85.572594},
+  });
 
+  const getLocationPermissions = async () => {
+    const response = await Location.getForegroundPermissionsAsync();
+    return response.granted;
+  }
 
- {/*} // Function handles a click on the public/private bar
-  const clickPublicOrPrivate = () => {
-    if (publicOrPrivate === 'Public') {
-      setPublicOrPrivate('Private');
-    } else {
-      setPublicOrPrivate('Public');
-    }
-  } */}
+  const getLocation = async () => {
+    const response = await Location.getCurrentPositionAsync({accuracy: Location.Accuracy.Highest});
+    const location = {latitude: response.coords.latitude, longitude: response.coords.longitude};
+    setMyLocation({ latitude: location.latitude, longitude: location.longitude});
+    return location;
+  }
 
   // Function handles displaying, hiding a pin's notes
   const handleCheck = () => {
@@ -70,13 +82,15 @@ const MapScreen = ({ route, navigation }) => {
   const createPin = (button) => {
     setisModalVisible(false);
     setSettingPin(false);
+    setKey(key + 1);
     if (button === 'create') {
       setPins(pins.concat({
         x: -mapPosition.x,
         y: -mapPosition.y,
-        title: button.title,
+        title: button.title || 'untitled',
         tags: button.tags,
-        notes: button.notes
+        notes: button.notes,
+        key: key,
       }));
     }
   }
@@ -92,7 +106,7 @@ const MapScreen = ({ route, navigation }) => {
   const showPin = (pin) => {
     const pinPosition = {left: pin.x + mapPosition.x, top: pin.y + mapPosition.y + 315};
     return (
-      <View style={styles.mapPin} key={pin.title}>
+      <View style={styles.mapPin} key={pin.title + String(pin.key)}>
         <Image source={require('../assets/blue-pin.png')} style={[styles.pinImage, pinPosition]} />
       </View>
     )
@@ -100,6 +114,14 @@ const MapScreen = ({ route, navigation }) => {
 
   const handleSetMapPosition = (event) => {
     setMapPosition({x: event.positionX, y: event.positionY, zoom: event.scale});
+  }
+
+  const getMapCoordinates = () => {
+    actualCoordinates = {
+      latitude: mapCorners.NW.latitude + (mapPosition.x / 1500) * (mapCorners.NE.latitude - mapCorners.SW.latitude),
+      longitude: mapCorners.SW.longitude + (mapPosition.y / 1500) * (mapCorners.SE.longitude - mapCorners.SW.longitude),
+    };
+    return actualCoordinates;
   }
 
   return (
@@ -113,6 +135,7 @@ const MapScreen = ({ route, navigation }) => {
         pinchToZoom={true}
         panToMove={true}
         minScale={0.4}
+        onClick={() => {getLocation(); setShowLocation(!showLocation);}}
         enableCenterFocus={false}
         onMove={(event) => handleSetMapPosition(event)}
       >
@@ -122,9 +145,6 @@ const MapScreen = ({ route, navigation }) => {
         />
       </ImageZoom>
 
-      {/* Public/private bar at the bottom of the screen 
-      <PublicPrivateBar type={publicOrPrivate} onClick={clickPublicOrPrivate} /> */}
-
       {/* User bar at top of the screen */}
       <UserBar
         userPhoto={userPhoto}
@@ -133,13 +153,21 @@ const MapScreen = ({ route, navigation }) => {
         boardScreen={false}
       />
 
+      {showLocation &&
+      <Text style={{position: 'absolute', bottom: 100, fontSize: 20, backgroundColor: 'white', padding: 5,}}>
+        Your location:{'\n'}
+        Latitude: {myLocation.latitude}{'\n'}
+        Longitude: {myLocation.longitude}{'\n\n'}
+        Map location{'\n'}
+        Latitude: {getMapCoordinates().latitude}{'\n'}
+        Longitude: {getMapCoordinates().longitude}{'\n'}
+      </Text>}
+
       {/* Drop pin button on map */}
       {settingPin ? checkAndXButton() : pinButton()}
       {settingPin && ghostPin()}
 
       {pins.map((pin) => showPin(pin))}
-
-      {/* <Text style={{top: 200, fontSize: 30, position: 'absolute'}}>Debug: {pins[0].x}</Text> */}
 
       <PinNote state={isModalVisible} onClick={(button) => createPin(button)} />
     </View>

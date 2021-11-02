@@ -36,6 +36,7 @@ const UserSignupScreen = (props) => {
       alert('Passwords are not the same');
       return;
     }
+    props.geoPermissions();
     props.navigator.navigate('Map', userPhoto);
   }
 

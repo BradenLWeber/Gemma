@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, TextInput, View, TouchableOpacity } from 'react-native';
 import Modal from 'react-native-modal';
 
-{/* Here's the tutorial I'm using to learn about Modals: 
-https://blog.logrocket.com/creating-a-pop-up-modal-in-react-native/ 
+{/* Here's the tutorial I'm using to learn about Modals:
+https://blog.logrocket.com/creating-a-pop-up-modal-in-react-native/
 
 Also using library 'react-native-modal'... y'all might need to run 'npm i react-native-modal'*/}
 
