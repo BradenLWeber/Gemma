@@ -3,12 +3,14 @@ import Board from '../components/board';
 import UserBar from '../components/userBar';
 import PublicPrivateBar from '../components/publicPrivateBar';
 import BoardMenu from '../components/boardMenu';
+
 import { StyleSheet, Text, View, TouchableOpacity, Image, ScrollView, SafeAreaView, Dimensions } from 'react-native';
 
 const BoardScreen = (props) => {
   const [publicOrPrivate, setPublicOrPrivate] = useState('Private');
   const [boardsType, setBoardsType] = useState('My');
   const [isModalVisible, setisModalVisible] = useState(false);
+
     // Function handles a click on the public/private bar
     const clickPublicOrPrivate = () => {
       if (publicOrPrivate === 'Public') {
