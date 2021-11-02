@@ -33,7 +33,6 @@ export default function App() {
   function boardScreen({ navigation }) {
     return (
       <BoardScreen
-       // boardsType={boardsType}
         setBoardsType={setBoardsType}
         navigator={navigation}
         userPhoto={'default'}

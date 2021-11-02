@@ -4,7 +4,6 @@ import { Platform, Image, View, Text, StyleSheet, TouchableOpacity, TouchableWit
 const UserBar = (props) => {
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showSearchMenu, setShowSearchMenu] = useState(false);
-  const [showOptionsMenu, setShowOptionsMenu] = useState(false);
   // Initial state depends on whether it is on the map screen or the board screen
   const [searchType, setSearchType] = useState(props.boardScreen ? 'board' : 'pin');
   const [userPhotoList, setUserPhotoList] = useState({ default: require('../assets/defaultAvatar.png') })
@@ -76,16 +75,13 @@ const UserBar = (props) => {
 
   // Handle clicking either "My boards" or "Public boards"
   // the type in this case is either "My" or "Public"
-  const clickBoards = (type, navigator) => {
-    setShowOptionsMenu(false);
+  const clickBoards = (navigator) => {
     setSearchType('board');
-    props.setBoardsType(type);
     navigator.navigate('Boards');
   }
 
   // This handles any click not on a menu while a menu is open
   const closeMenu = () => {
-    setShowOptionsMenu(false);
     setShowSearchMenu(false);
     setShowUserMenu(false);
   }
@@ -130,19 +126,18 @@ const UserBar = (props) => {
         {/*Options icon*/}
         <TouchableOpacity
           style={[styles.userOptions, props.optionsMenuShowing ? styles.userOptionsPressed : {}]}
-          onPress={() => setShowOptionsMenu(true)}
+          onPress={() => clickBoards(props.navigator)}
         >
-          <Text style={styles.userOptionsText}>. . .</Text>
+          <Image source={require('../assets/board-menu.png')} style={styles.boardMenuIcon} />
         </TouchableOpacity>
       </View>
       {/* If there is a menu being displayed, this invisible view takes up the whole screen
       and will make sure if the user tries to click out of the menu, the menu will close */}
-      {(showOptionsMenu || showSearchMenu || showUserMenu) && invisibleBackground()}
+      {(showSearchMenu || showUserMenu) && invisibleBackground()}
       {/* Popups when pressing user picture, search bar dropdown, or options icon
       It is important these come AFTER the invisible background so that they are on top*/}
       {showUserMenu && userMenu(props.navigator)}
       {showSearchMenu && searchMenu()}
-      {showOptionsMenu && optionsMenu(props.navigator)}
     </>
   )
 }
@@ -217,15 +212,15 @@ const styles = StyleSheet.create({
     margin: 7,
     alignItems: 'center',
     justifyContent: 'center',
+    backgroundColor: 'white'
   },
   userOptionsPressed: {
     backgroundColor: '#D4D8E5',
   },
-  userOptionsText: {
-    color: '#201E3C',
-    fontSize: 20,
-    bottom: 6,
-    left: 1,
+  boardMenuIcon: {
+    height: 40,
+    width: 40,
+    bottom: 3,
   },
   userMenu: {
     position: 'absolute',

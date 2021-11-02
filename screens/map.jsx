@@ -20,7 +20,6 @@ const MapScreen = ({ route, navigation }) => {
   };
 
   const [isModalVisible, setisModalVisible] = useState(false);
-  const [boardsType, setBoardsType] = useState('My');
   const [userPhoto, setUserPhoto] = useState('default');
   const [myLocation, setMyLocation] = useState({});
   const [showLocation, setShowLocation] = useState(false);
@@ -58,7 +57,7 @@ const MapScreen = ({ route, navigation }) => {
     return (
       <TouchableOpacity style={globalStyles.PinButton} onPress={handlePlacePin}>
         <View style={globalStyles.addWrapper}>
-          <Image source={require('../assets/blue-pin.png')} style={styles.pinIcon} />
+          <Image source={require('../assets/gem.png')} style={styles.pinIcon} />
         </View>
       </TouchableOpacity>
     )
@@ -100,7 +99,7 @@ const MapScreen = ({ route, navigation }) => {
   const ghostPin = () => {
     return(
       <View style={styles.ghostPin}>
-        <Image source={require('../assets/blue-pin.png')} style={pinImage} />
+        <Image source={require('../assets/gem.png')} style={styles.pinImage} />
       </View>
     )
   }
@@ -112,7 +111,7 @@ const MapScreen = ({ route, navigation }) => {
     }
     return (
       <View style={styles.mapPin} key={pin.title + String(pin.key)}>
-        <Image source={require('../assets/blue-pin.png')} style={[pinImage, pinPosition]} />
+        <Image source={require('../assets/gem.png')} style={[styles.pinImage, pinPosition]} />
       </View>
     )
   }
@@ -171,7 +170,6 @@ const MapScreen = ({ route, navigation }) => {
       <UserBar
         userPhoto={userPhoto}
         navigator={navigation}
-        setBoardsType={(type) => setBoardsType(type)}
         boardScreen={false}
       />
 
@@ -198,8 +196,8 @@ const MapScreen = ({ route, navigation }) => {
 
 const styles = StyleSheet.create({
   pinIcon: {
-    width: 30,
-    height: 30,
+    width: 40,
+    height: 40,
   },
   checkIcon: {
     width: 30,
@@ -209,6 +207,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: Dimensions.get('window').height / 2.3,
     alignSelf: 'center',
+    elevation: 1,
   },
   mapPin: {
     position: 'absolute'
