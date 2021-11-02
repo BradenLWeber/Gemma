@@ -8,9 +8,27 @@ https://blog.logrocket.com/creating-a-pop-up-modal-in-react-native/
 Also using library 'react-native-modal'... y'all might need to run 'npm i react-native-modal'*/}
 
 const PinNote = (props) => {
-    const [title, setTitle] = useState();
-    const [tags, setTags] = useState();
-    const [notes, setNotes] = useState();
+    const [title, setTitle] = useState(null);
+    const [tags, setTags] = useState(null);
+    const [notes, setNotes] = useState(null);
+
+    const handleClick = (type) => {
+        if (type === 'cancel') {
+            props.onClick('cancel');
+            setTitle(null);
+            setTags(null);
+            setNotes(null);
+        } else {
+            if (title === null) {
+                alert('Please fill title');
+                return;
+            }
+            props.onClick('create', title, tags, notes);
+            setTitle(null);
+            setTags(null);
+            setNotes(null);
+        }
+    }
 
     return(
         <Modal isVisible={props.state}>
@@ -22,10 +40,10 @@ const PinNote = (props) => {
                     <TextInput placeholder={'Notes'} style={styles.Notes} onChange={(text) => setNotes(text)} multiline={true}/>
                 </View>
                 <View style={styles.modalButtons}>
-                    <TouchableOpacity onPress={() => props.onClick('cancel', null, null, null)} style={styles.modalButton}>
+                    <TouchableOpacity onPress={() => handleClick('cancel')} style={styles.modalButton}>
                         <Text style={styles.modalText}>Cancel</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => props.onClick('create', title, tags, notes)} style={[styles.modalButton, styles.modalCreateButton]}>
+                    <TouchableOpacity onPress={() => handleClick('create')} style={[styles.modalButton, styles.modalCreateButton]}>
                         <Text style={styles.modalText}>Create</Text>
                     </TouchableOpacity>
                 </View>
