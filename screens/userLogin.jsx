@@ -1,5 +1,6 @@
 import React, { useState, useRef, createRef } from 'react';
 import { Text, View, TouchableOpacity, StyleSheet, KeyboardAvoidingView, TextInput, Keyboard } from 'react-native';
+import ForgotPassword from '../components/forgotPassword';
 
 const UserLoginScreen = (props) => {
   //const [username, setUsername] = useState('');
@@ -9,6 +10,10 @@ const UserLoginScreen = (props) => {
 
   const passwordInputRef = createRef();
   const emailInputRef = createRef();
+
+  const handleForgotPassword = () => {
+
+  }
 
   const handleLoginDone = () => {
     if (!userEmail) {
@@ -52,6 +57,9 @@ const UserLoginScreen = (props) => {
           }
           blurOnSubmit={false} />
       </KeyboardAvoidingView>
+      <TouchableOpacity onPress={handleForgotPassword} style={styles.forgotButton}>
+        <Text style={styles.forgotButtonText}>Forgot password?</Text>
+      </TouchableOpacity>
       <TouchableOpacity onPress={handleLoginDone} style={styles.doneButton}>
         <Text style={styles.buttonText}>Done</Text>
       </TouchableOpacity>
@@ -80,6 +88,15 @@ const styles = StyleSheet.create({
   passwordInputText: {
     paddingTop: 30,
     fontSize: 30,
+  },
+  forgotButton: {
+    flexDirection: 'row-reverse',
+    paddingRight: 10,
+  },
+  forgotButtonText: {
+    fontSize: 20,
+    fontStyle: 'italic',
+    color: '#97CCEE',
   },
   doneButton: {
     alignItems: "center",
