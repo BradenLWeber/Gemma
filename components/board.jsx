@@ -3,6 +3,40 @@ import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native'
 
 
 const Board = (props) => {
+    const BOARD = [
+        {
+          x:  750,
+          y: 750,
+          title: 'The middle of the map',
+          tags: 'middle, map, the',
+          notes: 'This is exactly in the middle of the map! Imagine that.',
+          key: 983,
+        },
+        {
+          x: 247,
+          y: 636,
+          title: 'Frog pond',
+          tags: 'Frog',
+          notes: 'This pond has tadpoles and frogs consistenly every year',
+          key: 984,
+        },
+        {
+          x: 523,
+          y: 904,
+          title: 'Good spot to pray',
+          tags: 'Bridge, pray',
+          notes: 'I like to stand on this bridge and hear the water while I pray',
+          key: 985,
+        },
+        {
+          x: 701,
+          y: 777,
+          title: 'Bird\'s nest!!!!',
+          tags: 'Bird, nest, !!!',
+          notes: 'I found a bird nest here the other day!!! The eggs had afros and I think one was doing the worm.',
+          key: 986,
+        }
+    ];
     // This button allows the user to change a board between public and private
     // It is only visible on "My boards"
     const publicPrivateButton = () => {
@@ -25,7 +59,7 @@ const Board = (props) => {
                 <Text style={styles.boardCreatorText}>Creator: VanderLindenIsTheGoose</Text>
             </View>
             {/* Image is wrapped in a button that takes user back to the map screen */}
-            <TouchableOpacity style={styles.boardImageWrapper} onPress={() => props.navigator.navigate('Map')}>
+            <TouchableOpacity style={styles.boardImageWrapper} onPress={() => {props.setBoard(BOARD); props.navigator.navigate('Map', {board: props.myBoard})}}>
                 <Image source={require('../assets/map-pins.png')} style={styles.boardImage}/>
             </TouchableOpacity>
         </View>

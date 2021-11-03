@@ -30,12 +30,13 @@ export default function App() {
     setUserPhoto(photo);
   }
 
-  function boardScreen({ navigation }) {
+  function boardScreen({ route, navigation }) {
     return (
       <BoardScreen
         setBoardsType={setBoardsType}
         navigator={navigation}
         userPhoto={'default'}
+        setBoard={route.params.setBoard}
       />
     )
   }

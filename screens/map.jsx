@@ -10,8 +10,8 @@ const MapScreen = ({ route, navigation }) => {
 
   const MAPWIDTH = 1500;
   const MAPHEIGHT = 1500;
-  const PINHEIGHT = 40;
-  const PINWIDTH = 40;
+  const PINHEIGHT = 50;
+  const PINWIDTH = 50;
   const MAPCORNERS = {
     NW: {latitude: 42.938471, longitude: -85.584682},
     NE: {latitude: 42.938471, longitude: -85.572594},
@@ -27,6 +27,7 @@ const MapScreen = ({ route, navigation }) => {
   const [mapPosition, setMapPosition] = useState({x: 0, y: 0, zoom: 1});
   const [pins, setPins] = useState([]);
   const [key, setKey] = useState(0);
+  const [pinModal, setPinModal] = useState(null);
 
   const getLocationPermissions = async () => {
     const response = await Location.getForegroundPermissionsAsync();
@@ -38,6 +39,10 @@ const MapScreen = ({ route, navigation }) => {
     const location = {latitude: response.coords.latitude, longitude: response.coords.longitude};
     setMyLocation({ latitude: location.latitude, longitude: location.longitude});
     return location;
+  }
+
+  const chooseBoard = () => {
+    setPins(BOARD);
   }
 
   // Function handles displaying, hiding a pin's notes
@@ -63,7 +68,7 @@ const MapScreen = ({ route, navigation }) => {
     )
   }
 
-  const checkAndXButton = () => {
+  const placingPinButtons = () => {
     return (
         <View style={globalStyles.PinButton}>
           <TouchableOpacity style={styles.xButton} onPress={handleX}>
@@ -99,7 +104,7 @@ const MapScreen = ({ route, navigation }) => {
   const ghostPin = () => {
     return(
       <View style={styles.ghostPin}>
-        <Image source={require('../assets/gem.png')} style={styles.pinImage} />
+        <Image source={require('../assets/gem.png')} style={pinImage} />
       </View>
     )
   }
@@ -107,11 +112,41 @@ const MapScreen = ({ route, navigation }) => {
   const showPin = (pin) => {
     const pinPosition = {
       left: (pin.x - mapPosition.x) * mapPosition.zoom,
-      top: (pin.y - mapPosition.y) * mapPosition.zoom + Dimensions.get('window').height / 2 - PINHEIGHT,
+      top: (pin.y - mapPosition.y) * mapPosition.zoom + Dimensions.get('window').height / 2 - PINHEIGHT + 5,
     }
     return (
-      <View style={styles.mapPin} key={pin.title + String(pin.key)}>
-        <Image source={require('../assets/gem.png')} style={[styles.pinImage, pinPosition]} />
+      <View key={pin.title + String(pin.key)} style={styles.mapPin}>
+        <TouchableOpacity onPress={() => clickPin(pin)} style={pinPosition}>
+          <Image source={require('../assets/gem.png')} style={pinImage} />
+        </TouchableOpacity>
+      </View>
+    )
+  }
+
+  const clickPin = (pin) => {
+    if (pin !== pinModal) {
+      setPinModal(pin);
+    } else {
+      setPinModal(null);
+    }
+  }
+
+  const showPinModal = () => {
+    const modalPosition = {
+      left: (pinModal.x - mapPosition.x) * mapPosition.zoom + 90,
+      top: (pinModal.y - mapPosition.y) * mapPosition.zoom + Dimensions.get('window').height / 2 - PINHEIGHT + 60,
+    }
+    return (
+      <View style={[styles.pinModal, modalPosition]}>
+        <Text style={styles.pinModalTitle}>{pinModal.title}</Text>
+        <Text style={styles.pinModalLabel}>Tags:</Text>
+        {pinModal.tags && <Text style={styles.pinModalText}>{pinModal.tags}</Text>}
+        <Text style={styles.pinModalLabel}>Notes:</Text>
+        {pinModal.notes && <Text style={styles.pinModalText}>{pinModal.notes}</Text>}
+        <Text style={styles.pinModalLabel}>Latitude:</Text>
+        <Text style={styles.pinModalText}>{mapXToLat(pinModal.x)}</Text>
+        <Text style={styles.pinModalLabel}>Longitude:</Text>
+        <Text style={styles.pinModalText}>{mapYToLong(pinModal.y)}</Text>
       </View>
     )
   }
@@ -126,10 +161,18 @@ const MapScreen = ({ route, navigation }) => {
 
   const getMapCoordinates = () => {
     actualCoordinates = {
-      latitude: MAPCORNERS.NW.latitude + (mapPosition.x / MAPWIDTH) * (MAPCORNERS.NE.latitude - MAPCORNERS.SW.latitude),
-      longitude: MAPCORNERS.SW.longitude + (mapPosition.y / MAPHEIGHT) * (MAPCORNERS.SE.longitude - MAPCORNERS.SW.longitude),
+      latitude: mapXToLat(mapPosition.x),
+      longitude: mapYToLong(mapPosition.y),
     };
     return actualCoordinates;
+  }
+
+  const mapXToLat = (x) => {
+    return MAPCORNERS.NW.latitude + (x / MAPWIDTH) * (MAPCORNERS.NE.latitude - MAPCORNERS.SW.latitude);
+  }
+
+  const mapYToLong = (y) => {
+    return MAPCORNERS.SW.longitude + (y / MAPHEIGHT) * (MAPCORNERS.SE.longitude - MAPCORNERS.SW.longitude);
   }
 
   // These styles require variable access, so they must be defined here
@@ -141,9 +184,9 @@ const MapScreen = ({ route, navigation }) => {
     bottom: Dimensions.get('window').height * (1/mapPosition.zoom) / 2,
   };
   const pinImage = {
-  width: 50,
-  height: 50,
-  }
+    width: PINWIDTH,
+    height: PINHEIGHT,
+  };
 
   return (
     <View style={globalStyles.container} onResponderReject>
@@ -156,7 +199,7 @@ const MapScreen = ({ route, navigation }) => {
         pinchToZoom={true}
         panToMove={true}
         minScale={0.4}
-        onClick={() => {getLocation(); setShowLocation(!showLocation);}}
+        onClick={() => {getLocation(); setShowLocation(!showLocation); setPinModal(null)}}
         enableCenterFocus={false}
         onMove={(event) => handleSetMapPosition(event, MAPWIDTH, MAPHEIGHT)}
       >
@@ -171,23 +214,15 @@ const MapScreen = ({ route, navigation }) => {
         userPhoto={userPhoto}
         navigator={navigation}
         boardScreen={false}
+        setBoard={setPins}
       />
 
-      {showLocation &&
-      <Text style={{position: 'absolute', bottom: 100, fontSize: 20, backgroundColor: 'white', padding: 5,}}>
-        Your location:{'\n'}
-        Latitude: {myLocation.latitude}{'\n'}
-        Longitude: {myLocation.longitude}{'\n\n'}
-        Map location{'\n'}
-        Latitude: {getMapCoordinates().latitude}{'\n'}
-        Longitude: {getMapCoordinates().longitude}{'\n'}
-      </Text>}
-
       {/* Drop pin button on map */}
-      {settingPin ? checkAndXButton() : pinButton()}
+      {settingPin ? placingPinButtons() : pinButton()}
       {settingPin && ghostPin()}
 
       {pins.map((pin) => showPin(pin))}
+      {pinModal !== null && showPinModal()}
 
       <PinNote state={isModalVisible} onClick={(button, title, tags, notes) => createPin(button, title, tags, notes)} />
     </View>
@@ -195,6 +230,29 @@ const MapScreen = ({ route, navigation }) => {
 }
 
 const styles = StyleSheet.create({
+  pinModal: {
+    position: 'absolute',
+    backgroundColor: 'lightgray',
+    borderColor: 'gray',
+    borderWidth: 3,
+    padding: 6,
+    width: Dimensions.get('window').width - 40,
+  },
+  pinModalTitle: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+  pinModalLabel: {
+    fontSize: 20,
+    marginTop: 3,
+    fontStyle: 'italic',
+    textDecorationLine: 'underline'
+  },
+  pinModalText: {
+    marginRight: 6,
+    fontSize: 20,
+    marginTop: 3,
+  },
   pinIcon: {
     width: 40,
     height: 40,
@@ -205,7 +263,7 @@ const styles = StyleSheet.create({
   },
   ghostPin: {
     position: 'absolute',
-    top: Dimensions.get('window').height / 2.3,
+    top: Dimensions.get('window').height / 2.26,
     alignSelf: 'center',
     elevation: 1,
   },

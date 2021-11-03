@@ -77,7 +77,7 @@ const UserBar = (props) => {
   // the type in this case is either "My" or "Public"
   const clickBoards = (navigator) => {
     setSearchType('board');
-    navigator.navigate('Boards');
+    navigator.navigate('Boards', {setBoard: props.setBoard});
   }
 
   // This handles any click not on a menu while a menu is open
