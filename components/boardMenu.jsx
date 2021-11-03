@@ -34,7 +34,7 @@ const BoardMenu = (props) => {
       const deleteBoardIcon = () => {
         return (
           <TouchableOpacity onPress={handleDeleteBoard}>
-            <Image source={require('../assets/trash.bmp')} style={styles.imageIcon}></Image>
+            <Image source={require('../assets/trash.png')} style={styles.imageIcon}></Image>
           </TouchableOpacity>
         )
       }
@@ -42,7 +42,7 @@ const BoardMenu = (props) => {
       const copyBoardIcon = () => {
         return (
           <TouchableOpacity onPress={handleCopyBoard}>
-            <Image source={require('../assets/copy.bmp')} style={styles.copyIcon}></Image>
+            <Image source={require('../assets/copy.png')} style={styles.copyIcon}></Image>
           </TouchableOpacity>
         )
       }
@@ -50,7 +50,7 @@ const BoardMenu = (props) => {
       const upvoteIcon = () => {
         return (
           <TouchableOpacity onPress={handleUpvoteBoard}>
-            <Image source={require('../assets/upvote.bmp')} style={styles.imageIcon}></Image>
+            <Image source={require('../assets/upvote.png')} style={styles.imageIcon}></Image>
           </TouchableOpacity>
         )
       }
@@ -58,7 +58,7 @@ const BoardMenu = (props) => {
       const reportIcon = () => {
         return (
           <TouchableOpacity onPress={handleReportBoard}>
-            <Image source={require('../assets/report.bmp')} style={styles.reportIcon}></Image>
+            <Image source={require('../assets/report.png')} style={styles.reportIcon}></Image>
           </TouchableOpacity>
         )
       }

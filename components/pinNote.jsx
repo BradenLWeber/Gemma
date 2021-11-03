@@ -35,9 +35,9 @@ const PinNote = (props) => {
             <View style={styles.Modal}>
                 <Text style={styles.Header}> Create a new pin </Text>
                 <View style={styles.InputView}>
-                    <TextInput placeholder={'Title'} style={styles.Title} onChange={(text) => setTitle(text)}/>
-                    <TextInput placeholder={'Tags'} style={styles.Tags} onChange={(text) => setTags(text)}/>
-                    <TextInput placeholder={'Notes'} style={styles.Notes} onChange={(text) => setNotes(text)} multiline={true}/>
+                    <TextInput placeholder={'Title'} style={styles.Title} onChangeText={(text) => setTitle(text)}/>
+                    <TextInput placeholder={'Tags'} style={styles.Tags} onChangeText={(text) => setTags(text)}/>
+                    <TextInput placeholder={'Notes'} style={styles.Notes} onChangeText={(text) => setNotes(text)} multiline={true}/>
                 </View>
                 <View style={styles.modalButtons}>
                     <TouchableOpacity onPress={() => handleClick('cancel')} style={styles.modalButton}>

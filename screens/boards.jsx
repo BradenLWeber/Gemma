@@ -7,6 +7,7 @@ import BoardMenu from '../components/boardMenu';
 import { StyleSheet, Text, View, TouchableOpacity, Image, ScrollView, SafeAreaView, Dimensions } from 'react-native';
 
 const BoardScreen = (props) => {
+
   const [publicOrPrivate, setPublicOrPrivate] = useState('Private');
   const [boardsType, setBoardsType] = useState('My');
   const [isModalVisible, setisModalVisible] = useState(false);
@@ -50,40 +51,29 @@ const BoardScreen = (props) => {
         <ScrollView style={styles.boardScrollContainer}>
           <View style={styles.boardContainer}>
             <TouchableOpacity onPress={handleModal}>
-              <Board boardType={boardsType} navigator={props.navigator} />
-              </TouchableOpacity>
-              <BoardMenu state={isModalVisible} boardsType={boardsType}
-              onClick={() => setisModalVisible()} />
+              <Board boardType={boardsType} navigator={props.navigator} setBoard={props.setBoard}/>
+            </TouchableOpacity>
 
             <TouchableOpacity onPress={handleModal}>
-              <Board boardType={boardsType} navigator={props.navigator} />
-              </TouchableOpacity>
-              <BoardMenu state={isModalVisible} boardsType={boardsType}
-              onClick={() => setisModalVisible()} />
+              <Board boardType={boardsType} navigator={props.navigator} setBoard={props.setBoard}/>
+            </TouchableOpacity>
+            <BoardMenu state={isModalVisible} boardsType={boardsType} onClick={() => setisModalVisible()}/>
 
             <TouchableOpacity onPress={handleModal}>
-              <Board boardType={boardsType} navigator={props.navigator} />
-              </TouchableOpacity>
-              <BoardMenu state={isModalVisible} boardsType={boardsType}
-              onClick={() => setisModalVisible()} />
+              <Board boardType={boardsType} navigator={props.navigator} setBoard={props.setBoard}/>
+            </TouchableOpacity>
 
             <TouchableOpacity onPress={handleModal}>
-              <Board boardType={boardsType} navigator={props.navigator} />
-              </TouchableOpacity>
-              <BoardMenu state={isModalVisible} boardsType={boardsType}
-              onClick={() => setisModalVisible()} />
+              <Board boardType={boardsType} navigator={props.navigator} setBoard={props.setBoard}/>
+            </TouchableOpacity>
 
             <TouchableOpacity onPress={handleModal}>
-              <Board boardType={boardsType} navigator={props.navigator} />
-              </TouchableOpacity>
-              <BoardMenu state={isModalVisible} boardsType={boardsType}
-              onClick={() => setisModalVisible()} />
+              <Board boardType={boardsType} navigator={props.navigator} setBoard={props.setBoard}/>
+            </TouchableOpacity>
 
             <TouchableOpacity onPress={handleModal}>
-              <Board boardType={boardsType} navigator={props.navigator} />
-              </TouchableOpacity>
-              <BoardMenu state={isModalVisible} boardsType={boardsType}
-              onClick={() => setisModalVisible()} />
+              <Board boardType={boardsType} navigator={props.navigator} setBoard={props.setBoard}/>
+            </TouchableOpacity>
           </View>
         </ScrollView>
       </SafeAreaView>
