@@ -106,17 +106,20 @@ const styles = StyleSheet.create({
   forgotButton: {
     flexDirection: 'row-reverse',
     paddingRight: 10,
+    position: 'absolute',
+    left: 3,
+    top: 250,
   },
   forgotButtonText: {
     fontSize: 20,
     fontStyle: 'italic',
-    color: '#97CCEE',
+    color: '#28539c',
   },
   doneButton: {
     alignItems: "center",
     backgroundColor: "#6CC071",
     width: 120,
-    marginTop: 50,
+    marginTop: 80,
     padding: 10,
     borderRadius: 10,
   },
