@@ -13,10 +13,10 @@ const MapScreen = ({ route, navigation }) => {
   const PINHEIGHT = 50;
   const PINWIDTH = 50;
   const MAPCORNERS = {
-    NW: {latitude: 42.938471, longitude: -85.584682},
-    NE: {latitude: 42.938471, longitude: -85.572594},
-    SW: {latitude: 42.929547, longitude: -85.584682},
-    SE: {latitude: 42.929547, longitude: -85.572594},
+    NW: {latitude: 42.938853, longitude: -85.573372},
+    NE: {latitude: 42.938853, longitude: -85.573994},
+    SW: {latitude: 42.929539, longitude: -85.573372},
+    SE: {latitude: 42.929539, longitude: -85.573994},
   };
 
   const [isModalVisible, setisModalVisible] = useState(false);
@@ -29,6 +29,7 @@ const MapScreen = ({ route, navigation }) => {
   const [key, setKey] = useState(0);
   const [pinModal, setPinModal] = useState(null);
   const [panTo, setPanTo] = useState(null);
+  const [debug, setDebug] = useState(null);
 
   const getLocationPermissions = async () => {
     const response = await Location.getForegroundPermissionsAsync();
@@ -77,21 +78,31 @@ const MapScreen = ({ route, navigation }) => {
     await getLocation();
     if (
       myLocation.longitude > MAPCORNERS.NE.longitude ||
-      myLocation.longitude > MAPCORNERS.NW.longitude ||
+      myLocation.longitude < MAPCORNERS.SW.longitude ||
       myLocation.latitude > MAPCORNERS.NE.latitude ||
-      myLocation.latitude > MAPCORNERS.SW.latitude
+      myLocation.latitude < MAPCORNERS.SW.latitude
     ) {
-      alert('You are out of the map');
+      // alert(`${myLocation.longitude} > ${MAPCORNERS.NE.longitude} ${myLocation.longitude > MAPCORNERS.SW.longitude} ||\n
+      // ${myLocation.longitude} < ${MAPCORNERS.SW.longitude} ${myLocation.longitude < MAPCORNERS.NE.longitude} ||\n
+      // ${myLocation.latitude} > ${MAPCORNERS.NE.latitude} ${myLocation.latitude > MAPCORNERS.NE.latitude} ||\n
+      // ${myLocation.latitude} < ${MAPCORNERS.SW.latitude} ${myLocation.latitude < MAPCORNERS.SW.latitude} \n`);
+      alert('You are not on the map');
       return;
     }
+
     const myPosition = {
-      x: mapLatToX(myLocation.latitude),
-      y: mapLongToY(myLocation.longitude),
+      x: mapLongToCenterX(myLocation.longitude),
+      y: mapLatToCenterY(myLocation.latitude),
       scale: 1.0,
       duration: 0,
     };
-    setPanTo(myPosition);
-    setPanTo(null);
+    setDebug({
+      lat: myLocation.latitude,
+      long: myLocation.longitude,
+      myX: myPosition.x,
+      myY: myPosition.y});
+    // setPanTo(myPosition);
+    // setPanTo(null);
   }
 
   const placingPinButtons = () => {
@@ -129,6 +140,9 @@ const MapScreen = ({ route, navigation }) => {
         notes: notes,
         key: key,
       }));
+    } else {
+      setisModalVisible(false);
+      setSettingPin(false);
     }
   }
 
@@ -175,9 +189,9 @@ const MapScreen = ({ route, navigation }) => {
         <Text style={styles.pinModalLabel}>Notes:</Text>
         {pinModal.notes && <Text style={styles.pinModalText}>{pinModal.notes}</Text>}
         <Text style={styles.pinModalLabel}>Latitude:</Text>
-        <Text style={styles.pinModalText}>{mapXToLat(pinModal.x)}</Text>
+        <Text style={styles.pinModalText}>{mapYToLat(pinModal.y)}</Text>
         <Text style={styles.pinModalLabel}>Longitude:</Text>
-        <Text style={styles.pinModalText}>{mapYToLong(pinModal.y)}</Text>
+        <Text style={styles.pinModalText}>{mapXToLong(pinModal.x)}</Text>
       </View>
     )
   }
@@ -192,26 +206,29 @@ const MapScreen = ({ route, navigation }) => {
 
   const getMapCoordinates = () => {
     actualCoordinates = {
-      latitude: mapXToLat(mapPosition.x),
-      longitude: mapYToLong(mapPosition.y),
+      latitude: mapYToLat(mapPosition.x),
+      longitude: mapXToLong(mapPosition.y),
     };
     return actualCoordinates;
   }
 
-  const mapXToLat = (x) => {
-    return MAPCORNERS.SW.latitude + (x / MAPWIDTH) * (MAPCORNERS.NE.latitude - MAPCORNERS.SW.latitude);
+  const mapXToLong = (x) => {
+    return MAPCORNERS.SW.longitude + (x / MAPWIDTH) * (MAPCORNERS.NE.longitude - MAPCORNERS.SW.longitude);
   }
 
-  const mapYToLong = (y) => {
-    return MAPCORNERS.SW.longitude + (y / MAPHEIGHT) * (MAPCORNERS.SE.longitude - MAPCORNERS.SW.longitude);
+  const mapYToLat = (y) => {
+    return MAPCORNERS.SW.latitude + (y / MAPHEIGHT) * (MAPCORNERS.NE.latitude - MAPCORNERS.SW.latitude);
   }
 
-  const mapLatToX = (lat) => {
-    return (lat - MAPCORNERS.SW.latitude) * MAPWIDTH / (MAPCORNERS.NE.latitude - MAPCORNERS.SW.latitude);
+  // Calculates the Y coming from the center because that is the Y used in ImageZoom to center the map
+
+  const mapLatToCenterY = (lat) => {
+    return (lat - MAPCORNERS.SW.latitude) / (MAPCORNERS.NE.latitude - MAPCORNERS.SW.latitude) * MAPHEIGHT - MAPHEIGHT / 2;
   }
 
-  const mapLongToY = (long) => {
-    return (long - MAPCORNERS.SW.longitude) * MAPHEIGHT / (MAPCORNERS.SE.longitude - MAPCORNERS.SW.longitude);
+  // Calculates the X coming from the center because that is the X used in ImageZoom to center the map
+  const mapLongToCenterX = (long) => {
+    return - (long - MAPCORNERS.SW.longitude) / (MAPCORNERS.NE.longitude - MAPCORNERS.SW.longitude) * MAPWIDTH + MAPWIDTH / 2;
   }
 
   // These styles require variable access, so they must be defined here
@@ -263,6 +280,8 @@ const MapScreen = ({ route, navigation }) => {
 
       {pins.map((pin) => showPin(pin))}
       {pinModal !== null && showPinModal()}
+
+      {/* <Text style={{position: 'absolute', top: 150, fontSize: 25}}>Debug: {JSON.stringify(debug)}</Text> */}
 
       <PinNote state={isModalVisible} onClick={(button, title, tags, notes) => createPin(button, title, tags, notes)} />
     </View>
