@@ -28,7 +28,7 @@ const UserBar = (props) => {
           <Text style={styles.menuButtonText}>Settings</Text>
         </TouchableOpacity>
         <View style={styles.menuDivider} />
-        <TouchableOpacity style={styles.menuButton}>
+        <TouchableOpacity style={styles.menuButton} onPress={() => props.navigator.navigate('Login')}>
           <Text style={styles.menuButtonText}>Logout</Text>
         </TouchableOpacity>
       </View>
