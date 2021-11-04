@@ -89,6 +89,7 @@ const styles = StyleSheet.create({
         fontSize: 60,
         marginTop: 80,
         color: '#201E3C',
+        width: 500,
     },
     signupButton: {
         alignItems: "center",
