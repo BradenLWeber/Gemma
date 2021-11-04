@@ -1,6 +1,5 @@
 import React, { useState, useRef, createRef } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Switch, Image, KeyboardAvoidingView, TextInput } from 'react-native';
-import { ColorPicker } from 'react-native-color-picker';
 
 const Settings = (props) => {
 
