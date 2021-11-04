@@ -28,6 +28,7 @@ const MapScreen = ({ route, navigation }) => {
   const [pins, setPins] = useState([]);
   const [key, setKey] = useState(0);
   const [pinModal, setPinModal] = useState(null);
+  const [panTo, setPanTo] = useState(null);
 
   const getLocationPermissions = async () => {
     const response = await Location.getForegroundPermissionsAsync();
@@ -68,6 +69,31 @@ const MapScreen = ({ route, navigation }) => {
     )
   }
 
+  const handleGetMyLocation = async () => {
+    if (await getLocationPermissions() === false) {
+      alert('Location not turned on');
+      return;
+    }
+    await getLocation();
+    if (
+      myLocation.longitude > MAPCORNERS.NE.longitude ||
+      myLocation.longitude > MAPCORNERS.NW.longitude ||
+      myLocation.latitude > MAPCORNERS.NE.latitude ||
+      myLocation.latitude > MAPCORNERS.SW.latitude
+    ) {
+      alert('You are out of the map');
+      return;
+    }
+    const myPosition = {
+      x: mapLatToX(myLocation.latitude),
+      y: mapLongToY(myLocation.longitude),
+      scale: 1.0,
+      duration: 0,
+    };
+    setPanTo(myPosition);
+    setPanTo(null);
+  }
+
   const placingPinButtons = () => {
     return (
         <View style={globalStyles.PinButton}>
@@ -79,6 +105,11 @@ const MapScreen = ({ route, navigation }) => {
           <TouchableOpacity onPress={handleCheck}>
             <View style={globalStyles.addWrapper}>
               <Image source={require('../assets/blue-check.png')} style={styles.checkIcon} />
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.myLocationButton} onPress={handleGetMyLocation}>
+            <View style={globalStyles.addWrapper}>
+              <Image source={require('../assets/blue-pin.png')} style={styles.checkIcon} />
             </View>
           </TouchableOpacity>
         </View>
@@ -168,11 +199,19 @@ const MapScreen = ({ route, navigation }) => {
   }
 
   const mapXToLat = (x) => {
-    return MAPCORNERS.NW.latitude + (x / MAPWIDTH) * (MAPCORNERS.NE.latitude - MAPCORNERS.SW.latitude);
+    return MAPCORNERS.SW.latitude + (x / MAPWIDTH) * (MAPCORNERS.NE.latitude - MAPCORNERS.SW.latitude);
   }
 
   const mapYToLong = (y) => {
     return MAPCORNERS.SW.longitude + (y / MAPHEIGHT) * (MAPCORNERS.SE.longitude - MAPCORNERS.SW.longitude);
+  }
+
+  const mapLatToX = (lat) => {
+    return (lat - MAPCORNERS.SW.latitude) * MAPWIDTH / (MAPCORNERS.NE.latitude - MAPCORNERS.SW.latitude);
+  }
+
+  const mapLongToY = (long) => {
+    return (long - MAPCORNERS.SW.longitude) * MAPHEIGHT / (MAPCORNERS.SE.longitude - MAPCORNERS.SW.longitude);
   }
 
   // These styles require variable access, so they must be defined here
@@ -198,6 +237,7 @@ const MapScreen = ({ route, navigation }) => {
         imageHeight={MAPHEIGHT + Dimensions.get('window').height * (1/mapPosition.zoom)}
         pinchToZoom={true}
         panToMove={true}
+        centerOn={panTo}
         minScale={0.4}
         onClick={() => {getLocation(); setShowLocation(!showLocation); setPinModal(null)}}
         enableCenterFocus={false}
@@ -273,6 +313,10 @@ const styles = StyleSheet.create({
   xButton: {
     position: 'absolute',
     right: 70,
+  },
+  myLocationButton: {
+    position: 'absolute',
+    right: 141,
   }
 });
 

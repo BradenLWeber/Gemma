@@ -48,7 +48,7 @@ const Login = (props) => {
     const handleGeoPermissions = async () => {
         let { status } = await Location.requestForegroundPermissionsAsync();
         if (status !== 'granted') {
-            alert("Location Permission has not been granted!");
+            alert("Location Permission has been denied!");
         }
     }
 
@@ -89,6 +89,7 @@ const styles = StyleSheet.create({
         fontSize: 60,
         marginTop: 80,
         color: '#201E3C',
+        width: 500,
     },
     signupButton: {
         alignItems: "center",

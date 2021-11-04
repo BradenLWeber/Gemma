@@ -67,11 +67,12 @@ export default function App() {
     )
   };
 
-  function settingsScreen({ navigation }) {
+  function settingsScreen({ route, navigation }) {
     return (
       <SettingScreen
         navigator={navigation}
         userPhoto={userPhoto}
+        locationPermission={route.params.locationPermission}
       />
     )
   };

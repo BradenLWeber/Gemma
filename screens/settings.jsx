@@ -1,12 +1,13 @@
-import React, { useState, useRef, createRef } from 'react';
+import React, { useState, useRef, createRef, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Switch, Image, KeyboardAvoidingView, TextInput } from 'react-native';
 import { ColorPicker } from 'react-native-color-picker';
+import * as Location from 'expo-location';
 
 const Settings = (props) => {
 
   const [userPhotoList, setUserPhotoList] = useState({ default: require('../assets/defaultAvatar.png') })
   const [username, setUsername] = useState('FuriousFive5');
-  const [GPS, setGPS] = useState(true);
+  const [GPS, setGPS] = useState(props.locationPermission);
 
   const nameInputRef = createRef();
 
@@ -15,6 +16,16 @@ const Settings = (props) => {
   }
   const handlePicture = () => {
 
+  }
+  const setPermissions = async (value) => {
+    if (value === true) {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+        if (status === 'granted') {
+            setGPS(true);
+        }
+    } else {
+      alert('Turn off permissions at settings -> apps -> Expo Go -> Permissions');
+    }
   }
 
   return (
@@ -57,7 +68,7 @@ const Settings = (props) => {
           trackColor={{ false: 'gray', true: '#6CC071' }}
           thumbColor="white"
           ios_backgroundColor="gray"
-          onValueChange={(value) => setGPS(value)}
+          onValueChange={(value) => setPermissions(value)}
           value={GPS}
           style={{ transform: [{ scaleX: 1.3 }, { scaleY: 1.3 }] }}
         />
