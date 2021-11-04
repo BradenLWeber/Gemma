@@ -98,6 +98,9 @@ const MapScreen = ({ route, navigation }) => {
         notes: notes,
         key: key,
       }));
+    } else {
+      setisModalVisible(false);
+      setSettingPin(false);
     }
   }
 
