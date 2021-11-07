@@ -1,6 +1,5 @@
 import React, { useState, useRef, createRef, useEffect } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Switch, Image, KeyboardAvoidingView, TextInput } from 'react-native';
-import { ColorPicker } from 'react-native-color-picker';
 import * as Location from 'expo-location';
 
 const Settings = (props) => {
