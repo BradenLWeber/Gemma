@@ -29,7 +29,6 @@ const MapScreen = ({ route, navigation }) => {
   const [key, setKey] = useState(0);
   const [pinModal, setPinModal] = useState(null);
   const [panTo, setPanTo] = useState(null);
-  const [debug, setDebug] = useState(null);
 
   const getLocationPermissions = async () => {
     const response = await Location.getForegroundPermissionsAsync();
@@ -83,12 +82,12 @@ const MapScreen = ({ route, navigation }) => {
       myLocation.latitude > MAPCORNERS.NE.latitude ||
       myLocation.latitude < MAPCORNERS.SW.latitude
     ) {
-      // alert(`${myLocation.longitude} > ${MAPCORNERS.NE.longitude} ${myLocation.longitude > MAPCORNERS.SW.longitude} ||\n
-      // ${myLocation.longitude} < ${MAPCORNERS.SW.longitude} ${myLocation.longitude < MAPCORNERS.NE.longitude} ||\n
-      // ${myLocation.latitude} > ${MAPCORNERS.NE.latitude} ${myLocation.latitude > MAPCORNERS.NE.latitude} ||\n
-      // ${myLocation.latitude} < ${MAPCORNERS.SW.latitude} ${myLocation.latitude < MAPCORNERS.SW.latitude} \n`);
-      // alert('You are not on the map');
-      // return;
+      alert(`${myLocation.longitude} > ${MAPCORNERS.NE.longitude} ${myLocation.longitude > MAPCORNERS.SW.longitude} ||\n
+      ${myLocation.longitude} < ${MAPCORNERS.SW.longitude} ${myLocation.longitude < MAPCORNERS.NE.longitude} ||\n
+      ${myLocation.latitude} > ${MAPCORNERS.NE.latitude} ${myLocation.latitude > MAPCORNERS.NE.latitude} ||\n
+      ${myLocation.latitude} < ${MAPCORNERS.SW.latitude} ${myLocation.latitude < MAPCORNERS.SW.latitude} \n`);
+      alert('You are not on the map');
+      return;
     }
 
     const myPosition = {
@@ -97,7 +96,6 @@ const MapScreen = ({ route, navigation }) => {
       scale: 1.0,
       duration: 0,
     };
-    setDebug(myLocation);
     // setPanTo(myPosition);
     // setPanTo(null);
   }
@@ -276,8 +274,6 @@ const MapScreen = ({ route, navigation }) => {
 
       {pins.map((pin) => showPin(pin))}
       {pinModal !== null && showPinModal()}
-
-      <Text style={{position: 'absolute', top: 150, fontSize: 25}}>Debug: {JSON.stringify(debug)}</Text>
 
       <PinNote state={isModalVisible} onClick={(button, title, tags, notes) => createPin(button, title, tags, notes)} />
     </View>
