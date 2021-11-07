@@ -37,9 +37,10 @@ const MapScreen = ({ route, navigation }) => {
   }
 
   const getLocation = async () => {
-    const response = await Location.getCurrentPositionAsync({accuracy: Location.Accuracy.Highest});
+    const response = await Location.getCurrentPositionAsync({accuracy: Location.Accuracy.BestForNavigation});
     const location = {latitude: response.coords.latitude, longitude: response.coords.longitude};
-    setMyLocation({ latitude: location.latitude, longitude: location.longitude});
+    const status = await Location.getProviderStatusAsync();
+    setMyLocation({ latitude: location.latitude, longitude: location.longitude, accuracy: response.coords.accuracy, time: response.timestamp, gps: status.gpsAvailable});
     return location;
   }
 
@@ -86,8 +87,8 @@ const MapScreen = ({ route, navigation }) => {
       // ${myLocation.longitude} < ${MAPCORNERS.SW.longitude} ${myLocation.longitude < MAPCORNERS.NE.longitude} ||\n
       // ${myLocation.latitude} > ${MAPCORNERS.NE.latitude} ${myLocation.latitude > MAPCORNERS.NE.latitude} ||\n
       // ${myLocation.latitude} < ${MAPCORNERS.SW.latitude} ${myLocation.latitude < MAPCORNERS.SW.latitude} \n`);
-      alert('You are not on the map');
-      return;
+      // alert('You are not on the map');
+      // return;
     }
 
     const myPosition = {
@@ -96,11 +97,7 @@ const MapScreen = ({ route, navigation }) => {
       scale: 1.0,
       duration: 0,
     };
-    setDebug({
-      lat: myLocation.latitude,
-      long: myLocation.longitude,
-      myX: myPosition.x,
-      myY: myPosition.y});
+    setDebug(myLocation);
     // setPanTo(myPosition);
     // setPanTo(null);
   }
@@ -217,11 +214,10 @@ const MapScreen = ({ route, navigation }) => {
   }
 
   const mapYToLat = (y) => {
-    return MAPCORNERS.SW.latitude + (y / MAPHEIGHT) * (MAPCORNERS.NE.latitude - MAPCORNERS.SW.latitude);
+    return MAPCORNERS.NE.latitude - (y / MAPHEIGHT) * (MAPCORNERS.NE.latitude - MAPCORNERS.SW.latitude);
   }
 
   // Calculates the Y coming from the center because that is the Y used in ImageZoom to center the map
-
   const mapLatToCenterY = (lat) => {
     return (lat - MAPCORNERS.SW.latitude) / (MAPCORNERS.NE.latitude - MAPCORNERS.SW.latitude) * MAPHEIGHT - MAPHEIGHT / 2;
   }
@@ -281,7 +277,7 @@ const MapScreen = ({ route, navigation }) => {
       {pins.map((pin) => showPin(pin))}
       {pinModal !== null && showPinModal()}
 
-      {/* <Text style={{position: 'absolute', top: 150, fontSize: 25}}>Debug: {JSON.stringify(debug)}</Text> */}
+      <Text style={{position: 'absolute', top: 150, fontSize: 25}}>Debug: {JSON.stringify(debug)}</Text>
 
       <PinNote state={isModalVisible} onClick={(button, title, tags, notes) => createPin(button, title, tags, notes)} />
     </View>
