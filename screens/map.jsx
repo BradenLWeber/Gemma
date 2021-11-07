@@ -13,9 +13,9 @@ const MapScreen = ({ route, navigation }) => {
   const PINHEIGHT = 50;
   const PINWIDTH = 50;
   const MAPCORNERS = {
-    NW: {latitude: 42.938853, longitude: -85.573372},
+    NW: {latitude: 42.938853, longitude: -85.585157},
     NE: {latitude: 42.938853, longitude: -85.573994},
-    SW: {latitude: 42.929539, longitude: -85.573372},
+    SW: {latitude: 42.929539, longitude: -85.585157},
     SE: {latitude: 42.929539, longitude: -85.573994},
   };
 
@@ -36,10 +36,10 @@ const MapScreen = ({ route, navigation }) => {
   }
 
   const getLocation = async () => {
-    const response = await Location.getCurrentPositionAsync({accuracy: Location.Accuracy.BestForNavigation});
+    const response = await Location.getCurrentPositionAsync({accuracy: Location.Accuracy.Highest});
     const location = {latitude: response.coords.latitude, longitude: response.coords.longitude};
     const status = await Location.getProviderStatusAsync();
-    setMyLocation({ latitude: location.latitude, longitude: location.longitude, accuracy: response.coords.accuracy, time: response.timestamp, gps: status.gpsAvailable});
+    setMyLocation({ latitude: location.latitude, longitude: location.longitude, accuracy: response.coords.accuracy});
     return location;
   }
 
