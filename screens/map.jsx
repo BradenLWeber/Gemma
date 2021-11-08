@@ -8,8 +8,8 @@ import ImageZoom from 'react-native-image-pan-zoom';
 
 const MapScreen = ({ route, navigation }) => {
 
-  const MAPWIDTH = 1500;
   const MAPHEIGHT = 1500;
+  const MAPWIDTH = 1940; //MAPHEIGHT * 1.293;
   const PINHEIGHT = 50;
   const PINWIDTH = 50;
   const MAPCORNERS = {
@@ -41,10 +41,6 @@ const MapScreen = ({ route, navigation }) => {
     const status = await Location.getProviderStatusAsync();
     setMyLocation({ latitude: location.latitude, longitude: location.longitude, accuracy: response.coords.accuracy});
     return location;
-  }
-
-  const chooseBoard = () => {
-    setPins(BOARD);
   }
 
   // Function handles displaying, hiding a pin's notes
@@ -265,7 +261,7 @@ const MapScreen = ({ route, navigation }) => {
         userPhoto={userPhoto}
         navigator={navigation}
         boardScreen={false}
-        setBoard={setPins}
+        setBoard={(board) => setPins(pins.concat(board))}
       />
 
       {/* Drop pin button on map */}

@@ -213,9 +213,8 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
     fontSize: 60,
-    bottom: 6,
+    bottom: 8,
     color: 'gray',
-    right: 0,
   },
   userOptions: {
     width: 46,

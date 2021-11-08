@@ -16,19 +16,19 @@ const BoardMenu = (props) => {
         }
     
       const handleDeleteBoard = () => {
-        alert('Pressed delete board');
+        alert('Pressed delete on ' + props.boardPressed.title);
       }
     
       const handleCopyBoard = () => {
-        alert('Pressed copy board');
+        alert('Pressed copy on ' + props.boardPressed.title);
       }
     
       const handleUpvoteBoard = () => {
-        alert('Pressed upvote board');
+        alert('Pressed upvote on ' + props.boardPressed.title);
       }
     
       const handleReportBoard = () => {
-        alert('Pressed report board');
+        alert('Pressed report on ' + props.boardPressed.title);
       }
     
       const deleteBoardIcon = () => {
