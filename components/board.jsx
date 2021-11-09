@@ -34,7 +34,7 @@ const Board = (props) => {
             <View style={styles.boardText}>
                 <Text style={styles.boardTitle}>{props.board.title}</Text>
                 <View style={styles.boardDivider} />
-                <Text style={styles.boardInfoText}>Pins: {props.board.length}</Text>
+                <Text style={styles.boardInfoText}>Pins: {props.board.pins.length}</Text>
                 <Text style={styles.boardInfoText}>Upvotes: {props.board.upvotes}</Text>
                 {/* Only render public/private button if it is personal boards, not public */}
                 {props.boardType == 'My' && publicPrivateButton()}

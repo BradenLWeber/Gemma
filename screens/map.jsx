@@ -24,7 +24,7 @@ const MapScreen = ({ route, navigation }) => {
   const [myLocation, setMyLocation] = useState({});
   const [showLocation, setShowLocation] = useState(false);
   const [settingPin, setSettingPin] = useState(false);
-  const [mapPosition, setMapPosition] = useState({x: 0, y: 0, zoom: 1});
+  const [mapPosition, setMapPosition] = useState({x: MAPWIDTH / 2, y: MAPHEIGHT / 2, zoom: 1});
   const [pins, setPins] = useState([]);
   const [key, setKey] = useState(0);
   const [pinModal, setPinModal] = useState(null);
@@ -261,7 +261,7 @@ const MapScreen = ({ route, navigation }) => {
         userPhoto={userPhoto}
         navigator={navigation}
         boardScreen={false}
-        setBoard={(board) => setPins(pins.concat(board))}
+        setBoard={(board) => setPins(board)}
       />
 
       {/* Drop pin button on map */}

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Board from '../components/board';
 import UserBar from '../components/userBar';
+import AddBoard from '../components/addBoard';
 import PublicPrivateBar from '../components/publicPrivateBar';
 import BoardMenu from '../components/boardMenu';
 
@@ -12,11 +13,38 @@ const BoardScreen = (props) => {
   const [boardsType, setBoardsType] = useState('My');
   const [isModalVisible, setisModalVisible] = useState(false);
   const [boardPressed, setBoardPressed] = useState(null);
-  const [boards, setBoards] = useState([
+  const [key, setKey] = useState(1);
+  const [addBoardModal, setAddBoardModal] = useState(false);
+  const [publicBoards, setPublicBoards] = useState([
+    {
+      upvotes: 20,
+      creator: 'NoobIsNewbie',
+      title: 'Public board',
+      pins: [
+          {
+          x:  900,
+          y: 650,
+          title: 'A spot on the map',
+          tags: 'map, the',
+          notes: 'This is a public spot!',
+          key: 483,
+          },
+          {
+          x: 100,
+          y: 636,
+          title: 'Near the edge',
+          tags: 'Edge',
+          notes: 'This is near the edge',
+          key: 484,
+          },
+      ]
+    }
+  ])
+  const [privateBoards, setPrivateBoards] = useState([
     {
       upvotes: 20,
       creator: 'VanderLindenIsTheGoose',
-      title: 'Example board',
+      title: 'Private board',
       pins: [
           {
           x:  970,
@@ -70,8 +98,16 @@ const BoardScreen = (props) => {
     setisModalVisible(!isModalVisible);
   }
 
+  const clickAddBoard = (title) => {
+    // Braden issue here!
+    if (title) {
+      setPrivateBoards(privateBoards.concat({title: title, upvotes: 0, creator: 'Braden', pins: []}));
+    }
+    setAddBoardModal(false);
+  }
+
   const handleAddBoard = () => {
-    alert('Pressed add board');
+    setAddBoardModal(true);
   }
 
  const addBoardIcon = () => {
@@ -86,7 +122,7 @@ const BoardScreen = (props) => {
 
   const showBoard = (board) => {
     return (
-      <TouchableOpacity onPress={() => {handleModal(); setBoardPressed(board)}} key={boards.indexOf(board)}>
+      <TouchableOpacity onPress={() => {handleModal(); setBoardPressed(board)}} key={privateBoards.indexOf(board)}>
         <Board boardType={boardsType} navigator={props.navigator} setBoard={props.setBoard} board={board}/>
       </TouchableOpacity>
     )
@@ -95,31 +131,31 @@ const BoardScreen = (props) => {
   return (
     <View style={{ alignItems: 'center', position: 'relative' }}>
       <View style={styles.boardHeadingContainer}>
+        <PublicPrivateBar type={publicOrPrivate} onClick={clickPublicOrPrivate} />
         {boardsType === 'My' && addBoardIcon()}
       </View>
       <SafeAreaView style={{ height: Dimensions.get('window').height - 230 }}>
         <ScrollView style={styles.boardScrollContainer}>
           <View style={styles.boardContainer}>
-            {boards.map((board) => showBoard(board))}
+            {publicOrPrivate === 'Private' && privateBoards.map((board) => showBoard(board))}
+            {publicOrPrivate === 'Public' && publicBoards.map((board) => showBoard(board))}
             <BoardMenu state={isModalVisible} boardsType={boardsType} onClick={() => setisModalVisible()} boardPressed={boardPressed}/>
           </View>
         </ScrollView>
       </SafeAreaView>
-      {/* Public/private bar at the top of the screen */}
-      <PublicPrivateBar type={publicOrPrivate} onClick={clickPublicOrPrivate} />
       <UserBar
         navigator={props.navigator}
         setBoardsType={(type) => setBoardsType(type)}
         boardScreen={true}
         userPhoto={props.userPhoto}
       />
+      <AddBoard visibility={addBoardModal} makeBoard={clickAddBoard} exitModal={() => setAddBoardModal(false)}/>
     </View>
   )
 }
 
 const styles = StyleSheet.create({
   addBoard: {
-    marginLeft: 300,
     marginTop: 3,
     marginBottom: 10,
     justifyContent: 'center',
@@ -139,6 +175,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
     flexDirection: 'row',
     height: 55,
+    justifyContent: 'space-between'
   },
   boardScrollContainer: {
     height: '100%',
