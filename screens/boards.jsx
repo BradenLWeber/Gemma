@@ -99,7 +99,6 @@ const BoardScreen = (props) => {
   }
 
   const clickAddBoard = (title) => {
-    // Braden issue here!
     if (title) {
       setPrivateBoards(privateBoards.concat({title: title, upvotes: 0, creator: 'Braden', pins: []}));
     }
