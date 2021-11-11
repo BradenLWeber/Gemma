@@ -48,7 +48,7 @@ const Login = (props) => {
     const handleGeoPermissions = async () => {
         let { status } = await Location.requestForegroundPermissionsAsync();
         if (status !== 'granted') {
-            alert("Location Permission has not been granted!");
+            alert("Location Permission has been denied!");
         }
     }
 

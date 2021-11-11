@@ -30,16 +30,11 @@ const styles = StyleSheet.create({
     publicPrivateBar: {
         flexDirection: 'row',
         alignSelf: 'flex-start',
-        position: 'absolute',
-        top: 90,
-        //paddingBottom: 10,
         width: 140,
         height: 40,
-        marginLeft: 20,
         backgroundColor: '#F9D01E',
         borderRadius: 20,
         elevation: 8,
-        marginTop: 5,
     },
     textPrivate: {
         paddingTop: 8,

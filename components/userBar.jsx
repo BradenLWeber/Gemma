@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Platform, Image, View, Text, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, KeyboardAvoidingView, TextInput } from 'react-native'
+import * as Location from 'expo-location';
 
 const UserBar = (props) => {
   const [showUserMenu, setShowUserMenu] = useState(false);
@@ -8,11 +9,22 @@ const UserBar = (props) => {
   const [searchType, setSearchType] = useState(props.boardScreen ? 'board' : 'pin');
   const [userPhotoList, setUserPhotoList] = useState({ default: require('../assets/defaultAvatar.png') })
 
+  const getLocationPermissions = async () => {
+    const response = await Location.getForegroundPermissionsAsync();
+    return response.granted;
+  }
+
+  const clickSettings = async () => {
+    setShowUserMenu(false);
+    const response = await getLocationPermissions();
+    props.navigator.navigate('Settings', {locationPermission: response});
+  }
+
   // The popup when pressing the user icon
   const userMenu = (navigator) => {
     return (
       <View style={styles.userMenu}>
-        <TouchableOpacity style={styles.menuButton} onPress={() => props.navigator.navigate('Settings')}>
+        <TouchableOpacity style={styles.menuButton} onPress={clickSettings}>
           <Text style={styles.menuButtonText}>Settings</Text>
         </TouchableOpacity>
         <View style={styles.menuDivider} />
@@ -201,9 +213,8 @@ const styles = StyleSheet.create({
     width: 30,
     height: 30,
     fontSize: 60,
-    bottom: 6,
+    bottom: 8,
     color: 'gray',
-    right: 0,
   },
   userOptions: {
     width: 46,

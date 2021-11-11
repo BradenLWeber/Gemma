@@ -8,15 +8,15 @@ import ImageZoom from 'react-native-image-pan-zoom';
 
 const MapScreen = ({ route, navigation }) => {
 
-  const MAPWIDTH = 1500;
   const MAPHEIGHT = 1500;
+  const MAPWIDTH = 1940; //MAPHEIGHT * 1.293;
   const PINHEIGHT = 50;
   const PINWIDTH = 50;
   const MAPCORNERS = {
-    NW: {latitude: 42.938471, longitude: -85.584682},
-    NE: {latitude: 42.938471, longitude: -85.572594},
-    SW: {latitude: 42.929547, longitude: -85.584682},
-    SE: {latitude: 42.929547, longitude: -85.572594},
+    NW: {latitude: 42.938853, longitude: -85.585157},
+    NE: {latitude: 42.938853, longitude: -85.573994},
+    SW: {latitude: 42.929539, longitude: -85.585157},
+    SE: {latitude: 42.929539, longitude: -85.573994},
   };
 
   const [isModalVisible, setisModalVisible] = useState(false);
@@ -24,10 +24,11 @@ const MapScreen = ({ route, navigation }) => {
   const [myLocation, setMyLocation] = useState({});
   const [showLocation, setShowLocation] = useState(false);
   const [settingPin, setSettingPin] = useState(false);
-  const [mapPosition, setMapPosition] = useState({x: 0, y: 0, zoom: 1});
+  const [mapPosition, setMapPosition] = useState({x: MAPWIDTH / 2, y: MAPHEIGHT / 2, zoom: 1});
   const [pins, setPins] = useState([]);
   const [key, setKey] = useState(0);
   const [pinModal, setPinModal] = useState(null);
+  const [panTo, setPanTo] = useState(null);
 
   const getLocationPermissions = async () => {
     const response = await Location.getForegroundPermissionsAsync();
@@ -37,12 +38,9 @@ const MapScreen = ({ route, navigation }) => {
   const getLocation = async () => {
     const response = await Location.getCurrentPositionAsync({accuracy: Location.Accuracy.Highest});
     const location = {latitude: response.coords.latitude, longitude: response.coords.longitude};
-    setMyLocation({ latitude: location.latitude, longitude: location.longitude});
+    const status = await Location.getProviderStatusAsync();
+    setMyLocation({ latitude: location.latitude, longitude: location.longitude, accuracy: response.coords.accuracy});
     return location;
-  }
-
-  const chooseBoard = () => {
-    setPins(BOARD);
   }
 
   // Function handles displaying, hiding a pin's notes
@@ -68,6 +66,36 @@ const MapScreen = ({ route, navigation }) => {
     )
   }
 
+  const handleGetMyLocation = async () => {
+    if (await getLocationPermissions() === false) {
+      alert('Location not turned on');
+      return;
+    }
+    await getLocation();
+    if (
+      myLocation.longitude > MAPCORNERS.NE.longitude ||
+      myLocation.longitude < MAPCORNERS.SW.longitude ||
+      myLocation.latitude > MAPCORNERS.NE.latitude ||
+      myLocation.latitude < MAPCORNERS.SW.latitude
+    ) {
+      alert(`${myLocation.longitude} > ${MAPCORNERS.NE.longitude} ${myLocation.longitude > MAPCORNERS.SW.longitude} ||\n
+      ${myLocation.longitude} < ${MAPCORNERS.SW.longitude} ${myLocation.longitude < MAPCORNERS.NE.longitude} ||\n
+      ${myLocation.latitude} > ${MAPCORNERS.NE.latitude} ${myLocation.latitude > MAPCORNERS.NE.latitude} ||\n
+      ${myLocation.latitude} < ${MAPCORNERS.SW.latitude} ${myLocation.latitude < MAPCORNERS.SW.latitude} \n`);
+      alert('You are not on the map');
+      return;
+    }
+
+    const myPosition = {
+      x: mapLongToCenterX(myLocation.longitude),
+      y: mapLatToCenterY(myLocation.latitude),
+      scale: 1.0,
+      duration: 0,
+    };
+    // setPanTo(myPosition);
+    // setPanTo(null);
+  }
+
   const placingPinButtons = () => {
     return (
         <View style={globalStyles.PinButton}>
@@ -79,6 +107,11 @@ const MapScreen = ({ route, navigation }) => {
           <TouchableOpacity onPress={handleCheck}>
             <View style={globalStyles.addWrapper}>
               <Image source={require('../assets/blue-check.png')} style={styles.checkIcon} />
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.myLocationButton} onPress={handleGetMyLocation}>
+            <View style={globalStyles.addWrapper}>
+              <Image source={require('../assets/blue-pin.png')} style={styles.checkIcon} />
             </View>
           </TouchableOpacity>
         </View>
@@ -147,9 +180,9 @@ const MapScreen = ({ route, navigation }) => {
         <Text style={styles.pinModalLabel}>Notes:</Text>
         {pinModal.notes && <Text style={styles.pinModalText}>{pinModal.notes}</Text>}
         <Text style={styles.pinModalLabel}>Latitude:</Text>
-        <Text style={styles.pinModalText}>{mapXToLat(pinModal.x)}</Text>
+        <Text style={styles.pinModalText}>{mapYToLat(pinModal.y)}</Text>
         <Text style={styles.pinModalLabel}>Longitude:</Text>
-        <Text style={styles.pinModalText}>{mapYToLong(pinModal.y)}</Text>
+        <Text style={styles.pinModalText}>{mapXToLong(pinModal.x)}</Text>
       </View>
     )
   }
@@ -164,18 +197,28 @@ const MapScreen = ({ route, navigation }) => {
 
   const getMapCoordinates = () => {
     actualCoordinates = {
-      latitude: mapXToLat(mapPosition.x),
-      longitude: mapYToLong(mapPosition.y),
+      latitude: mapYToLat(mapPosition.x),
+      longitude: mapXToLong(mapPosition.y),
     };
     return actualCoordinates;
   }
 
-  const mapXToLat = (x) => {
-    return MAPCORNERS.NW.latitude + (x / MAPWIDTH) * (MAPCORNERS.NE.latitude - MAPCORNERS.SW.latitude);
+  const mapXToLong = (x) => {
+    return MAPCORNERS.SW.longitude + (x / MAPWIDTH) * (MAPCORNERS.NE.longitude - MAPCORNERS.SW.longitude);
   }
 
-  const mapYToLong = (y) => {
-    return MAPCORNERS.SW.longitude + (y / MAPHEIGHT) * (MAPCORNERS.SE.longitude - MAPCORNERS.SW.longitude);
+  const mapYToLat = (y) => {
+    return MAPCORNERS.NE.latitude - (y / MAPHEIGHT) * (MAPCORNERS.NE.latitude - MAPCORNERS.SW.latitude);
+  }
+
+  // Calculates the Y coming from the center because that is the Y used in ImageZoom to center the map
+  const mapLatToCenterY = (lat) => {
+    return (lat - MAPCORNERS.SW.latitude) / (MAPCORNERS.NE.latitude - MAPCORNERS.SW.latitude) * MAPHEIGHT - MAPHEIGHT / 2;
+  }
+
+  // Calculates the X coming from the center because that is the X used in ImageZoom to center the map
+  const mapLongToCenterX = (long) => {
+    return - (long - MAPCORNERS.SW.longitude) / (MAPCORNERS.NE.longitude - MAPCORNERS.SW.longitude) * MAPWIDTH + MAPWIDTH / 2;
   }
 
   // These styles require variable access, so they must be defined here
@@ -201,6 +244,7 @@ const MapScreen = ({ route, navigation }) => {
         imageHeight={MAPHEIGHT + Dimensions.get('window').height * (1/mapPosition.zoom)}
         pinchToZoom={true}
         panToMove={true}
+        centerOn={panTo}
         minScale={0.4}
         onClick={() => {getLocation(); setShowLocation(!showLocation); setPinModal(null)}}
         enableCenterFocus={false}
@@ -217,7 +261,7 @@ const MapScreen = ({ route, navigation }) => {
         userPhoto={userPhoto}
         navigator={navigation}
         boardScreen={false}
-        setBoard={setPins}
+        setBoard={(board) => setPins(board)}
       />
 
       {/* Drop pin button on map */}
@@ -276,6 +320,10 @@ const styles = StyleSheet.create({
   xButton: {
     position: 'absolute',
     right: 70,
+  },
+  myLocationButton: {
+    position: 'absolute',
+    right: 141,
   }
 });
 
