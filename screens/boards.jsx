@@ -121,7 +121,7 @@ const BoardScreen = (props) => {
 
   const showBoard = (board) => {
     return (
-      <TouchableOpacity onPress={() => {handleModal(); setBoardPressed(board)}} key={privateBoards.indexOf(board)}>
+      <TouchableOpacity onLongPress={() => {handleModal(); setBoardPressed(board)}} key={privateBoards.indexOf(board)}>
         <Board boardType={boardsType} navigator={props.navigator} setBoard={props.setBoard} board={board}/>
       </TouchableOpacity>
     )
