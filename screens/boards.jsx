@@ -11,7 +11,7 @@ const BoardScreen = (props) => {
 
   const [publicOrPrivate, setPublicOrPrivate] = useState('Private');
   const [boardsType, setBoardsType] = useState('My');
-  const [isModalVisible, setisModalVisible] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const [boardPressed, setBoardPressed] = useState(null);
   const [key, setKey] = useState(1);
   const [addBoardModal, setAddBoardModal] = useState(false);
@@ -59,7 +59,7 @@ const BoardScreen = (props) => {
           y: 636,
           title: 'Frog pond',
           tags: 'Frog',
-          notes: 'This pond has tadpoles and frogs consistenly every year',
+          notes: 'This pond has tadpoles and frogs consistently every year',
           key: 984,
           },
           {
@@ -95,7 +95,7 @@ const BoardScreen = (props) => {
 
      // Function handles displaying, hiding a menu of board options
   const handleModal = () => {
-    setisModalVisible(!isModalVisible);
+    setIsModalVisible(!isModalVisible);
   }
 
   const clickAddBoard = (title) => {
@@ -138,7 +138,7 @@ const BoardScreen = (props) => {
           <View style={styles.boardContainer}>
             {publicOrPrivate === 'Private' && privateBoards.map((board) => showBoard(board))}
             {publicOrPrivate === 'Public' && publicBoards.map((board) => showBoard(board))}
-            <BoardMenu state={isModalVisible} boardsType={boardsType} onClick={() => setisModalVisible()} boardPressed={boardPressed}/>
+            <BoardMenu state={isModalVisible} boardsType={boardsType} onClick={() => setIsModalVisible()} boardPressed={boardPressed}/>
           </View>
         </ScrollView>
       </SafeAreaView>
