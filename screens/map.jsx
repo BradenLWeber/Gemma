@@ -29,6 +29,8 @@ const MapScreen = ({ route, navigation }) => {
   const [key, setKey] = useState(0);
   const [pinModal, setPinModal] = useState(null);
   const [panTo, setPanTo] = useState(null);
+  const [searchType, setSearchType] = useState('pin');
+  const [searchValue, setSearchValue] = useState('');
 
   const getLocationPermissions = async () => {
     const response = await Location.getForegroundPermissionsAsync();
@@ -146,6 +148,11 @@ const MapScreen = ({ route, navigation }) => {
   }
 
   const showPin = (pin) => {
+    if (searchValue !== '') {
+      if (searchType === 'pin' && !pin.title.toLowerCase().includes(searchValue.toLowerCase())) return;
+      if (searchType === 'tag' && !pin.tags.toLowerCase().includes(searchValue.toLowerCase())) return;
+    }
+
     const pinPosition = {
       left: (pin.x - mapPosition.x) * mapPosition.zoom,
       top: (pin.y - mapPosition.y) * mapPosition.zoom + Dimensions.get('window').height / 2 - PINHEIGHT + 5,
@@ -262,6 +269,8 @@ const MapScreen = ({ route, navigation }) => {
         navigator={navigation}
         boardScreen={false}
         setBoard={(board) => setPins(board)}
+        setSearchType={setSearchType}
+        setSearchValue={setSearchValue}
       />
 
       {/* Drop pin button on map */}
