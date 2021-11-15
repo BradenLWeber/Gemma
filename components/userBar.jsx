@@ -40,12 +40,12 @@ const UserBar = (props) => {
     // If on the board screen
     if (props.boardScreen) {
       return (
-        <View style={styles.searchMenuBoards}>
-          <TouchableOpacity style={styles.menuButton} onPress={() => { setSearchType('board'); setShowSearchMenu(false); }}>
+        <View style={[styles.searchMenu, styles.searchMenuBoards]}>
+          <TouchableOpacity style={styles.menuButton} onPress={() => { setSearchType('board'); setShowSearchMenu(false); props.setSearchType('board') }}>
             <Text style={styles.menuButtonText}>Board name</Text>
           </TouchableOpacity>
           <View style={styles.menuDivider} />
-          <TouchableOpacity style={styles.menuButton} onPress={() => { setSearchType('creator'); setShowSearchMenu(false); }}>
+          <TouchableOpacity style={styles.menuButton} onPress={() => { setSearchType('creator'); setShowSearchMenu(false); props.setSearchType('creator')}}>
             <Text style={styles.menuButtonText}>Creator name</Text>
           </TouchableOpacity>
         </View>
@@ -53,16 +53,12 @@ const UserBar = (props) => {
       // If on the main screen
     } else {
       return (
-        <View style={styles.searchMenu}>
-          <TouchableOpacity style={styles.menuButton} onPress={() => { setSearchType('pin'); setShowSearchMenu(false); }}>
+        <View style={[styles.searchMenu, styles.searchMenuMap]}>
+          <TouchableOpacity style={styles.menuButton} onPress={() => { setSearchType('pin'); setShowSearchMenu(false); props.setSearchType('pin')}}>
             <Text style={styles.menuButtonText}>Pin name</Text>
           </TouchableOpacity>
           <View style={styles.menuDivider} />
-          <TouchableOpacity style={styles.menuButton} onPress={() => { setSearchType('creator'); setShowSearchMenu(false); }}>
-            <Text style={styles.menuButtonText}>Creator name</Text>
-          </TouchableOpacity>
-          <View style={styles.menuDivider} />
-          <TouchableOpacity style={styles.menuButton} onPress={() => { setSearchType('tag'); setShowSearchMenu(false); }}>
+          <TouchableOpacity style={styles.menuButton} onPress={() => { setSearchType('tag'); setShowSearchMenu(false); props.setSearchType('tag')}}>
             <Text style={styles.menuButtonText}>Tag name</Text>
           </TouchableOpacity>
         </View>
@@ -117,6 +113,16 @@ const UserBar = (props) => {
     )
   }
 
+  // Makes sure search bar on map screen does not have "Search for boards..." when navigating
+  // from the boards to the maps
+  const searchPlaceholder = () => {
+    if (searchType === 'board' && !props.boardScreen ||
+        searchType === 'creator' && !props.boardScreen) {
+      setSearchType('pin');
+    }
+    return 'Search for ' + searchType + '...';
+  }
+
   return (
     <>
       <View style={styles.userBar}>
@@ -129,7 +135,7 @@ const UserBar = (props) => {
           {/* This extra view wrapper allows me to specificy the width I want the textInput */}
           <View style={styles.userInputWidth}>
             <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-              <TextInput style={styles.inputText} placeholder={'Search for ' + searchType + '...'} />
+              <TextInput style={styles.inputText} placeholder={searchPlaceholder()} onChangeText={(text) => props.setSearchValue(text)} />
             </KeyboardAvoidingView>
           </View>
           {/* Search options icon */}
@@ -248,23 +254,17 @@ const styles = StyleSheet.create({
     position: 'absolute',
     right: '20%',
     top: 75,
-    width: 150,
-    height: 150,
+    height: 100,
     backgroundColor: '#F9D01E',
     alignItems: 'center',
     marginTop: 20,
     elevation: 21,
   },
   searchMenuBoards: {
-    position: 'absolute',
-    right: '20%',
-    top: 75,
     width: 150,
-    height: 100,
-    backgroundColor: '#F9D01E',
-    alignItems: 'center',
-    elevation: 21,
-    marginTop: 20,
+  },
+  searchMenuMap: {
+    width: 125,
   },
   optionsMenu: {
     position: 'absolute',

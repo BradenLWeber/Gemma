@@ -11,9 +11,10 @@ const BoardScreen = (props) => {
 
   const [publicOrPrivate, setPublicOrPrivate] = useState('Private');
   const [boardsType, setBoardsType] = useState('My');
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isModalVisible, setisModalVisible] = useState(false);
+  const [searchType, setSearchType] = useState('board');
+  const [searchValue, setSearchValue] = useState('');
   const [boardPressed, setBoardPressed] = useState(null);
-  const [key, setKey] = useState(1);
   const [addBoardModal, setAddBoardModal] = useState(false);
   const [publicBoards, setPublicBoards] = useState([
     {
@@ -120,8 +121,12 @@ const BoardScreen = (props) => {
   }
 
   const showBoard = (board) => {
+    if (searchValue !== '') {
+      if (searchType === 'board' && !board.title.toLowerCase().includes(searchValue.toLowerCase())) return;
+      else if (searchType === 'creator' && !board.creator.toLowerCase().includes(searchValue.toLowerCase())) return;
+    }
     return (
-      <TouchableOpacity onPress={() => {handleModal(); setBoardPressed(board)}} key={privateBoards.indexOf(board)}>
+      <TouchableOpacity onLongPress={() => {handleModal(); setBoardPressed(board)}} key={privateBoards.indexOf(board)}>
         <Board boardType={boardsType} navigator={props.navigator} setBoard={props.setBoard} board={board}/>
       </TouchableOpacity>
     )
@@ -147,6 +152,8 @@ const BoardScreen = (props) => {
         setBoardsType={(type) => setBoardsType(type)}
         boardScreen={true}
         userPhoto={props.userPhoto}
+        setSearchType={setSearchType}
+        setSearchValue={setSearchValue}
       />
       <AddBoard visibility={addBoardModal} makeBoard={clickAddBoard} exitModal={() => setAddBoardModal(false)}/>
     </View>
