@@ -1,9 +1,12 @@
-import React, { useState, useRef, createRef } from 'react';
+import React, { useState, useRef, createRef, useEffect } from 'react';
 import { Text, View, TouchableOpacity, StyleSheet, KeyboardAvoidingView, TextInput, Keyboard } from 'react-native';
 import ForgotPassword from '../components/forgotPassword';
 
+// useEffect code from https://github.com/calvin-cs262-organization/monopoly-client
+
 const UserLoginScreen = (props) => {
   //const [username, setUsername] = useState('');
+  const [userID, setUserID] = useState(1);
   const [userEmail, setUserEmail] = useState('');
   const [userPassword, setUserPassword] = useState('');
   const [userPhoto, setUserPhoto] = useState('https://scontent-ort2-1.xx.fbcdn.net/v/t1.6435-1/p148x148/66809435_10156811580748462_298237271994269696_n.jpg?_nc_cat=100&ccb=1-5&_nc_sid=1eb0c7&_nc_ohc=3sDvYWe41uQAX9uBr7l&_nc_ht=scontent-ort2-1.xx&oh=94344cfc8b679f337a5480004463abb7&oe=61836442');
@@ -11,6 +14,18 @@ const UserLoginScreen = (props) => {
 
   const passwordInputRef = createRef();
   const emailInputRef = createRef();
+  const passwordCheckInputRef = createRef();
+
+  const [isLoading, setLoading] = useState(true);
+  const [data, setData] = useState([]);
+
+  // useEffect(() => {
+  //   fetch('https://still-retreat-52810.herokuapp.com/AUsers/')
+  //     .then((response) => response.json())
+  //     .then((json) => setData(json))
+  //     .catch((error) => console.error(error))
+  //     .finally(() => setLoading(false));
+  // }, []);
 
   const forgotPasswordModal = () => {
     setisModalVisible(true);
@@ -28,17 +43,28 @@ const UserLoginScreen = (props) => {
     }
   }
 
-  const handleLoginDone = () => {
-    if (!userEmail) {
-      alert('Please fill Email');
-      return;
+  // const handleLoginDone = () => {
+  //   if (!userEmail) {
+  //     alert('Please fill Email');
+  //     return;
+  //   }
+  //   if (!userPassword) {
+  //     alert('Please fill Password');
+  //     return;
+  //   }
+  //   props.geoPermissions();
+  //   props.navigator.navigate('Map', userPhoto);
+  // }
+  const handleLoginDone = async () => {
+    try {
+      const response = await fetch('https://still-retreat-52810.herokuapp.com/AUsers/' + userEmail + '/' + userPassword, { method: 'GET' });
+      const json = await response.json();
+      setData(json);
+      props.geoPermissions();
+      props.navigator.navigate('Map', userPhoto);
+    } catch (error) {
+      alert("Invalid username or password");
     }
-    if (!userPassword) {
-      alert('Please fill Password');
-      return;
-    }
-    props.geoPermissions();
-    props.navigator.navigate('Map', userPhoto);
   }
 
   return (
