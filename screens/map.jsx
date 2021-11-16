@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Text, View, TouchableOpacity, Image, StyleSheet, Dimensions } from 'react-native';
 import UserBar from '../components/userBar';
 import PinNote from '../components/pinNote';
@@ -14,9 +14,9 @@ const MapScreen = ({ route, navigation }) => {
   const PINWIDTH = 50;
   const MAPCORNERS = {
     NW: {latitude: 42.938853, longitude: -85.585157},
-    NE: {latitude: 42.938853, longitude: -85.573994},
+    NE: {latitude: 42.938853, longitude: -85.572192},
     SW: {latitude: 42.929539, longitude: -85.585157},
-    SE: {latitude: 42.929539, longitude: -85.573994},
+    SE: {latitude: 42.929539, longitude: -85.572192},
   };
 
   const [isModalVisible, setisModalVisible] = useState(false);
@@ -32,13 +32,15 @@ const MapScreen = ({ route, navigation }) => {
   const [searchType, setSearchType] = useState('pin');
   const [searchValue, setSearchValue] = useState('');
 
+  useEffect(() => {getLocation()}, []);
+
   const getLocationPermissions = async () => {
     const response = await Location.getForegroundPermissionsAsync();
     return response.granted;
   }
 
   const getLocation = async () => {
-    const response = await Location.getCurrentPositionAsync({accuracy: Location.Accuracy.Highest});
+    const response = await Location.getCurrentPositionAsync({accuracy: Location.Accuracy.Highest, enableHighAccuracy: true});
     const location = {latitude: response.coords.latitude, longitude: response.coords.longitude};
     const status = await Location.getProviderStatusAsync();
     setMyLocation({ latitude: location.latitude, longitude: location.longitude, accuracy: response.coords.accuracy});
@@ -80,10 +82,6 @@ const MapScreen = ({ route, navigation }) => {
       myLocation.latitude > MAPCORNERS.NE.latitude ||
       myLocation.latitude < MAPCORNERS.SW.latitude
     ) {
-      alert(`${myLocation.longitude} > ${MAPCORNERS.NE.longitude} ${myLocation.longitude > MAPCORNERS.SW.longitude} ||\n
-      ${myLocation.longitude} < ${MAPCORNERS.SW.longitude} ${myLocation.longitude < MAPCORNERS.NE.longitude} ||\n
-      ${myLocation.latitude} > ${MAPCORNERS.NE.latitude} ${myLocation.latitude > MAPCORNERS.NE.latitude} ||\n
-      ${myLocation.latitude} < ${MAPCORNERS.SW.latitude} ${myLocation.latitude < MAPCORNERS.SW.latitude} \n`);
       alert('You are not on the map');
       return;
     }
@@ -94,8 +92,8 @@ const MapScreen = ({ route, navigation }) => {
       scale: 1.0,
       duration: 0,
     };
-    // setPanTo(myPosition);
-    // setPanTo(null);
+    setPanTo(myPosition);
+    setPanTo(null);
   }
 
   const placingPinButtons = () => {
