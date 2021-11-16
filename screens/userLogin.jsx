@@ -19,14 +19,6 @@ const UserLoginScreen = (props) => {
   const [isLoading, setLoading] = useState(true);
   const [data, setData] = useState([]);
 
-  // useEffect(() => {
-  //   fetch('https://still-retreat-52810.herokuapp.com/AUsers/')
-  //     .then((response) => response.json())
-  //     .then((json) => setData(json))
-  //     .catch((error) => console.error(error))
-  //     .finally(() => setLoading(false));
-  // }, []);
-
   const forgotPasswordModal = () => {
     setisModalVisible(true);
   }
@@ -43,18 +35,6 @@ const UserLoginScreen = (props) => {
     }
   }
 
-  // const handleLoginDone = () => {
-  //   if (!userEmail) {
-  //     alert('Please fill Email');
-  //     return;
-  //   }
-  //   if (!userPassword) {
-  //     alert('Please fill Password');
-  //     return;
-  //   }
-  //   props.geoPermissions();
-  //   props.navigator.navigate('Map', userPhoto);
-  // }
   const handleLoginDone = async () => {
     try {
       const response = await fetch('https://still-retreat-52810.herokuapp.com/AUsers/' + userEmail + '/' + userPassword, { method: 'GET' });

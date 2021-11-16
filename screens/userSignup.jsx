@@ -10,35 +10,76 @@ const UserSignupScreen = (props) => {
   const [userPassword, setUserPassword] = useState('');
   const [userCheckPassword, setUserCheckPassword] = useState('');
   const [userPhoto, setUserPhoto] = useState('../assets/defaultAvatar.png');
+  const [viewPublic, setViewPublic] = useState('PUB');
 
   const emailInputRef = createRef();
   const passwordInputRef = createRef();
   const passwordCheckInputRef = createRef();
 
-  const handleSignupDone = () => {
-    if (!username) {
-      alert('Please fill Name');
-      return;
-    }
-    if (!userEmail) {
+  const handleSignupDone = async () => {
+    const data = {
+      userEmail: userEmail, userPassword: userPassword, viewPublic: viewPublic
+    };
+    if (!data.userEmail) {
       alert('Please fill Email');
       return;
     }
-    if (!userPassword) {
+    if (!data.userPassword) {
       alert('Please fill Password');
       return;
     }
-    if (!userCheckPassword) {
-      alert('Please fill Password');
-      return;
-    }
-    if (userPassword !== userCheckPassword) {
-      alert('Passwords are not the same');
-      return;
-    }
+    // try {
+    //   const response = fetch('https://still-retreat-52810.herokuapp.com/AUsers', {
+    //     method: "POST",
+    //     body: JSON.stringify(data),
+    //     headers: { "Content-type": "application/json" }
+    //   });
+    //   props.geoPermissions();
+    //   props.navigator.navigate('Map', userPhoto);
+    // } catch (error) {
+    //   alert("Invalid username or password");
+    // }
+    await fetch('https://still-retreat-52810.herokuapp.com/AUsers', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        userEmail: data.userEmail,
+        userPassword: data.userPassword,
+        emailAddress: data.viewPublic,
+      })
+    })
+      .then(async response => await response.text())
+      .catch((error) => {
+        alert("Invalid username or password");
+      });
+
     props.geoPermissions();
     props.navigator.navigate('Map', userPhoto);
   }
+
+  // const handleSignupDone = () => {
+  //   if (!username) {
+  //     alert('Please fill Name');
+  //     return;
+  //   }
+  //   if (!userEmail) {
+  //     alert('Please fill Email');
+  //     return;
+  //   }
+  //   if (!userPassword) {
+  //     alert('Please fill Password');
+  //     return;
+  //   }
+  //   if (!userCheckPassword) {
+  //     alert('Please fill Password');
+  //     return;
+  //   }
+  //   if (userPassword !== userCheckPassword) {
+  //     alert('Passwords are not the same');
+  //     return;
+  //   }
+  //   props.geoPermissions();
+  //   props.navigator.navigate('Map', userPhoto);
+  // }
 
   return (
     <View style={styles.userSignupView}>
