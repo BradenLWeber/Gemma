@@ -62,11 +62,18 @@ const MapScreen = ({ route, navigation }) => {
 
   const pinButton = () => {
     return (
-      <TouchableOpacity style={globalStyles.PinButton} onPress={handlePlacePin}>
-        <View style={globalStyles.addWrapper}>
-          <Image source={require('../assets/gem.png')} style={styles.pinIcon} />
-        </View>
-      </TouchableOpacity>
+      <View style={globalStyles.PinButton}>
+        <TouchableOpacity style={styles.xButton} onPress={handleGetMyLocation}>
+          <View style={globalStyles.addWrapper}>
+            <Image source={require('../assets/blue-pin.png')} style={styles.checkIcon} />
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handlePlacePin}>
+          <View style={globalStyles.addWrapper}>
+            <Image source={require('../assets/gem.png')} style={styles.pinIcon} />
+          </View>
+        </TouchableOpacity>
+      </View>
     )
   }
 
