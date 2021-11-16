@@ -16,6 +16,7 @@ const UserBar = (props) => {
 
   const clickSettings = async () => {
     setShowUserMenu(false);
+    props.setSettingPinFalse();
     const response = await getLocationPermissions();
     props.navigator.navigate('Settings', {locationPermission: response});
   }
@@ -66,26 +67,12 @@ const UserBar = (props) => {
     }
   }
 
-  // The popup when pressing the options icon
-  const optionsMenu = (navigator) => {
-    return (
-      <View style={styles.optionsMenu}>
-        <TouchableOpacity style={styles.menuButton} onPress={() => clickBoards('My', navigator)}>
-          <Text style={styles.menuButtonText}>My boards</Text>
-        </TouchableOpacity>
-        <View style={styles.menuDivider} />
-        <TouchableOpacity style={styles.menuButton} onPress={() => clickBoards('Public', navigator)}>
-          <Text style={styles.menuButtonText}>Public boards</Text>
-        </TouchableOpacity>
-      </View>
-    )
-  }
-
   // Handle clicking either "My boards" or "Public boards"
   // the type in this case is either "My" or "Public"
   const clickBoards = (navigator) => {
     setSearchType('board');
-    navigator.navigate('Boards', {setBoard: props.setBoard});
+    props.setSettingPinFalse();
+    navigator.navigate('Boards', {setBoard: props.setBoard, setCreator: props.setCreator});
   }
 
   // This handles any click not on a menu while a menu is open
