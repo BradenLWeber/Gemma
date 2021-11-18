@@ -31,6 +31,7 @@ const MapScreen = ({ route, navigation }) => {
   const [panTo, setPanTo] = useState(null);
   const [searchType, setSearchType] = useState('pin');
   const [searchValue, setSearchValue] = useState('');
+  const [creator, setCreator] = useState(null);
 
   useEffect(() => {getLocation()}, []);
 
@@ -165,7 +166,7 @@ const MapScreen = ({ route, navigation }) => {
     return (
       <View key={pin.title + String(pin.key)} style={styles.mapPin}>
         <TouchableOpacity onPress={() => clickPin(pin)} style={pinPosition}>
-          <Image source={require('../assets/gem.png')} style={pinImage} />
+          <Image source={require('../assets/gem.png')} style={[pinImage, {opacity: pin === pinModal ? 1.0 : 0.4}]} />
         </TouchableOpacity>
       </View>
     )
@@ -179,7 +180,29 @@ const MapScreen = ({ route, navigation }) => {
     }
   }
 
+  const showTags = (tags) => {
+    // The Set syntax gets rid of duplicates
+    const tagList = [...new Set(tags.split(','))];
+    return (
+      <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+        {tagList.map((tag) =>
+          tag.trim() !== '' &&
+          <View style={styles.tag} key={tag}>
+            <Text style={styles.tagText}>
+              {tag.trim()}
+            </Text>
+          </View>
+        )}
+      </View>
+    )
+  }
+
   const showPinModal = () => {
+    if (searchValue !== '') {
+      if (searchType === 'pin' && !pinModal.title.toLowerCase().includes(searchValue.toLowerCase())) setPinModal(null);
+      if (searchType === 'tag' && !pinModal.tags.toLowerCase().includes(searchValue.toLowerCase())) setPinModal(null);
+    }
+
     const modalPosition = {
       left: (pinModal.x - mapPosition.x) * mapPosition.zoom + 90,
       top: (pinModal.y - mapPosition.y) * mapPosition.zoom + Dimensions.get('window').height / 2 - PINHEIGHT + 60,
@@ -187,14 +210,17 @@ const MapScreen = ({ route, navigation }) => {
     return (
       <View style={[styles.pinModal, modalPosition]}>
         <Text style={styles.pinModalTitle}>{pinModal.title}</Text>
-        <Text style={styles.pinModalLabel}>Tags:</Text>
-        {pinModal.tags && <Text style={styles.pinModalText}>{pinModal.tags}</Text>}
-        <Text style={styles.pinModalLabel}>Notes:</Text>
-        {pinModal.notes && <Text style={styles.pinModalText}>{pinModal.notes}</Text>}
-        <Text style={styles.pinModalLabel}>Latitude:</Text>
-        <Text style={styles.pinModalText}>{mapYToLat(pinModal.y)}</Text>
-        <Text style={styles.pinModalLabel}>Longitude:</Text>
-        <Text style={styles.pinModalText}>{mapXToLong(pinModal.x)}</Text>
+        {pinModal.tags && showTags(pinModal.tags)}
+        { pinModal.notes &&
+        <>
+          <View style={{flexDirection: 'row'}}>
+            <Image source={require('../assets/defaultAvatar.png')} style={styles.pinModalUserIcon}/>
+            <Text style={styles.pinModalCreator}>{creator}</Text>
+          </View>
+          <Text style={styles.pinModalText}>{pinModal.notes}</Text>
+        </>
+        }
+        <Text style={styles.latLongText}>{mapYToLat(pinModal.y)}, {mapXToLong(pinModal.x)}</Text>
       </View>
     )
   }
@@ -276,6 +302,8 @@ const MapScreen = ({ route, navigation }) => {
         setBoard={(board) => setPins(board)}
         setSearchType={setSearchType}
         setSearchValue={setSearchValue}
+        setCreator = {setCreator}
+        setSettingPinFalse={() => setSettingPin(false)}
       />
 
       {/* Drop pin button on map */}
@@ -298,6 +326,7 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     padding: 6,
     width: Dimensions.get('window').width - 40,
+    flexDirection: 'column',
   },
   pinModalTitle: {
     fontSize: 20,
@@ -307,12 +336,51 @@ const styles = StyleSheet.create({
     fontSize: 20,
     marginTop: 3,
     fontStyle: 'italic',
-    textDecorationLine: 'underline'
+    textDecorationLine: 'underline',
+  },
+  tag: {
+    height: 30,
+    marginRight: 7,
+    marginTop: 4,
+    marginBottom: 4,
+    backgroundColor: '#a8a8a8',
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  tagText: {
+    margin: 7,
+    fontSize: 15,
+    bottom: 1,
   },
   pinModalText: {
     marginRight: 6,
     fontSize: 20,
-    marginTop: 3,
+    marginTop: 10,
+    backgroundColor: '#fafafa',
+    padding: 10,
+    borderColor: 'gray',
+    borderWidth: 1,
+    borderRadius: 10,
+  },
+  latLongText: {
+    marginRight: 6,
+    fontSize: 15,
+    marginTop: 20,
+    color: 'gray'
+  },
+  pinModalCreator: {
+    marginTop: 20,
+    marginLeft: 10,
+    fontSize: 15,
+  },
+  pinModalUserIcon: {
+    height: 30,
+    width: 30,
+    borderRadius: 15,
+    borderWidth: 1,
+    borderColor: 'black',
+    marginTop: 15,
   },
   pinIcon: {
     width: 40,
