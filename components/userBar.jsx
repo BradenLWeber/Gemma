@@ -120,7 +120,7 @@ const UserBar = (props) => {
         searchType === 'creator' && !props.boardScreen) {
       setSearchType('pin');
     }
-    return 'Search for ' + searchType + '...';
+    return 'Filter by ' + searchType + '...';
   }
 
   return (
