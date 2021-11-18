@@ -1,6 +1,9 @@
-import React, { useState, useRef, createRef } from 'react';
+import React, { useState, useRef, createRef, useEffect } from 'react';
 import { Text, View, TouchableOpacity, StyleSheet, KeyboardAvoidingView, TextInput, Keyboard } from 'react-native';
 import ForgotPassword from '../components/forgotPassword';
+
+// useEffect code from https://github.com/calvin-cs262-organization/monopoly-client
+// login GET ideas from https://github.com/calvin-cs262-organization/monopoly-client
 
 const UserLoginScreen = (props) => {
   //const [username, setUsername] = useState('');
@@ -11,6 +14,7 @@ const UserLoginScreen = (props) => {
 
   const passwordInputRef = createRef();
   const emailInputRef = createRef();
+  const passwordCheckInputRef = createRef();
 
   const forgotPasswordModal = () => {
     setisModalVisible(true);
@@ -28,17 +32,18 @@ const UserLoginScreen = (props) => {
     }
   }
 
-  const handleLoginDone = () => {
-    if (!userEmail) {
-      alert('Please fill Email');
-      return;
+  const handleLoginDone = async () => {
+    try {
+      const response = await fetch('https://still-retreat-52810.herokuapp.com/AUsers/' + userEmail + '/' + userPassword, { method: 'GET' });
+      if (response.status !== 200) {
+        alert('Login failed');
+        return;
+      }
+      props.geoPermissions();
+      props.navigator.navigate('Map', userPhoto);
+    } catch (error) {
+      alert("Invalid email or password");
     }
-    if (!userPassword) {
-      alert('Please fill Password');
-      return;
-    }
-    props.geoPermissions();
-    props.navigator.navigate('Map', userPhoto);
   }
 
   return (
