@@ -92,8 +92,6 @@ const MapScreen = ({ route, navigation }) => {
       scale: 1.0,
       duration: 0,
     };
-    // setPanTo(myPosition);
-    // setPanTo(null);
   }
 
   const placingPinButtons = () => {
@@ -123,29 +121,10 @@ const MapScreen = ({ route, navigation }) => {
       setisModalVisible(false);
       setSettingPin(false);
       setKey(key + 1);
-    
-      {/*let data = {
-        method: 'POST',
-        credentials: 'same-origin',
-        mode: 'same-origin',
-        body: JSON.stringify({
-          UserID: 7,
-          pinID: 12345, //key,
-          pinName: title,
-          longitude: mapPosition.y,
-          latitude: mapPosition.x,
-          pinNotes: notes,
-        }),
-        headers: {
-          'Accept':       'application/json',
-          'Content-Type': 'application/json',
-          //'X-CSRFToken':  cookie.load('csrftoken')
-        }
-      }
-      return fetch('https://still-retreat-52810.herokuapp.com/Coordinates/', data)
-              .then(response => response.json())  // promise
-              //.then(json => dispatch(receiveAppos(json)))
-*/}
+      var lat = mapPosition.x;
+      var long = mapPosition.y;
+
+      // Post coordinate data to Heroku app
       fetch('https://still-retreat-52810.herokuapp.com/Coordinates/', {
         method: 'post',
         headers: {
@@ -154,22 +133,14 @@ const MapScreen = ({ route, navigation }) => {
         },
         body: JSON.stringify({
           UserID: 2,
-          pinID: 12345, //key,
+          pinID: 3, //key,
           pinName: title,
-          longitude: mapPosition.y,
-          latitude: mapPosition.x,
+          longitude: long.toFixed(14),
+          latitude: lat.toFixed(14),
           pinNotes: notes,
           })
         });
 
-      {/*setPins(pins.concat({
-        x: mapPosition.x,
-        y: mapPosition.y,
-        title: title,
-        tags: tags,
-        notes: notes,
-        key: key,
-      }));*/}
     } else {
       setisModalVisible(false);
       setSettingPin(false);
