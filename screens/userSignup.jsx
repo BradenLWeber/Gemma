@@ -1,8 +1,10 @@
 import React, { useState, useRef, createRef } from 'react';
 import { Text, View, TouchableOpacity, StyleSheet, KeyboardAvoidingView, TextInput } from 'react-native';
 
-// Sign up input ideas from https://aboutreact.com/react-native-login-and-signup/
+// Sign-up input ideas from https://aboutreact.com/react-native-login-and-signup/
 // Info on useRef use from https://stackoverflow.com/questions/32748718/react-native-how-to-select-the-next-textinput-after-pressing-the-next-keyboar
+// Sign-up POST ideas from https://github.com/calvin-cs262-organization/monopoly-client
+// and https://jasonwatmore.com/post/2020/02/01/react-fetch-http-post-request-examples
 
 const UserSignupScreen = (props) => {
   const [username, setUsername] = useState('');
@@ -17,69 +19,45 @@ const UserSignupScreen = (props) => {
   const passwordCheckInputRef = createRef();
 
   const handleSignupDone = async () => {
-    const data = {
-      userEmail: userEmail, userPassword: userPassword, viewPublic: viewPublic
-    };
-    if (!data.userEmail) {
+    if (!username) {
+      alert('Please fill Name');
+      return;
+    }
+    if (!userEmail) {
       alert('Please fill Email');
       return;
     }
-    if (!data.userPassword) {
+    if (!userPassword) {
       alert('Please fill Password');
       return;
     }
-    // try {
-    //   const response = fetch('https://still-retreat-52810.herokuapp.com/AUsers', {
-    //     method: "POST",
-    //     body: JSON.stringify(data),
-    //     headers: { "Content-type": "application/json" }
-    //   });
-    //   props.geoPermissions();
-    //   props.navigator.navigate('Map', userPhoto);
-    // } catch (error) {
-    //   alert("Invalid username or password");
-    // }
-    await fetch('https://still-retreat-52810.herokuapp.com/AUsers', {
-      method: 'POST', headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        userEmail: data.userEmail,
-        userPassword: data.userPassword,
-        emailAddress: data.viewPublic,
-      })
-    })
-      .then(async response => await response.text())
-      .catch((error) => {
-        alert("Invalid username or password");
+    if (!userCheckPassword) {
+      alert('Please fill Password');
+      return;
+    }
+    if (userPassword !== userCheckPassword) {
+      alert('Passwords are not the same');
+      return;
+    }
+    try {
+      await fetch('https://still-retreat-52810.herokuapp.com/AUsers/', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          emailAddress: userEmail,
+          passphrase: userPassword,
+          viewPublic: viewPublic,
+        })
       });
-
-    props.geoPermissions();
-    props.navigator.navigate('Map', userPhoto);
+      props.geoPermissions();
+      props.navigator.navigate('Map', userPhoto);
+    } catch (error) {
+      alert("Invalid email or password");
+    }
   }
-
-  // const handleSignupDone = () => {
-  //   if (!username) {
-  //     alert('Please fill Name');
-  //     return;
-  //   }
-  //   if (!userEmail) {
-  //     alert('Please fill Email');
-  //     return;
-  //   }
-  //   if (!userPassword) {
-  //     alert('Please fill Password');
-  //     return;
-  //   }
-  //   if (!userCheckPassword) {
-  //     alert('Please fill Password');
-  //     return;
-  //   }
-  //   if (userPassword !== userCheckPassword) {
-  //     alert('Passwords are not the same');
-  //     return;
-  //   }
-  //   props.geoPermissions();
-  //   props.navigator.navigate('Map', userPhoto);
-  // }
 
   return (
     <View style={styles.userSignupView}>
