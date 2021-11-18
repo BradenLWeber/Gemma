@@ -126,8 +126,9 @@ const BoardScreen = (props) => {
       else if (searchType === 'creator' && !board.creator.toLowerCase().includes(searchValue.toLowerCase())) return;
     }
     return (
-      <TouchableOpacity onLongPress={() => { handleModal(); setBoardPressed(board) }} key={privateBoards.indexOf(board)}>
-        <Board boardType={boardsType} navigator={props.navigator} setBoard={props.setBoard} board={board} />
+      <TouchableOpacity onLongPress={() => {handleModal(); setBoardPressed(board)}} key={privateBoards.indexOf(board)}>
+        <Board boardType={boardsType} navigator={props.navigator} setBoard={props.setBoard} board={board} setCreator={props.setCreator}/>
+
       </TouchableOpacity>
     )
   }
