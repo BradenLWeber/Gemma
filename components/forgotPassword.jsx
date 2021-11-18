@@ -3,6 +3,7 @@ import { StyleSheet, Text, TextInput, View, TouchableOpacity } from 'react-nativ
 import Modal from 'react-native-modal';
 
 const ForgotPassword = (props) => {
+  const [userEmail, setUserEmail] = useState('');
   const [changeUserPassword, setChangeUserPassword] = useState(null);
   const [changeUserCheckPassword, setChangeUserCheckPassword] = useState(null);
 
@@ -25,6 +26,20 @@ const ForgotPassword = (props) => {
         return;
       }
       props.onClick('change', changeUserPassword);
+      try {
+        fetch('https://still-retreat-52810.herokuapp.com/AUsers/', {
+          method: 'PUT',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            passphrase: changeUserPassword,
+          })
+        });
+      } catch (error) {
+        alert("Invalid email or password");
+      }
       setChangeUserPassword(null);
       setChangeUserCheckPassword(null);
     }
@@ -35,6 +50,7 @@ const ForgotPassword = (props) => {
       <View style={styles.Modal}>
         <Text style={styles.Header}> Change Password </Text>
         <View style={styles.InputView}>
+          <TextInput placeholder={'Email'} style={styles.password} onChangeText={(text) => setUserEmail(text)} />
           <TextInput placeholder={'Password'} secureTextEntry={true} style={styles.password} onChangeText={(text) => setChangeUserPassword(text)} />
           <TextInput placeholder={'Confirm Password'} secureTextEntry={true} style={styles.confirmPassword} onChangeText={(text) => setChangeUserCheckPassword(text)} />
         </View>
