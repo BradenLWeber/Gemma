@@ -116,7 +116,7 @@ const MapScreen = ({ route, navigation }) => {
     )
   }
 
-  const createPin = (button, title, tags, notes) => {
+  const createPin = async (button, title, tags, notes) => {
     if (button === 'create') {
       setisModalVisible(false);
       setSettingPin(false);
@@ -125,21 +125,29 @@ const MapScreen = ({ route, navigation }) => {
       var long = mapPosition.y;
 
       // Post coordinate data to Heroku app
-      fetch('https://still-retreat-52810.herokuapp.com/Coordinates/', {
-        method: 'post',
-        headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          UserID: 2,
-          pinID: key,
-          pinName: title,
-          longitude: long.toFixed(14),
-          latitude: lat.toFixed(14),
-          pinNotes: notes,
-          })
-        });
+      try {
+        const response = await fetch('https://still-retreat-52810.herokuapp.com/Coordinates/', {
+          method: 'post',
+          headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            UserID: 2,
+            pinID: key,
+            pinName: title,
+            longitude: long.toFixed(14),
+            latitude: lat.toFixed(14),
+            pinNotes: notes,
+            })
+          });
+          if (response.status !== 200) {
+            alert('Pin could not be placed');
+            return;
+          } 
+      }catch (error) {
+            alert('Something went wrong!');
+      }
 
     } else {
       setisModalVisible(false);
@@ -277,6 +285,7 @@ const MapScreen = ({ route, navigation }) => {
       {/* Drop pin button on map */}
       {settingPin ? placingPinButtons() : pinButton()}
       {settingPin && ghostPin()}
+
 
       {pins.map((pin) => showPin(pin))}
       {pinModal !== null && showPinModal()}
