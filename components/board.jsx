@@ -42,7 +42,7 @@ const Board = (props) => {
             </View>
             {/* Image is wrapped in a button that takes user back to the map screen */}
             <View style={styles.imageBorder}>
-                <TouchableOpacity style={styles.boardImageWrapper} onPress={() => {props.setBoard(props.board.pins); props.navigator.navigate('Map')}}>
+                <TouchableOpacity style={styles.boardImageWrapper} onPress={() => {props.setBoard(props.board.pins); props.setCreator(props.board.creator); props.navigator.navigate('Map')}}>
                     <Image source={require('../assets/mapEcoPreserve.png')} style={styles.boardImage}/>
                     {props.board.pins.map((pin) => showPin(pin))}
                 </TouchableOpacity>

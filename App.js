@@ -34,6 +34,7 @@ export default function App() {
     return (
       <BoardScreen
         setBoardsType={setBoardsType}
+        setCreator={route.params.setCreator}
         navigator={navigation}
         userPhoto={'default'}
         setBoard={route.params.setBoard}

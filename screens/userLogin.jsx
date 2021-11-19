@@ -35,6 +35,10 @@ const UserLoginScreen = (props) => {
   const handleLoginDone = async () => {
     try {
       const response = await fetch('https://still-retreat-52810.herokuapp.com/AUsers/' + userEmail + '/' + userPassword, { method: 'GET' });
+      if (response.status !== 200) {
+        alert('Login failed');
+        return;
+      }
       props.geoPermissions();
       props.navigator.navigate('Map', userPhoto);
     } catch (error) {
