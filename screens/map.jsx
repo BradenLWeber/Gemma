@@ -133,7 +133,7 @@ const MapScreen = ({ route, navigation }) => {
         },
         body: JSON.stringify({
           UserID: 2,
-          pinID: 3, //key,
+          pinID: key,
           pinName: title,
           longitude: long.toFixed(14),
           latitude: lat.toFixed(14),
