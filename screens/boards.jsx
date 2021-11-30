@@ -23,14 +23,14 @@ const BoardScreen = (props) => {
     setPrivateBoards([
       {
         upvotes: 0,
-        creator: 'VanderGoosen',
+        creator: 'Me',
         title: 'Default ecosystem board',
         map: 'ECO',
         pins: []
       },
       {
         upvotes: 0,
-        creator: 'VanderGoosen',
+        creator: 'Me',
         title: 'Default campus board',
         map: 'CAM',
         pins: []
