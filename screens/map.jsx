@@ -8,24 +8,35 @@ import ImageZoom from 'react-native-image-pan-zoom';
 
 const MapScreen = ({ route, navigation }) => {
 
-  const MAPHEIGHT = 1500;
-  const MAPWIDTH = 1940; //MAPHEIGHT * 1.293;
+  const MAPHEIGHTECO = 1500;
+  const MAPWIDTHECO = 1940;
+  const MAPHEIGHTCAM = 1965;
+  const MAPWIDTHCAM = 1850;
   const PINHEIGHT = 50;
   const PINWIDTH = 50;
-  const MAPCORNERS = {
+  const MAPCORNERSECO = {
     NW: {latitude: 42.938853, longitude: -85.585157},
     NE: {latitude: 42.938853, longitude: -85.573994},
     SW: {latitude: 42.929539, longitude: -85.585157},
     SE: {latitude: 42.929539, longitude: -85.573994},
   };
+  const MAPCORNERSCAM = {
+    NW: {latitude: 42.937887, longitude: -85.594130},
+    NE: {latitude: 42.937887, longitude: -85.579824},
+    SW: {latitude: 42.926867, longitude: -85.594130},
+    SE: {latitude: 42.926867, longitude: -85.579824},
+  };
+  const MAPS = {
+    ECO: require('../assets/mapEcoPreserve.png'),
+    CAM: require('../assets/CampusFinal.png')
+  }
 
   const [isModalVisible, setisModalVisible] = useState(false);
   const [userPhoto, setUserPhoto] = useState('default');
   const [myLocation, setMyLocation] = useState({});
-  const [showLocation, setShowLocation] = useState(false);
   const [settingPin, setSettingPin] = useState(false);
-  const [mapPosition, setMapPosition] = useState({x: MAPWIDTH / 2, y: MAPHEIGHT / 2, zoom: 1});
-  const [pins, setPins] = useState([]);
+  const [mapPosition, setMapPosition] = useState({x: MAPWIDTHECO / 2, y: MAPHEIGHTECO / 2, zoom: 1});
+  const [board, setBoard] = useState({pins: [], map: 'ECO'});
   const [key, setKey] = useState(0);
   const [pinModal, setPinModal] = useState(null);
   const [panTo, setPanTo] = useState(null);
@@ -75,6 +86,7 @@ const MapScreen = ({ route, navigation }) => {
       return;
     }
     await getLocation();
+    const MAPCORNERS = getMapCorners();
     if (
       myLocation.longitude > MAPCORNERS.NE.longitude ||
       myLocation.longitude < MAPCORNERS.SW.longitude ||
@@ -126,14 +138,20 @@ const MapScreen = ({ route, navigation }) => {
       setisModalVisible(false);
       setSettingPin(false);
       setKey(key + 1);
-      setPins(pins.concat({
-        x: mapPosition.x,
-        y: mapPosition.y,
-        title: title,
-        tags: tags,
-        notes: notes,
-        key: key,
-      }));
+      setBoard({
+        upvotes: board.upvotes,
+        creator: board.creator,
+        title: board.title,
+        map: board.map,
+        pins: board.pins.concat({
+          x: mapPosition.x,
+          y: mapPosition.y,
+          title: title,
+          tags: tags,
+          notes: notes,
+          key: key,
+        }),
+      });
     } else {
       setisModalVisible(false);
       setSettingPin(false);
@@ -210,7 +228,7 @@ const MapScreen = ({ route, navigation }) => {
         <>
           <View style={{flexDirection: 'row'}}>
             <Image source={require('../assets/defaultAvatar.png')} style={styles.pinModalUserIcon}/>
-            <Text style={styles.pinModalCreator}>{creator}</Text>
+            <Text style={styles.pinModalCreator}>{board.creator}</Text>
           </View>
           <Text style={styles.pinModalText}>{pinModal.notes}</Text>
         </>
@@ -220,10 +238,10 @@ const MapScreen = ({ route, navigation }) => {
     )
   }
 
-  const handleSetMapPosition = (event, mapWidth, mapHeight) => {
+  const handleSetMapPosition = (event) => {
     setMapPosition({
-      x: -event.positionX + mapWidth / 2,
-      y: -event.positionY + mapHeight / 2,
+      x: -event.positionX + getMapWidth() / 2,
+      y: -event.positionY + getMapHeight() / 2,
       zoom: event.scale
     });
   }
@@ -236,29 +254,45 @@ const MapScreen = ({ route, navigation }) => {
     return actualCoordinates;
   }
 
+  const getMapCorners = () => {
+    return board.map === 'ECO' ? MAPCORNERSECO : MAPCORNERSCAM;
+  }
+
+  const getMapHeight = () => {
+    return board.map === 'ECO' ? MAPHEIGHTECO : MAPHEIGHTCAM;
+  }
+
+  const getMapWidth = () => {
+    return board.map === 'ECO' ? MAPWIDTHECO : MAPWIDTHCAM;
+  }
+
   const mapXToLong = (x) => {
-    return MAPCORNERS.SW.longitude + (x / MAPWIDTH) * (MAPCORNERS.NE.longitude - MAPCORNERS.SW.longitude);
+    const MAPCORNERS = getMapCorners();
+    return MAPCORNERS.SW.longitude + (x / getMapWidth()) * (MAPCORNERS.NE.longitude - MAPCORNERS.SW.longitude);
   }
 
   const mapYToLat = (y) => {
-    return MAPCORNERS.NE.latitude - (y / MAPHEIGHT) * (MAPCORNERS.NE.latitude - MAPCORNERS.SW.latitude);
+    const MAPCORNERS = getMapCorners();
+    return MAPCORNERS.NE.latitude - (y / getMapHeight()) * (MAPCORNERS.NE.latitude - MAPCORNERS.SW.latitude);
   }
 
   // Calculates the Y coming from the center because that is the Y used in ImageZoom to center the map
   const mapLatToCenterY = (lat) => {
-    return (lat - MAPCORNERS.SW.latitude) / (MAPCORNERS.NE.latitude - MAPCORNERS.SW.latitude) * MAPHEIGHT - MAPHEIGHT / 2;
+    const MAPCORNERS = getMapCorners();
+    return (lat - MAPCORNERS.SW.latitude) / (MAPCORNERS.NE.latitude - MAPCORNERS.SW.latitude) * getMapHeight() - getMapHeight() / 2;
   }
 
   // Calculates the X coming from the center because that is the X used in ImageZoom to center the map
   const mapLongToCenterX = (long) => {
-    return - (long - MAPCORNERS.SW.longitude) / (MAPCORNERS.NE.longitude - MAPCORNERS.SW.longitude) * MAPWIDTH + MAPWIDTH / 2;
+    const MAPCORNERS = getMapCorners();
+    return - (long - MAPCORNERS.SW.longitude) / (MAPCORNERS.NE.longitude - MAPCORNERS.SW.longitude) * getMapWidth() + getMapWidth() / 2;
   }
 
   // These styles require variable access, so they must be defined here
   const mapStyle = {
     position: 'absolute',
-    height: MAPHEIGHT,
-    width: MAPWIDTH,
+    height: getMapHeight(),
+    width: getMapWidth(),
     left: Dimensions.get('window').width * (1/mapPosition.zoom) / 2,
     bottom: Dimensions.get('window').height * (1/mapPosition.zoom) / 2,
   };
@@ -273,18 +307,17 @@ const MapScreen = ({ route, navigation }) => {
       <ImageZoom
         cropWidth={Dimensions.get('window').width}
         cropHeight={Dimensions.get('window').height}
-        imageWidth={MAPWIDTH + Dimensions.get('window').width * (1/mapPosition.zoom)}
-        imageHeight={MAPHEIGHT + Dimensions.get('window').height * (1/mapPosition.zoom)}
+        imageWidth={getMapWidth() + Dimensions.get('window').width * (1/mapPosition.zoom)}
+        imageHeight={getMapHeight() + Dimensions.get('window').height * (1/mapPosition.zoom)}
         pinchToZoom={true}
         panToMove={true}
         centerOn={panTo}
-        minScale={0.4}
-        onClick={() => {getLocation(); setShowLocation(!showLocation); setPinModal(null)}}
+        minScale={0.3}
         enableCenterFocus={false}
-        onMove={(event) => handleSetMapPosition(event, MAPWIDTH, MAPHEIGHT)}
+        onMove={(event) => handleSetMapPosition(event)}
       >
         <Image
-          source={require('../assets/mapEcoPreserve.png')}
+          source={MAPS[board.map]}
           style={mapStyle}
         />
       </ImageZoom>
@@ -294,19 +327,22 @@ const MapScreen = ({ route, navigation }) => {
         userPhoto={userPhoto}
         navigator={navigation}
         boardScreen={false}
-        setBoard={(board) => setPins(board)}
+        setBoard={(board) => setBoard(board)}
         setSearchType={setSearchType}
         setSearchValue={setSearchValue}
         setCreator = {setCreator}
-        setSettingPinFalse={() => setSettingPin(false)}
+        setResetMap={() => {setSettingPin(false); setPinModal(null)}}
       />
 
       {/* Drop pin button on map */}
       {settingPin ? placingPinButtons() : pinButton()}
       {settingPin && ghostPin()}
 
-      {pins.map((pin) => showPin(pin))}
+      {board.pins.map((pin) => showPin(pin))}
       {pinModal !== null && showPinModal()}
+
+      {/* Uncomment this and use it to show information on the map screen */}
+      {/* <Text style = {{position: 'absolute', fontSize: 30, top: 100}}></Text> */}
 
       <PinNote state={isModalVisible} onClick={(button, title, tags, notes) => createPin(button, title, tags, notes)} />
     </View>
