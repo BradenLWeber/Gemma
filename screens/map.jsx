@@ -5,6 +5,7 @@ import PinNote from '../components/pinNote';
 import { globalStyles } from '../styles/global';
 import * as Location from 'expo-location';
 import ImageZoom from 'react-native-image-pan-zoom';
+import Modal from 'react-native-modal';
 
 const MapScreen = ({ route, navigation }) => {
 
@@ -36,13 +37,14 @@ const MapScreen = ({ route, navigation }) => {
   const [myLocation, setMyLocation] = useState({});
   const [settingPin, setSettingPin] = useState(false);
   const [mapPosition, setMapPosition] = useState({x: MAPWIDTHECO / 2, y: MAPHEIGHTECO / 2, zoom: 1});
-  const [board, setBoard] = useState({pins: [], map: 'ECO'});
+  const [board, setBoard] = useState({pins: [], map: 'ECO', creator: 'Me'});
   const [key, setKey] = useState(0);
   const [pinModal, setPinModal] = useState(null);
   const [panTo, setPanTo] = useState(null);
   const [searchType, setSearchType] = useState('pin');
   const [searchValue, setSearchValue] = useState('');
   const [creator, setCreator] = useState(null);
+  const [deletePinModal, setDeletePinModal] = useState(false);
 
   const getLocationPermissions = async () => {
     const response = await Location.getForegroundPermissionsAsync();
@@ -200,11 +202,7 @@ const MapScreen = ({ route, navigation }) => {
       <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
         {tagList.map((tag) =>
           tag.trim() !== '' &&
-          <View style={styles.tag} key={tag}>
-            <Text style={styles.tagText}>
-              {tag.trim()}
-            </Text>
-          </View>
+          <Text style={styles.tagText} key={tag}>#{tag.trim()}</Text>
         )}
       </View>
     )
@@ -222,7 +220,12 @@ const MapScreen = ({ route, navigation }) => {
     }
     return (
       <View style={[styles.pinModal, modalPosition]}>
-        <Text style={styles.pinModalTitle}>{pinModal.title}</Text>
+        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+          <Text style={styles.pinModalTitle}>{pinModal.title}</Text>
+          <TouchableOpacity onPress={() => setPinModal(null)}>
+            <Text style={{fontSize: 25, paddingRight: 5,}}>X</Text>
+          </TouchableOpacity>
+        </View>
         {pinModal.tags && showTags(pinModal.tags)}
         { pinModal.notes &&
         <>
@@ -233,9 +236,46 @@ const MapScreen = ({ route, navigation }) => {
           <Text style={styles.pinModalText}>{pinModal.notes}</Text>
         </>
         }
-        <Text style={styles.latLongText}>{mapYToLat(pinModal.y)}, {mapXToLong(pinModal.x)}</Text>
+        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+          <Text style={styles.latLongText}>{mapYToLat(pinModal.y)}, {mapXToLong(pinModal.x)}</Text>
+          <TouchableOpacity style={styles.deletePin} onPress={() => setDeletePinModal(true)}>
+            <Image source={require('../assets/trash.png')} style={styles.deletePinIcon}></Image>
+          </TouchableOpacity>
+        </View>
       </View>
     )
+  }
+
+  const showDeletePinModal = () => {
+    return (
+      <Modal isVisible={true}>
+        <View style={styles.deletePinModal}>
+          <Text style={{alignSelf: 'center', fontSize: 25, margin: 10,}}>Delete pin?</Text>
+          <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
+            <TouchableOpacity style={styles.deletePinModalButton} onPress={() => deletePin()}>
+              <Text>Yes</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.deletePinModalButton} onPress={() => setDeletePinModal(false)}>
+              <Text>No</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+    )
+  }
+
+  const deletePin = () => {
+    setBoard({
+      upvotes: board.upvotes,
+      title: board.title,
+      creator: board.creator,
+      map: board.map,
+      pins: board.pins.filter((pin) => {
+        pin !== pinModal
+      })
+    });
+    setDeletePinModal(false);
+    setPinModal(null);
   }
 
   const handleSetMapPosition = (event) => {
@@ -340,6 +380,7 @@ const MapScreen = ({ route, navigation }) => {
 
       {board.pins.map((pin) => showPin(pin))}
       {pinModal !== null && showPinModal()}
+      {deletePinModal && showDeletePinModal()}
 
       {/* Uncomment this and use it to show information on the map screen */}
       {/* <Text style = {{position: 'absolute', fontSize: 30, top: 100}}></Text> */}
@@ -358,9 +399,10 @@ const styles = StyleSheet.create({
     padding: 6,
     width: Dimensions.get('window').width - 40,
     flexDirection: 'column',
+    elevation: 10,
   },
   pinModalTitle: {
-    fontSize: 20,
+    fontSize: 25,
     fontWeight: 'bold',
   },
   pinModalLabel: {
@@ -381,14 +423,16 @@ const styles = StyleSheet.create({
   },
   tagText: {
     margin: 7,
+    marginTop: 0,
+    marginLeft: 3,
     fontSize: 15,
     bottom: 1,
   },
   pinModalText: {
     marginRight: 6,
     fontSize: 20,
+    backgroundColor: '#F2F2F2',
     marginTop: 10,
-    backgroundColor: '#fafafa',
     padding: 10,
     borderColor: 'gray',
     borderWidth: 1,
@@ -437,6 +481,30 @@ const styles = StyleSheet.create({
   myLocationButton: {
     position: 'absolute',
     right: 141,
+  },
+  deletePinIcon: {
+    width: 35,
+    height: 35,
+  },
+  deletePin: {
+    borderRadius: 5,
+    height: 30,
+    marginTop: 10,
+    marginBottom: 5,
+  },
+  deletePinModal: {
+    backgroundColor: '#F2F2F2',
+    width: 200,
+    height: 120,
+    alignSelf: 'center'
+  },
+  deletePinModalButton: {
+    marginTop: 10,
+    width: 50,
+    height: 33,
+    backgroundColor: '#C4C4C4',
+    alignItems: 'center',
+    justifyContent: 'center'
   }
 });
 
