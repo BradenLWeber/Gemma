@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, TextInput, View, TouchableOpacity } from 'react-native';
+import { ScrollView, StyleSheet, Text, TextInput, View, TouchableOpacity } from 'react-native';
 import Modal from 'react-native-modal';
 
 {/* Here's the tutorial I'm using to learn about Modals:
@@ -32,7 +32,7 @@ const PinNote = (props) => {
 
     return (
         <Modal isVisible={props.state}>
-            <View style={styles.Modal}>
+            <ScrollView contentContainerStyle={styles.Modal} keyboardShouldPersistTaps='handled'>
                 <Text style={styles.Header}> Create a new pin </Text>
                 <View style={styles.InputView}>
                     <TextInput placeholder={'Title'} style={styles.Title} onChangeText={(text) => setTitle(text)} />
@@ -47,7 +47,7 @@ const PinNote = (props) => {
                         <Text style={styles.modalText}>Create</Text>
                     </TouchableOpacity>
                 </View>
-            </View>
+            </ScrollView>
         </Modal>
     )
 
