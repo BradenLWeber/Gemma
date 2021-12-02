@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Text, View, TouchableOpacity, Image, StyleSheet, Dimensions } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, FlatList, Text, View, TouchableOpacity, Image, StyleSheet, Dimensions } from 'react-native';
 import UserBar from '../components/userBar';
 import PinNote from '../components/pinNote';
 import { globalStyles } from '../styles/global';
@@ -25,10 +25,68 @@ const MapScreen = ({ route, navigation }) => {
   const [showLocation, setShowLocation] = useState(false);
   const [settingPin, setSettingPin] = useState(false);
   const [mapPosition, setMapPosition] = useState({x: MAPWIDTH / 2, y: MAPHEIGHT / 2, zoom: 1});
-  const [pins, setPins] = useState([]);
   const [key, setKey] = useState(0);
   const [pinModal, setPinModal] = useState(null);
   const [panTo, setPanTo] = useState(null);
+  {/* I set pins to an array of one default pin.
+  when showPins() is called in the main section, it keeps giving an undefined
+  error because the array is empty. I tried making the array not empty to see if
+  that changed anything. */}
+  const [pins, setPins] = useState([{
+    UserID: 2,
+    pinid: 0,
+    pinName: 'temp',
+    longitude: -85.57957550000000,
+    latitude: 42.93419600000000,
+    pinNotes: 'i am of no use to nobody',}]);
+  const [isLoading, setLoading] = useState(true);
+ //const [isMounted, setIsMounted] = useState(false);
+
+  const getPins = async () => {
+      try {
+        const response = await fetch('https://still-retreat-52810.herokuapp.com/Coordinates');
+        console.log('waiting for data...');
+        const json = await response.json();
+        console.log(json);
+        //console.log('here are the pins (called from getPins)');
+       // console.log(pins);
+        return json;
+     } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+  }
+
+  useEffect(() => {
+    console.log('use effect called!');
+    console.log('pins are');    // show pins before update
+    console.log(pins);
+    let isMounted = true;     // without this, it threw an "unmounted data leak" error. (smthn bout race conditions...)
+    getPins().then(json => {  // StackOverflow suggested this as a way to fix that.
+      if (isMounted) {
+        setPins(json); 
+        console.log('here are the set pins');
+        console.log(pins);
+      isMounted = false;
+      setLoading = false;}
+    })
+    //return () => {isMounted = false; setLoading(false);}
+    {/* async function handleGetPins() {
+      let response = await fetch('https://still-retreat-52810.herokuapp.com/Coordinates', {method: 'GET'})
+      .then ((response = response.json()))
+      .then(console.log(response))
+      .then(setPins(response))
+    */}
+
+    //handleGetPins()
+    console.log('here are the pins (called from useEffect)');
+    console.log(pins);
+   // setLoading(false);
+  }, [pins]);
+
+  //const [pins, setPins] = useState(handleGetPins());
+
 
   const getLocationPermissions = async () => {
     const response = await Location.getForegroundPermissionsAsync();
@@ -121,8 +179,8 @@ const MapScreen = ({ route, navigation }) => {
       setisModalVisible(false);
       setSettingPin(false);
       setKey(key + 1);
-      var lat = mapPosition.x;
-      var long = mapPosition.y;
+      var lat = mapPosition.y;
+      var long = mapPosition.x;
 
       // Post coordinate data to Heroku app
       try {
@@ -134,7 +192,7 @@ const MapScreen = ({ route, navigation }) => {
           },
           body: JSON.stringify({
             UserID: 2,
-            pinID: key,
+            pinid: key,
             pinName: title,
             longitude: long.toFixed(14),
             latitude: lat.toFixed(14),
@@ -164,12 +222,13 @@ const MapScreen = ({ route, navigation }) => {
   }
 
   const showPin = (pin) => {
+    console.log(pin);
     const pinPosition = {
-      left: (pin.x - mapPosition.x) * mapPosition.zoom,
-      top: (pin.y - mapPosition.y) * mapPosition.zoom + Dimensions.get('window').height / 2 - PINHEIGHT + 5,
+      left: (parseFloat(pin.longitude) - mapPosition.x) * mapPosition.zoom,
+      top: (parseFloat(pin.latitude) - mapPosition.y) * mapPosition.zoom + Dimensions.get('window').height / 2 - PINHEIGHT + 5,
     }
     return (
-      <View key={pin.title + String(pin.key)} style={styles.mapPin}>
+      <View key={pin.pinName + String(pinid)} style={styles.mapPin}>
         <TouchableOpacity onPress={() => clickPin(pin)} style={pinPosition}>
           <Image source={require('../assets/gem.png')} style={pinImage} />
         </TouchableOpacity>
@@ -254,27 +313,46 @@ const MapScreen = ({ route, navigation }) => {
 
   return (
     <View style={globalStyles.container} onResponderReject>
-      {/* The map */}
-      <ImageZoom
-        cropWidth={Dimensions.get('window').width}
-        cropHeight={Dimensions.get('window').height}
-        imageWidth={MAPWIDTH + Dimensions.get('window').width * (1/mapPosition.zoom)}
-        imageHeight={MAPHEIGHT + Dimensions.get('window').height * (1/mapPosition.zoom)}
-        pinchToZoom={true}
-        panToMove={true}
-        centerOn={panTo}
-        minScale={0.4}
-        onClick={() => {getLocation(); setShowLocation(!showLocation); setPinModal(null)}}
-        enableCenterFocus={false}
-        onMove={(event) => handleSetMapPosition(event, MAPWIDTH, MAPHEIGHT)}
-      >
-        <Image
-          source={require('../assets/mapEcoPreserve.png')}
-          style={mapStyle}
-        />
-      </ImageZoom>
+      {/* I added an isLoading check to keep it from trying to display the pins
+          before they'd been retrieved from the server. It didn't really help.*/}
+      {isLoading ? <ActivityIndicator/> : (
+        // The map
+        <ImageZoom
+          cropWidth={Dimensions.get('window').width}
+          cropHeight={Dimensions.get('window').height}
+          imageWidth={MAPWIDTH + Dimensions.get('window').width * (1/mapPosition.zoom)}
+          imageHeight={MAPHEIGHT + Dimensions.get('window').height * (1/mapPosition.zoom)}
+          pinchToZoom={true}
+          panToMove={true}
+          centerOn={panTo}
+          minScale={0.4}
+          onClick={() => {getLocation(); setShowLocation(!showLocation); setPinModal(null);}}
+          enableCenterFocus={false}
+          onMove={(event) => handleSetMapPosition(event, MAPWIDTH, MAPHEIGHT)}
+        >
+          <Image
+            source={require('../assets/mapEcoPreserve.png')}
+            style={mapStyle}
+          />
+         {/* I also tried displaying the pins using a FlatList...
+         <FlatList
+                    data={pins}
+                    keyExtractor={({ pinid }, index) => pinid.toString()}
+                    renderItem={({ item }) => (
+                      <View key={item.pinName + String(item.pinid)} style={styles.mapPin}>
+                        <TouchableOpacity onPress={() => clickPin(item)} style={{
+                                          left: (item.longitude - mapPosition.x) * mapPosition.zoom,
+                                          top: (item.latitude - mapPosition.y) * mapPosition.zoom + Dimensions.get('window').height / 2 - PINHEIGHT + 5,
+                                            }}>
+                            <Image source={require('../assets/gem.png')} style={pinImage} />
+                        </TouchableOpacity>
+                       </View>
+                        )}
+                                          />*/}
+        </ImageZoom>
+        )}
 
-      {/* User bar at top of the screen */}
+    {/* User bar at top of the screen */}
       <UserBar
         userPhoto={userPhoto}
         navigator={navigation}
@@ -286,11 +364,12 @@ const MapScreen = ({ route, navigation }) => {
       {settingPin ? placingPinButtons() : pinButton()}
       {settingPin && ghostPin()}
 
-
-      {pins.map((pin) => showPin(pin))}
+      {isLoading ? <ActivityIndicator/> :(
+        pins.map(({pin}) => showPin(pin)))}
       {pinModal !== null && showPinModal()}
 
       <PinNote state={isModalVisible} onClick={(button, title, tags, notes) => createPin(button, title, tags, notes)} />
+
     </View>
   );
 }
