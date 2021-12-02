@@ -2,20 +2,17 @@ import React, { useState } from 'react';
 import { StyleSheet, Text, TextInput, View, TouchableOpacity } from 'react-native';
 import Modal from 'react-native-modal';
 
-{/* Here's the tutorial I'm using to learn about Modals:
-https://blog.logrocket.com/creating-a-pop-up-modal-in-react-native/
-
-Also using library 'react-native-modal'... y'all might need to run 'npm i react-native-modal'*/}
-
 const AddBoard = (props) => {
     const [title, setTitle] = useState(null);
+    const [preserveOrCampus, setPreserveOrCampus] = useState('Preserve');
 
-    const handleClick = (title) => {
+    const handleClick = (title, type) => {
         if (title === null) {
             alert('Please fill title');
             return;
         }
-        props.makeBoard(title);
+        const mapType = type == 'Preserve' ? 'ECO' : 'CAM';
+        props.makeBoard(title, mapType);
         setTitle(null);
     }
 
@@ -26,11 +23,19 @@ const AddBoard = (props) => {
                 <View style={styles.InputView}>
                     <TextInput placeholder={'Title'} style={styles.Title} onChangeText={(text) => setTitle(text)} />
                 </View>
+                <View style={styles.modalButtons2}>
+                    <TouchableOpacity onPress={() => setPreserveOrCampus('Preserve')} style={[styles.modalButton2, preserveOrCampus == 'Preserve' ? styles.selectedButton : {}]}>
+                        <Text style={styles.modalText}>Preserve map</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => setPreserveOrCampus('Campus')} style={[styles.modalButton2, preserveOrCampus == 'Campus' ? styles.selectedButton : {}]}>
+                        <Text style={styles.modalText}>Campus map</Text>
+                    </TouchableOpacity>
+                </View>
                 <View style={styles.modalButtons}>
                     <TouchableOpacity onPress={props.exitModal} style={styles.modalButton}>
                         <Text style={styles.modalText}>Cancel</Text>
                     </TouchableOpacity>
-                    <TouchableOpacity onPress={() => handleClick(title)} style={[styles.modalButton, styles.modalCreateButton]}>
+                    <TouchableOpacity onPress={() => handleClick(title, preserveOrCampus)} style={[styles.modalButton, styles.modalCreateButton]}>
                         <Text style={styles.modalText}>Create</Text>
                     </TouchableOpacity>
                 </View>
@@ -52,7 +57,7 @@ const styles = StyleSheet.create({
     },
     InputView: {
         justifyContent: 'flex-start',
-        marginBottom: 30,
+        marginBottom: 15,
         marginTop: 20,
         marginLeft: 10,
         marginRight: 10
@@ -86,11 +91,15 @@ const styles = StyleSheet.create({
         height: 30,
         backgroundColor: '#FFFFFF',
         padding: 5,
-        marginBottom: 5,
     },
     modalButtons: {
         flexDirection: 'row',
         justifyContent: 'space-between',
+    },
+    modalButtons2: {
+        flexDirection: 'row',
+        justifyContent: 'space-around',
+        marginBottom: 15,
     },
     modalButton: {
         height: 40,
@@ -101,6 +110,17 @@ const styles = StyleSheet.create({
         backgroundColor: 'lightgray',
         alignItems: 'center',
         justifyContent: 'center',
+        elevation: 3,
+    },
+    modalButton2: {
+        height: 40,
+        width: 160,
+        marginLeft: 10,
+        marginRight: 10,
+        marginBottom: 10,
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 10,
     },
     modalText: {
         fontSize: 20,
@@ -108,6 +128,10 @@ const styles = StyleSheet.create({
     modalCreateButton: {
         backgroundColor: '#6CC071',
     },
+    selectedButton: {
+        backgroundColor: '#aaaaaa',
+        elevation: 3,
+    }
 });
 
 export default AddBoard;
