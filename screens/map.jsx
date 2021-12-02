@@ -28,7 +28,9 @@ const MapScreen = ({ route, navigation }) => {
   const [key, setKey] = useState(0);
   const [pinModal, setPinModal] = useState(null);
   const [panTo, setPanTo] = useState(null);
-<<<<<<< HEAD
+  const [searchType, setSearchType] = useState('pin');
+  const [searchValue, setSearchValue] = useState('');
+  const [creator, setCreator] = useState(null);
   {/* I set pins to an array of one default pin.
   when showPins() is called in the main section, it keeps giving an undefined
   error because the array is empty. I tried making the array not empty to see if
@@ -87,12 +89,6 @@ const MapScreen = ({ route, navigation }) => {
   }, [pins]);
 
   //const [pins, setPins] = useState(handleGetPins());
-
-=======
-  const [searchType, setSearchType] = useState('pin');
-  const [searchValue, setSearchValue] = useState('');
-  const [creator, setCreator] = useState(null);
->>>>>>> 16bc9cf9af323e041ed06d0a1a3c307bb868500a
 
   const getLocationPermissions = async () => {
     const response = await Location.getForegroundPermissionsAsync();
@@ -228,15 +224,12 @@ const MapScreen = ({ route, navigation }) => {
   }
 
   const showPin = (pin) => {
-<<<<<<< HEAD
-    console.log(pin);
-=======
+    console.log('pin:', pin);
     if (searchValue !== '') {
       if (searchType === 'pin' && !pin.title.toLowerCase().includes(searchValue.toLowerCase())) return;
       if (searchType === 'tag' && !pin.tags.toLowerCase().includes(searchValue.toLowerCase())) return;
     }
 
->>>>>>> 16bc9cf9af323e041ed06d0a1a3c307bb868500a
     const pinPosition = {
       left: (parseFloat(pin.longitude) - mapPosition.x) * mapPosition.zoom,
       top: (parseFloat(pin.latitude) - mapPosition.y) * mapPosition.zoom + Dimensions.get('window').height / 2 - PINHEIGHT + 5,
