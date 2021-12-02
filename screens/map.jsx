@@ -70,6 +70,7 @@ const MapScreen = ({ route, navigation }) => {
 
   const handlePlacePin = () => {
     setSettingPin(true);
+    setPinModal(null);
   }
 
   const pinButton = () => {
@@ -237,7 +238,7 @@ const MapScreen = ({ route, navigation }) => {
         </>
         }
         <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-          <Text style={styles.latLongText}>{mapYToLat(pinModal.y)}, {mapXToLong(pinModal.x)}</Text>
+          <Text style={styles.latLongText}>{mapYToLat(pinModal.y).toFixed(12)}, {mapXToLong(pinModal.x).toFixed(12)}</Text>
           <TouchableOpacity style={styles.deletePin} onPress={() => setDeletePinModal(true)}>
             <Image source={require('../assets/trash.png')} style={styles.deletePinIcon}></Image>
           </TouchableOpacity>
@@ -270,9 +271,7 @@ const MapScreen = ({ route, navigation }) => {
       title: board.title,
       creator: board.creator,
       map: board.map,
-      pins: board.pins.filter((pin) => {
-        pin !== pinModal
-      })
+      pins: board.pins.filter((pin) => pin.title !== pinModal.title),
     });
     setDeletePinModal(false);
     setPinModal(null);
