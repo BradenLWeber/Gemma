@@ -175,8 +175,8 @@ const MapScreen = ({ route, navigation }) => {
               'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            UserID: 2,
-            pinid: key,
+            UserID: 2,      // we need to work UserID in here as a prop sometime
+            pinid: 43, //key,
             pinName: title,
             longitude: long.toFixed(14),
             latitude: lat.toFixed(14),
@@ -190,6 +190,9 @@ const MapScreen = ({ route, navigation }) => {
       }catch (error) {
             alert('Something went wrong!');
       }
+
+      // Update pins useState in app
+      setPins((await getPins()));
 
     } else {
       setisModalVisible(false);
