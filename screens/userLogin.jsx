@@ -2,6 +2,11 @@ import React, { useState, useRef, createRef, useEffect } from 'react';
 import { Text, View, TouchableOpacity, StyleSheet, KeyboardAvoidingView, TextInput, Keyboard } from 'react-native';
 import ForgotPassword from '../components/forgotPassword';
 
+<<<<<<< HEAD
+=======
+// useEffect code from https://github.com/calvin-cs262-organization/monopoly-client
+// login GET ideas from https://github.com/calvin-cs262-organization/monopoly-client
+>>>>>>> 16bc9cf9af323e041ed06d0a1a3c307bb868500a
 
 const UserLoginScreen = (props) => {
   //const [username, setUsername] = useState('');
@@ -33,6 +38,13 @@ const UserLoginScreen = (props) => {
   const handleLoginDone = async () => {
     try {
       const response = await fetch('https://still-retreat-52810.herokuapp.com/AUsers/' + userEmail + '/' + userPassword, { method: 'GET' });
+<<<<<<< HEAD
+=======
+      if (response.status !== 200) {
+        alert('Login failed');
+        return;
+      }
+>>>>>>> 16bc9cf9af323e041ed06d0a1a3c307bb868500a
       props.geoPermissions();
       props.navigator.navigate('Map', userPhoto);
     } catch (error) {

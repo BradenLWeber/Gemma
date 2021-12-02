@@ -11,9 +11,10 @@ const BoardScreen = (props) => {
 
   const [publicOrPrivate, setPublicOrPrivate] = useState('Private');
   const [boardsType, setBoardsType] = useState('My');
-  const [isModalVisible, setisModalVisible] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [searchType, setSearchType] = useState('board');
+  const [searchValue, setSearchValue] = useState('');
   const [boardPressed, setBoardPressed] = useState(null);
-  const [key, setKey] = useState(1);
   const [addBoardModal, setAddBoardModal] = useState(false);
   const [publicBoards, setPublicBoards] = useState([
     {
@@ -21,22 +22,22 @@ const BoardScreen = (props) => {
       creator: 'NoobIsNewbie',
       title: 'Public board',
       pins: [
-          {
-          x:  900,
+        {
+          x: 900,
           y: 650,
           title: 'A spot on the map',
           tags: 'map, the',
           notes: 'This is a public spot!',
           key: 483,
-          },
-          {
+        },
+        {
           x: 100,
           y: 636,
           title: 'Near the edge',
           tags: 'Edge',
           notes: 'This is near the edge',
           key: 484,
-          },
+        },
       ]
     }
   ])
@@ -46,43 +47,43 @@ const BoardScreen = (props) => {
       creator: 'VanderLindenIsTheGoose',
       title: 'Private board',
       pins: [
-          {
-          x:  970,
+        {
+          x: 970,
           y: 750,
           title: 'The middle of the map',
           tags: 'middle, map, the',
           notes: 'This is exactly in the middle of the map! Imagine that.',
           key: 983,
-          },
-          {
+        },
+        {
           x: 460,
           y: 636,
           title: 'Frog pond',
           tags: 'Frog',
-          notes: 'This pond has tadpoles and frogs consistenly every year',
+          notes: 'This pond has tadpoles and frogs consistently every year',
           key: 984,
-          },
-          {
+        },
+        {
           x: 480,
           y: 904,
           title: 'Good spot to pray',
           tags: 'Bridge, pray',
           notes: 'I like to stand on this bridge and hear the water while I pray',
           key: 985,
-          },
-          {
+        },
+        {
           x: 701,
           y: 760,
           title: 'Bird\'s nest!!!!',
           tags: 'Bird, nest, !!!',
           notes: 'I found a bird nest here the other day!!! The eggs had afros and I think one was doing the worm.',
           key: 986,
-          },
+        },
       ]
     }
   ]);
 
-    // Function handles a click on the public/private bar
+  // Function handles a click on the public/private bar
   const clickPublicOrPrivate = () => {
     if (publicOrPrivate === 'Public') {
       setPublicOrPrivate('Private');
@@ -93,14 +94,14 @@ const BoardScreen = (props) => {
     }
   }
 
-     // Function handles displaying, hiding a menu of board options
+  // Function handles displaying, hiding a menu of board options
   const handleModal = () => {
-    setisModalVisible(!isModalVisible);
+    setIsModalVisible(!isModalVisible);
   }
 
   const clickAddBoard = (title) => {
     if (title) {
-      setPrivateBoards(privateBoards.concat({title: title, upvotes: 0, creator: 'Braden', pins: []}));
+      setPrivateBoards(privateBoards.concat({ title: title, upvotes: 0, creator: 'Braden', pins: [] }));
     }
     setAddBoardModal(false);
   }
@@ -109,7 +110,7 @@ const BoardScreen = (props) => {
     setAddBoardModal(true);
   }
 
- const addBoardIcon = () => {
+  const addBoardIcon = () => {
     return (
       <TouchableOpacity onPress={handleAddBoard}>
         <View style={styles.addBoard}>
@@ -120,9 +121,14 @@ const BoardScreen = (props) => {
   }
 
   const showBoard = (board) => {
+    if (searchValue !== '') {
+      if (searchType === 'board' && !board.title.toLowerCase().includes(searchValue.toLowerCase())) return;
+      else if (searchType === 'creator' && !board.creator.toLowerCase().includes(searchValue.toLowerCase())) return;
+    }
     return (
       <TouchableOpacity onLongPress={() => {handleModal(); setBoardPressed(board)}} key={privateBoards.indexOf(board)}>
-        <Board boardType={boardsType} navigator={props.navigator} setBoard={props.setBoard} board={board}/>
+        <Board boardType={boardsType} navigator={props.navigator} setBoard={props.setBoard} board={board} setCreator={props.setCreator}/>
+
       </TouchableOpacity>
     )
   }
@@ -138,7 +144,7 @@ const BoardScreen = (props) => {
           <View style={styles.boardContainer}>
             {publicOrPrivate === 'Private' && privateBoards.map((board) => showBoard(board))}
             {publicOrPrivate === 'Public' && publicBoards.map((board) => showBoard(board))}
-            <BoardMenu state={isModalVisible} boardsType={boardsType} onClick={() => setisModalVisible()} boardPressed={boardPressed}/>
+            <BoardMenu state={isModalVisible} boardsType={boardsType} onClick={() => setIsModalVisible()} boardPressed={boardPressed} />
           </View>
         </ScrollView>
       </SafeAreaView>
@@ -147,8 +153,10 @@ const BoardScreen = (props) => {
         setBoardsType={(type) => setBoardsType(type)}
         boardScreen={true}
         userPhoto={props.userPhoto}
+        setSearchType={setSearchType}
+        setSearchValue={setSearchValue}
       />
-      <AddBoard visibility={addBoardModal} makeBoard={clickAddBoard} exitModal={() => setAddBoardModal(false)}/>
+      <AddBoard visibility={addBoardModal} makeBoard={clickAddBoard} exitModal={() => setAddBoardModal(false)} />
     </View>
   )
 }

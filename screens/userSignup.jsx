@@ -1,8 +1,10 @@
 import React, { useState, useRef, createRef } from 'react';
 import { Text, View, TouchableOpacity, StyleSheet, KeyboardAvoidingView, TextInput } from 'react-native';
 
-// Sign up input ideas from https://aboutreact.com/react-native-login-and-signup/
+// Sign-up input ideas from https://aboutreact.com/react-native-login-and-signup/
 // Info on useRef use from https://stackoverflow.com/questions/32748718/react-native-how-to-select-the-next-textinput-after-pressing-the-next-keyboar
+// Sign-up POST ideas from https://github.com/calvin-cs262-organization/monopoly-client
+// and https://jasonwatmore.com/post/2020/02/01/react-fetch-http-post-request-examples
 
 const UserSignupScreen = (props) => {
   const [username, setUsername] = useState('');
@@ -10,12 +12,13 @@ const UserSignupScreen = (props) => {
   const [userPassword, setUserPassword] = useState('');
   const [userCheckPassword, setUserCheckPassword] = useState('');
   const [userPhoto, setUserPhoto] = useState('../assets/defaultAvatar.png');
+  const [viewPublic, setViewPublic] = useState('PUB');
 
   const emailInputRef = createRef();
   const passwordInputRef = createRef();
   const passwordCheckInputRef = createRef();
 
-  const handleSignupDone = () => {
+  const handleSignupDone = async () => {
     if (!username) {
       alert('Please fill Name');
       return;
@@ -36,8 +39,24 @@ const UserSignupScreen = (props) => {
       alert('Passwords are not the same');
       return;
     }
-    props.geoPermissions();
-    props.navigator.navigate('Map', userPhoto);
+    try {
+      await fetch('https://still-retreat-52810.herokuapp.com/AUsers/', {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          emailAddress: userEmail,
+          passphrase: userPassword,
+          viewPublic: viewPublic,
+        })
+      });
+      props.geoPermissions();
+      props.navigator.navigate('Map', userPhoto);
+    } catch (error) {
+      alert("Invalid email or password");
+    }
   }
 
   return (
