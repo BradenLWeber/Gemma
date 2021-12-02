@@ -176,7 +176,7 @@ const MapScreen = ({ route, navigation }) => {
           },
           body: JSON.stringify({
             UserID: 2,      // we need to work UserID in here as a prop sometime
-            pinid: 43, //key,
+            pinid: key,
             pinName: title,
             longitude: long.toFixed(14),
             latitude: lat.toFixed(14),
@@ -192,7 +192,11 @@ const MapScreen = ({ route, navigation }) => {
       }
 
       // Update pins useState in app
-      setPins((await getPins()));
+      try {
+        setPins((await getPins()));
+      } catch (error) {
+        alert('Pin could not be saved');
+      }
 
     } else {
       setisModalVisible(false);
@@ -218,6 +222,8 @@ const MapScreen = ({ route, navigation }) => {
       left: (mapLongToCenterX(parseFloat(pin.longitude)) - mapPosition.x) * mapPosition.zoom,
       top: (mapLatToCenterY(parseFloat(pin.latitude)) - mapPosition.y) * mapPosition.zoom + Dimensions.get('window').height / 2 - PINHEIGHT + 5,
     }
+    console.log('Here are the pinPositions');
+    console.log(pinPosition);
     return (
       <View key={pin.pinName + String(pin.pinid)} style={styles.mapPin}>
         <TouchableOpacity onPress={() => clickPin(pin)} style={pinPosition}>
