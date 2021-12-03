@@ -16,7 +16,7 @@ const UserBar = (props) => {
 
   const clickSettings = async () => {
     setShowUserMenu(false);
-    props.setSettingPinFalse();
+    props.setResetMap();
     const response = await getLocationPermissions();
     props.navigator.navigate('Settings', {locationPermission: response});
   }
@@ -71,7 +71,7 @@ const UserBar = (props) => {
   // the type in this case is either "My" or "Public"
   const clickBoards = (navigator) => {
     setSearchType('board');
-    props.setSettingPinFalse();
+    props.setResetMap();
     navigator.navigate('Boards', {setBoard: props.setBoard, setCreator: props.setCreator});
   }
 
