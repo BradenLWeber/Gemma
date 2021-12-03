@@ -104,8 +104,7 @@ const UserSignupScreen = (props) => {
           onChangeText={(checkPassword) => setUserCheckPassword(checkPassword)}
           placeholder={'Confirm password'}
           ref={passwordCheckInputRef}
-          returnKeyType="next"
-          blurOnSubmit={false} />
+          blurOnSubmit={true} />
       </KeyboardAvoidingView>
       <TouchableOpacity onPress={handleSignupDone} style={styles.doneButton}>
         <Text style={styles.buttonText}>Done</Text>

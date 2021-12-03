@@ -57,8 +57,8 @@ const UserLoginScreen = (props) => {
           placeholder={'User email'}
           returnKeyType="next"
           onSubmitEditing={() =>
-            emailInputRef.current &&
-            emailInputRef.current.focus()
+            passwordInputRef.current &&
+            passwordInputRef.current.focus()
           }
           blurOnSubmit={false}
         />
@@ -68,12 +68,8 @@ const UserLoginScreen = (props) => {
           onChangeText={(password) => setUserPassword(password)}
           placeholder={'Password'}
           ref={passwordInputRef}
-          returnKeyType="next"
-          onSubmitEditing={() =>
-            passwordCheckInputRef.current &&
-            passwordCheckInputRef.current.focus()
-          }
-          blurOnSubmit={false} />
+          // returnKeyType="next"
+          blurOnSubmit={true} />
       </KeyboardAvoidingView>
       <TouchableOpacity onPress={forgotPasswordModal} style={styles.forgotButton}>
         <Text style={styles.forgotButtonText}>Forgot password?</Text>
