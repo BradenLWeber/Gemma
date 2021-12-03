@@ -53,7 +53,7 @@ const Login = (props) => {
     }
 
     const handleGuestLogin = async () => {
-        handleGeoPermissions();
+        // handleGeoPermissions();
         props.navigator.navigate('Map', userPhoto);
     }
 

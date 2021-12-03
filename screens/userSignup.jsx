@@ -52,7 +52,7 @@ const UserSignupScreen = (props) => {
           viewPublic: viewPublic,
         })
       });
-      props.geoPermissions();
+      // props.geoPermissions();
       props.navigator.navigate('Map', userPhoto);
     } catch (error) {
       alert("Invalid email or password");

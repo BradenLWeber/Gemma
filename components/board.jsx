@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
         marginTop: 5,
     },
     boardDivider: {
-        width: 160,
+        width: 140,
         height: 3,
         marginTop: 7,
         backgroundColor: 'gray',
@@ -150,7 +150,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'black',
         marginTop: 20,
         marginBottom: 20,
-        right: -5
+        right: -10
     },
     imageBorderCam: {
         height: 160,
