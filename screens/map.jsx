@@ -171,7 +171,6 @@ const MapScreen = ({ route, navigation }) => {
       var lat = mapYToLat(mapPosition.y);
       var long = mapXToLong(mapPosition.x);
 
-      console.log('Braden', board);
       setBoard({
         creator: board.creator,
         title: board.title,
@@ -186,7 +185,6 @@ const MapScreen = ({ route, navigation }) => {
           pinid: key,
         }]),
       });
-      console.log('Braden 2', board);
 
       // Post coordinate data to Heroku app
       try {
