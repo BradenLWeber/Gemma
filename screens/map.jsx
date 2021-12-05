@@ -37,30 +37,20 @@ const MapScreen = ({ route, navigation }) => {
   const [myLocation, setMyLocation] = useState({});
   const [settingPin, setSettingPin] = useState(false);
   const [mapPosition, setMapPosition] = useState({x: MAPWIDTHECO / 2, y: MAPHEIGHTECO / 2, zoom: 1});
-  const [board, setBoard] = useState({pins: [], map: 'ECO', creator: 'Me'});
-  const [key, setKey] = useState(0);
+  const [board, setBoard] = useState({pins: [], map: 'ECO', creator: 'Me', title: 'default'});
+  const [key, setKey] = useState(5);
   const [pinModal, setPinModal] = useState(null);
   const [panTo, setPanTo] = useState(null);
   const [searchType, setSearchType] = useState('pin');
   const [searchValue, setSearchValue] = useState('');
   const [creator, setCreator] = useState(null);
   const [isLoading, setLoading] = useState(true);
-  {/* I set pins to an array of one default pin.
-  when showPins() is called in the main section, it keeps giving an undefined
-  error because the array is empty. I tried making the array not empty to see if
-  that changed anything. */}
-  const [pins, setPins] = useState([{
-    UserID: 2,
-    pinid: 0,
-    pinName: 'temp',
-    longitude: -85.577528,
-    latitude: 42.934095,
-    pinNotes: 'i am of no use to nobody',}])
+  const [deletePinModal, setDeletePinModal] = useState(false);
 
   const getPins = async () => {
       try {
         console.log('waiting for data...');
-        const response = await fetch('https://still-retreat-52810.herokuapp.com/Coordinates');
+        const response = await fetch('https://still-retreat-52810.herokuapp.com/Pins');
         const json = await response.json();
         console.log(json);
         return json;
@@ -75,16 +65,15 @@ const MapScreen = ({ route, navigation }) => {
     async function getData() {
       console.log('use effect called!');
       console.log('pins are');    // show pins before update
-      console.log(pins);
+      console.log(board.pins);
       console.log('Getpins returns: ', (await getPins()));
-      setPins((await getPins()));
+      setBoard({pins: (await getPins()), map: 'ECO', creator: 'Me'});
 
       console.log('here are the pins (called from useEffect)');
-      console.log(pins);
+      console.log(board.pins);
     }
     getData();
   }, []);
-  const [deletePinModal, setDeletePinModal] = useState(false);
 
   const getLocationPermissions = async () => {
     const response = await Location.getForegroundPermissionsAsync();
@@ -179,55 +168,51 @@ const MapScreen = ({ route, navigation }) => {
       setisModalVisible(false);
       setSettingPin(false);
       setKey(key + 1);
-      var lat = mapPosition.y;
-      var long = mapPosition.x;
+      var lat = mapYToLat(mapPosition.y);
+      var long = mapXToLong(mapPosition.x);
+
+      console.log('Braden', board);
+      setBoard({
+        creator: board.creator,
+        title: board.title,
+        map: board.map,
+        pins: board.pins.concat([{
+          boardid: 2,
+          longitude: long,
+          latitude: lat,
+          pinname: title,
+          pintag: tags,
+          pinnotes: notes,
+          pinid: key,
+        }]),
+      });
+      console.log('Braden 2', board);
 
       // Post coordinate data to Heroku app
       try {
-        const response = await fetch('https://still-retreat-52810.herokuapp.com/Coordinates/', {
+        const response = await fetch('https://still-retreat-52810.herokuapp.com/Pins', {
           method: 'post',
           headers: {
               'Accept': 'application/json',
               'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            UserID: 2,      // we need to work UserID in here as a prop sometime
-            pinid: key,
+            boardID: 2,      // we need to work BoardID in here as a prop sometime
+            pinid: String(key),
             pinName: title,
+            pinNotes: notes,
+            pinTag: tags,
             longitude: long.toFixed(14),
             latitude: lat.toFixed(14),
-            pinNotes: notes,
             })
           });
           if (response.status !== 200) {
-            alert('Pin could not be placed');
+            alert('Pin could not be placed with status: ' + response.status);
             return;
           } 
-      }catch (error) {
-            alert('Something went wrong!');
-      }
-
-      // Update pins useState in app
-      try {
-        setPins((await getPins()));
       } catch (error) {
-        alert('Pin could not be saved');
+            alert('Something went wrong:', error);
       }
-
-      setBoard({
-        upvotes: board.upvotes,
-        creator: board.creator,
-        title: board.title,
-        map: board.map,
-        pins: board.pins.concat({
-          x: mapPosition.x,
-          y: mapPosition.y,
-          title: title,
-          tags: tags,
-          notes: notes,
-          key: key,
-        }),
-      });
     } else {
       setisModalVisible(false);
       setSettingPin(false);
@@ -252,12 +237,12 @@ const MapScreen = ({ route, navigation }) => {
       left: (mapLongToCenterX(parseFloat(pin.longitude)) - mapPosition.x) * mapPosition.zoom,
       top: (mapLatToCenterY(parseFloat(pin.latitude)) - mapPosition.y) * mapPosition.zoom + Dimensions.get('window').height / 2 - PINHEIGHT + 5,
     }
-    console.log('Here are the pinPositions');
+    console.log(pin.pinname +':');
     console.log(pinPosition);
     return (
       <View key={pin.pinName + String(pin.pinid)} style={styles.mapPin}>
         <TouchableOpacity onPress={() => clickPin(pin)} style={pinPosition}>
-          <Image source={require('../assets/gem.png')} style={pinImage} />
+          <Image source={require('../assets/gem.png')} style={[pinImage, pin !== pinModal ? {opacity: 0.5} : {}]} />
         </TouchableOpacity>
       </View>
     )
@@ -291,13 +276,13 @@ const MapScreen = ({ route, navigation }) => {
     }
 
     const modalPosition = {
-      left: (pinModal.x - mapPosition.x) * mapPosition.zoom + 90,
-      top: (pinModal.y - mapPosition.y) * mapPosition.zoom + Dimensions.get('window').height / 2 - PINHEIGHT + 60,
+      left: (mapLongToCenterX(parseFloat(pinModal.longitude)) - mapPosition.x) * mapPosition.zoom + 90,
+      top: (mapLatToCenterY(parseFloat(pinModal.latitude)) - mapPosition.y) * mapPosition.zoom + Dimensions.get('window').height / 2 - PINHEIGHT + 60,
     }
     return (
       <View style={[styles.pinModal, modalPosition]}>
         <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-          <Text style={styles.pinModalTitle}>{pinModal.title}</Text>
+          <Text style={styles.pinModalTitle}>{pinModal.pinname}</Text>
           <TouchableOpacity onPress={() => setPinModal(null)}>
             <Text style={{fontSize: 25, paddingRight: 5,}}>X</Text>
           </TouchableOpacity>
@@ -313,7 +298,7 @@ const MapScreen = ({ route, navigation }) => {
         </>
         }
         <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-          <Text style={styles.latLongText}>{mapYToLat(pinModal.y).toFixed(12)}, {mapXToLong(pinModal.x).toFixed(12)}</Text>
+          <Text style={styles.latLongText}>{pinModal.latitude}, {pinModal.longitude}</Text>
           <TouchableOpacity style={styles.deletePin} onPress={() => setDeletePinModal(true)}>
             <Image source={require('../assets/trash.png')} style={styles.deletePinIcon}></Image>
           </TouchableOpacity>
@@ -342,11 +327,10 @@ const MapScreen = ({ route, navigation }) => {
 
   const deletePin = () => {
     setBoard({
-      upvotes: board.upvotes,
       title: board.title,
       creator: board.creator,
       map: board.map,
-      pins: board.pins.filter((pin) => pin.title !== pinModal.title),
+      pins: board.pins.filter((pin) => pin.pinname !== pinModal.pinname),
     });
     setDeletePinModal(false);
     setPinModal(null);
@@ -358,14 +342,6 @@ const MapScreen = ({ route, navigation }) => {
       y: -event.positionY + getMapHeight() / 2,
       zoom: event.scale
     });
-  }
-
-  const getMapCoordinates = () => {
-    actualCoordinates = {
-      latitude: mapYToLat(mapPosition.x),
-      longitude: mapXToLong(mapPosition.y),
-    };
-    return actualCoordinates;
   }
 
   const getMapCorners = () => {
@@ -387,19 +363,19 @@ const MapScreen = ({ route, navigation }) => {
 
   const mapYToLat = (y) => {
     const MAPCORNERS = getMapCorners();
-    return MAPCORNERS.NE.latitude - (y / getMapHeight()) * (MAPCORNERS.NE.latitude - MAPCORNERS.SW.latitude);
+    return MAPCORNERS.SW.latitude + (y / getMapHeight()) * (MAPCORNERS.NE.latitude - MAPCORNERS.SW.latitude);
   }
 
   // Calculates the Y coming from the center because that is the Y used in ImageZoom to center the map
   const mapLatToCenterY = (lat) => {
     const MAPCORNERS = getMapCorners();
-    return (lat - MAPCORNERS.SW.latitude) / (MAPCORNERS.NE.latitude - MAPCORNERS.SW.latitude) * getMapHeight() - getMapHeight() / 2;
+    return (lat - MAPCORNERS.SW.latitude) / (MAPCORNERS.NE.latitude - MAPCORNERS.SW.latitude) * getMapHeight();
   }
 
   // Calculates the X coming from the center because that is the X used in ImageZoom to center the map
   const mapLongToCenterX = (long) => {
     const MAPCORNERS = getMapCorners();
-    return - (long - MAPCORNERS.SW.longitude) / (MAPCORNERS.NE.longitude - MAPCORNERS.SW.longitude) * getMapWidth() + getMapWidth() / 2;
+    return (long - MAPCORNERS.SW.longitude) / (MAPCORNERS.NE.longitude - MAPCORNERS.SW.longitude) * getMapWidth();
   }
 
   // These styles require variable access, so they must be defined here
@@ -478,6 +454,7 @@ const styles = StyleSheet.create({
   pinModalTitle: {
     fontSize: 25,
     fontWeight: 'bold',
+    width: '90%'
   },
   pinModalLabel: {
     fontSize: 20,

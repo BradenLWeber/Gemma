@@ -9,15 +9,15 @@ Also using library 'react-native-modal'... y'all might need to run 'npm i react-
 
 const PinNote = (props) => {
     const [title, setTitle] = useState(null);
-    const [tags, setTags] = useState(null);
-    const [notes, setNotes] = useState(null);
+    const [tags, setTags] = useState('');
+    const [notes, setNotes] = useState('');
 
     const handleClick = (type) => {
         if (type === 'cancel') {
             props.onClick('cancel');
             setTitle(null);
-            setTags(null);
-            setNotes(null);
+            setTags('');
+            setNotes('');
         } else {
             if (title === null) {
                 alert('Please fill title');
@@ -25,8 +25,8 @@ const PinNote = (props) => {
             }
             props.onClick('create', title, tags, notes);
             setTitle(null);
-            setTags(null);
-            setNotes(null);
+            setTags('');
+            setNotes('');
         }
     }
 
