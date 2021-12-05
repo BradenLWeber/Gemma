@@ -5,26 +5,39 @@ import PinNote from '../components/pinNote';
 import { globalStyles } from '../styles/global';
 import * as Location from 'expo-location';
 import ImageZoom from 'react-native-image-pan-zoom';
+import Modal from 'react-native-modal';
 
 const MapScreen = ({ route, navigation }) => {
 
-  const MAPHEIGHT = 1500;
-  const MAPWIDTH = 1940; //MAPHEIGHT * 1.293;
+  const MAPHEIGHTECO = 1500;
+  const MAPWIDTHECO = 1940;
+  const MAPHEIGHTCAM = 1965;
+  const MAPWIDTHCAM = 1850;
   const PINHEIGHT = 50;
   const PINWIDTH = 50;
-  const MAPCORNERS = {
+  const MAPCORNERSECO = {
     NW: {latitude: 42.938853, longitude: -85.585157},
     NE: {latitude: 42.938853, longitude: -85.573994},
     SW: {latitude: 42.929539, longitude: -85.585157},
     SE: {latitude: 42.929539, longitude: -85.573994},
   };
+  const MAPCORNERSCAM = {
+    NW: {latitude: 42.937887, longitude: -85.594130},
+    NE: {latitude: 42.937887, longitude: -85.579824},
+    SW: {latitude: 42.926867, longitude: -85.594130},
+    SE: {latitude: 42.926867, longitude: -85.579824},
+  };
+  const MAPS = {
+    ECO: require('../assets/mapEcoPreserve.png'),
+    CAM: require('../assets/CampusFinal.png')
+  }
 
   const [isModalVisible, setisModalVisible] = useState(false);
   const [userPhoto, setUserPhoto] = useState('default');
   const [myLocation, setMyLocation] = useState({});
-  const [showLocation, setShowLocation] = useState(false);
   const [settingPin, setSettingPin] = useState(false);
-  const [mapPosition, setMapPosition] = useState({x: MAPWIDTH / 2, y: MAPHEIGHT / 2, zoom: 1});
+  const [mapPosition, setMapPosition] = useState({x: MAPWIDTHECO / 2, y: MAPHEIGHTECO / 2, zoom: 1});
+  const [board, setBoard] = useState({pins: [], map: 'ECO', creator: 'Me'});
   const [key, setKey] = useState(0);
   const [pinModal, setPinModal] = useState(null);
   const [panTo, setPanTo] = useState(null);
@@ -71,6 +84,7 @@ const MapScreen = ({ route, navigation }) => {
     }
     getData();
   }, []);
+  const [deletePinModal, setDeletePinModal] = useState(false);
 
   const getLocationPermissions = async () => {
     const response = await Location.getForegroundPermissionsAsync();
@@ -96,6 +110,7 @@ const MapScreen = ({ route, navigation }) => {
 
   const handlePlacePin = () => {
     setSettingPin(true);
+    setPinModal(null);
   }
 
   const pinButton = () => {
@@ -114,6 +129,7 @@ const MapScreen = ({ route, navigation }) => {
       return;
     }
     await getLocation();
+    const MAPCORNERS = getMapCorners();
     if (
       myLocation.longitude > MAPCORNERS.NE.longitude ||
       myLocation.longitude < MAPCORNERS.SW.longitude ||
@@ -198,6 +214,20 @@ const MapScreen = ({ route, navigation }) => {
         alert('Pin could not be saved');
       }
 
+      setBoard({
+        upvotes: board.upvotes,
+        creator: board.creator,
+        title: board.title,
+        map: board.map,
+        pins: board.pins.concat({
+          x: mapPosition.x,
+          y: mapPosition.y,
+          title: title,
+          tags: tags,
+          notes: notes,
+          key: key,
+        }),
+      });
     } else {
       setisModalVisible(false);
       setSettingPin(false);
@@ -233,29 +263,6 @@ const MapScreen = ({ route, navigation }) => {
     )
   }
 
-  const showPinModal = () => {
-    const modalPosition = {
-      left: mapLongToCenterX(parseFloat(pinModal.longitude) - mapPosition.x) * mapPosition.zoom + 90,
-      top: mapLatToCenterY(parseFloat(pinModal.latitude) - mapPosition.y) * mapPosition.zoom + Dimensions.get('window').height / 2 - PINHEIGHT + 60,
-    }
-    return (
-      <View style={[styles.pinModal, modalPosition]}>
-        <Text style={styles.pinModalTitle}>{pinModal.title}</Text>
-        {pinModal.tags && showTags(pinModal.tags)}
-        { pinModal.notes &&
-        <>
-          <View style={{flexDirection: 'row'}}>
-            <Image source={require('../assets/defaultAvatar.png')} style={styles.pinModalUserIcon}/>
-            <Text style={styles.pinModalCreator}>{creator}</Text>
-          </View>
-          <Text style={styles.pinModalText}>{pinModal.notes}</Text>
-        </>
-        }
-        <Text style={styles.latLongText}>{pinModal.latitude}, {pinModal.longitude}</Text>
-      </View>
-    )
-  }
-
   const clickPin = (pin) => {
     if (pin !== pinModal) {
       setPinModal(pin);
@@ -271,20 +278,84 @@ const MapScreen = ({ route, navigation }) => {
       <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
         {tagList.map((tag) =>
           tag.trim() !== '' &&
-          <View style={styles.tag} key={tag}>
-            <Text style={styles.tagText}>
-              {tag.trim()}
-            </Text>
-          </View>
+          <Text style={styles.tagText} key={tag}>#{tag.trim()}</Text>
         )}
       </View>
     )
   }
 
-  const handleSetMapPosition = (event, mapWidth, mapHeight) => {
+  const showPinModal = () => {
+    if (searchValue !== '') {
+      if (searchType === 'pin' && !pinModal.title.toLowerCase().includes(searchValue.toLowerCase())) setPinModal(null);
+      if (searchType === 'tag' && !pinModal.tags.toLowerCase().includes(searchValue.toLowerCase())) setPinModal(null);
+    }
+
+    const modalPosition = {
+      left: (pinModal.x - mapPosition.x) * mapPosition.zoom + 90,
+      top: (pinModal.y - mapPosition.y) * mapPosition.zoom + Dimensions.get('window').height / 2 - PINHEIGHT + 60,
+    }
+    return (
+      <View style={[styles.pinModal, modalPosition]}>
+        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+          <Text style={styles.pinModalTitle}>{pinModal.title}</Text>
+          <TouchableOpacity onPress={() => setPinModal(null)}>
+            <Text style={{fontSize: 25, paddingRight: 5,}}>X</Text>
+          </TouchableOpacity>
+        </View>
+        {pinModal.tags && showTags(pinModal.tags)}
+        { pinModal.notes &&
+        <>
+          <View style={{flexDirection: 'row'}}>
+            <Image source={require('../assets/defaultAvatar.png')} style={styles.pinModalUserIcon}/>
+            <Text style={styles.pinModalCreator}>{board.creator}</Text>
+          </View>
+          <Text style={styles.pinModalText}>{pinModal.notes}</Text>
+        </>
+        }
+        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+          <Text style={styles.latLongText}>{mapYToLat(pinModal.y).toFixed(12)}, {mapXToLong(pinModal.x).toFixed(12)}</Text>
+          <TouchableOpacity style={styles.deletePin} onPress={() => setDeletePinModal(true)}>
+            <Image source={require('../assets/trash.png')} style={styles.deletePinIcon}></Image>
+          </TouchableOpacity>
+        </View>
+      </View>
+    )
+  }
+
+  const showDeletePinModal = () => {
+    return (
+      <Modal isVisible={true}>
+        <View style={styles.deletePinModal}>
+          <Text style={{alignSelf: 'center', fontSize: 25, margin: 10,}}>Delete pin?</Text>
+          <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
+            <TouchableOpacity style={styles.deletePinModalButton} onPress={() => deletePin()}>
+              <Text>Yes</Text>
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.deletePinModalButton} onPress={() => setDeletePinModal(false)}>
+              <Text>No</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+    )
+  }
+
+  const deletePin = () => {
+    setBoard({
+      upvotes: board.upvotes,
+      title: board.title,
+      creator: board.creator,
+      map: board.map,
+      pins: board.pins.filter((pin) => pin.title !== pinModal.title),
+    });
+    setDeletePinModal(false);
+    setPinModal(null);
+  }
+
+  const handleSetMapPosition = (event) => {
     setMapPosition({
-      x: -event.positionX + mapWidth / 2,
-      y: -event.positionY + mapHeight / 2,
+      x: -event.positionX + getMapWidth() / 2,
+      y: -event.positionY + getMapHeight() / 2,
       zoom: event.scale
     });
   }
@@ -297,29 +368,45 @@ const MapScreen = ({ route, navigation }) => {
     return actualCoordinates;
   }
 
+  const getMapCorners = () => {
+    return board.map === 'ECO' ? MAPCORNERSECO : MAPCORNERSCAM;
+  }
+
+  const getMapHeight = () => {
+    return board.map === 'ECO' ? MAPHEIGHTECO : MAPHEIGHTCAM;
+  }
+
+  const getMapWidth = () => {
+    return board.map === 'ECO' ? MAPWIDTHECO : MAPWIDTHCAM;
+  }
+
   const mapXToLong = (x) => {
-    return MAPCORNERS.SW.longitude + (x / MAPWIDTH) * (MAPCORNERS.NE.longitude - MAPCORNERS.SW.longitude);
+    const MAPCORNERS = getMapCorners();
+    return MAPCORNERS.SW.longitude + (x / getMapWidth()) * (MAPCORNERS.NE.longitude - MAPCORNERS.SW.longitude);
   }
 
   const mapYToLat = (y) => {
-    return MAPCORNERS.NE.latitude - (y / MAPHEIGHT) * (MAPCORNERS.NE.latitude - MAPCORNERS.SW.latitude);
+    const MAPCORNERS = getMapCorners();
+    return MAPCORNERS.NE.latitude - (y / getMapHeight()) * (MAPCORNERS.NE.latitude - MAPCORNERS.SW.latitude);
   }
 
   // Calculates the Y coming from the center because that is the Y used in ImageZoom to center the map
   const mapLatToCenterY = (lat) => {
-    return (lat - MAPCORNERS.SW.latitude) / (MAPCORNERS.NE.latitude - MAPCORNERS.SW.latitude) * MAPHEIGHT - MAPHEIGHT / 2;
+    const MAPCORNERS = getMapCorners();
+    return (lat - MAPCORNERS.SW.latitude) / (MAPCORNERS.NE.latitude - MAPCORNERS.SW.latitude) * getMapHeight() - getMapHeight() / 2;
   }
 
   // Calculates the X coming from the center because that is the X used in ImageZoom to center the map
   const mapLongToCenterX = (long) => {
-    return - (long - MAPCORNERS.SW.longitude) / (MAPCORNERS.NE.longitude - MAPCORNERS.SW.longitude) * MAPWIDTH + MAPWIDTH / 2;
+    const MAPCORNERS = getMapCorners();
+    return - (long - MAPCORNERS.SW.longitude) / (MAPCORNERS.NE.longitude - MAPCORNERS.SW.longitude) * getMapWidth() + getMapWidth() / 2;
   }
 
   // These styles require variable access, so they must be defined here
   const mapStyle = {
     position: 'absolute',
-    height: MAPHEIGHT,
-    width: MAPWIDTH,
+    height: getMapHeight(),
+    width: getMapWidth(),
     left: Dimensions.get('window').width * (1/mapPosition.zoom) / 2,
     bottom: Dimensions.get('window').height * (1/mapPosition.zoom) / 2,
   };
@@ -330,6 +417,7 @@ const MapScreen = ({ route, navigation }) => {
 
   return (
     <View style={globalStyles.container} onResponderReject>
+<<<<<<< HEAD
       {/* I added an isLoading check to keep it from trying to display the pins
           before they'd been retrieved from the server. It didn't really help.*/}
       {isLoading ? <ActivityIndicator/> : (
@@ -370,19 +458,57 @@ const MapScreen = ({ route, navigation }) => {
         )}
 
     {/* User bar at top of the screen */}
+=======
+      {/* The map */}
+      <ImageZoom
+        cropWidth={Dimensions.get('window').width}
+        cropHeight={Dimensions.get('window').height}
+        imageWidth={getMapWidth() + Dimensions.get('window').width * (1/mapPosition.zoom)}
+        imageHeight={getMapHeight() + Dimensions.get('window').height * (1/mapPosition.zoom)}
+        pinchToZoom={true}
+        panToMove={true}
+        centerOn={panTo}
+        minScale={0.3}
+        enableCenterFocus={false}
+        onMove={(event) => handleSetMapPosition(event)}
+      >
+        <Image
+          source={MAPS[board.map]}
+          style={mapStyle}
+        />
+      </ImageZoom>
+
+      {/* User bar at top of the screen */}
+>>>>>>> eb2491867b1fa328b4ae668fc6ac4318da785121
       <UserBar
         userPhoto={userPhoto}
         navigator={navigation}
         boardScreen={false}
+<<<<<<< HEAD
         setBoard={(board) => setPins(board)}
+=======
+        setBoard={(board) => setBoard(board)}
+        setSearchType={setSearchType}
+        setSearchValue={setSearchValue}
+        setCreator = {setCreator}
+        setResetMap={() => {setSettingPin(false); setPinModal(null)}}
+>>>>>>> eb2491867b1fa328b4ae668fc6ac4318da785121
       />
 
       {/* Drop pin button on map */}
       {settingPin ? placingPinButtons() : pinButton()}
       {settingPin && ghostPin()}
 
+<<<<<<< HEAD
       {isLoading ? <ActivityIndicator/> : (pins.map((pin) => showPin(pin)))}
+=======
+      {board.pins.map((pin) => showPin(pin))}
+>>>>>>> eb2491867b1fa328b4ae668fc6ac4318da785121
       {pinModal !== null && showPinModal()}
+      {deletePinModal && showDeletePinModal()}
+
+      {/* Uncomment this and use it to show information on the map screen */}
+      {/* <Text style = {{position: 'absolute', fontSize: 30, top: 100}}></Text> */}
 
       <PinNote state={isModalVisible} onClick={(button, title, tags, notes) => createPin(button, title, tags, notes)} />
     </View>
@@ -397,21 +523,75 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     padding: 6,
     width: Dimensions.get('window').width - 40,
+<<<<<<< HEAD
+=======
+    flexDirection: 'column',
+    elevation: 10,
+>>>>>>> eb2491867b1fa328b4ae668fc6ac4318da785121
   },
   pinModalTitle: {
-    fontSize: 20,
+    fontSize: 25,
     fontWeight: 'bold',
   },
   pinModalLabel: {
     fontSize: 20,
     marginTop: 3,
     fontStyle: 'italic',
+<<<<<<< HEAD
     textDecorationLine: 'underline'
+=======
+    textDecorationLine: 'underline',
+  },
+  tag: {
+    height: 30,
+    marginRight: 7,
+    marginTop: 4,
+    marginBottom: 4,
+    backgroundColor: '#a8a8a8',
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  tagText: {
+    margin: 7,
+    marginTop: 0,
+    marginLeft: 3,
+    fontSize: 15,
+    bottom: 1,
+>>>>>>> eb2491867b1fa328b4ae668fc6ac4318da785121
   },
   pinModalText: {
     marginRight: 6,
     fontSize: 20,
+<<<<<<< HEAD
     marginTop: 3,
+=======
+    backgroundColor: '#F2F2F2',
+    marginTop: 10,
+    padding: 10,
+    borderColor: 'gray',
+    borderWidth: 1,
+    borderRadius: 10,
+  },
+  latLongText: {
+    marginRight: 6,
+    fontSize: 15,
+    marginTop: 20,
+    color: 'gray'
+  },
+  pinModalCreator: {
+    marginTop: 20,
+    marginLeft: 10,
+    fontSize: 15,
+  },
+  pinModalUserIcon: {
+    height: 30,
+    width: 30,
+    borderRadius: 15,
+    borderWidth: 1,
+    borderColor: 'black',
+    marginTop: 15,
+>>>>>>> eb2491867b1fa328b4ae668fc6ac4318da785121
   },
   pinIcon: {
     width: 40,
@@ -437,6 +617,30 @@ const styles = StyleSheet.create({
   myLocationButton: {
     position: 'absolute',
     right: 141,
+  },
+  deletePinIcon: {
+    width: 35,
+    height: 35,
+  },
+  deletePin: {
+    borderRadius: 5,
+    height: 30,
+    marginTop: 10,
+    marginBottom: 5,
+  },
+  deletePinModal: {
+    backgroundColor: '#F2F2F2',
+    width: 200,
+    height: 120,
+    alignSelf: 'center'
+  },
+  deletePinModalButton: {
+    marginTop: 10,
+    width: 50,
+    height: 33,
+    backgroundColor: '#C4C4C4',
+    alignItems: 'center',
+    justifyContent: 'center'
   }
 });
 

@@ -39,7 +39,7 @@ const UserLoginScreen = (props) => {
         alert('Login failed');
         return;
       }
-      props.geoPermissions();
+      // props.geoPermissions();
       props.navigator.navigate('Map', userPhoto);
     } catch (error) {
       alert("Invalid email or password");
