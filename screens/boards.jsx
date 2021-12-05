@@ -3,18 +3,15 @@ import Board from '../components/board';
 import UserBar from '../components/userBar';
 import AddBoard from '../components/addBoard';
 import PublicPrivateBar from '../components/publicPrivateBar';
-import BoardMenu from '../components/boardMenu';
 
 import { StyleSheet, Text, View, TouchableOpacity, Image, ScrollView, SafeAreaView, Dimensions } from 'react-native';
 
 const BoardScreen = (props) => {
 
   const [publicOrPrivate, setPublicOrPrivate] = useState('Private');
-  const [boardsType, setBoardsType] = useState('My');
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [searchType, setSearchType] = useState('board');
   const [searchValue, setSearchValue] = useState('');
-  const [boardPressed, setBoardPressed] = useState(null);
   const [addBoardModal, setAddBoardModal] = useState(false);
   const [publicBoards, setPublicBoards] = useState([]);
   const [privateBoards, setPrivateBoards] = useState([]);
@@ -22,21 +19,18 @@ const BoardScreen = (props) => {
   useEffect(() => {
     setPrivateBoards([
       {
-        upvotes: 0,
         creator: 'Me',
         title: 'Default ecosystem board',
         map: 'ECO',
         pins: []
       },
       {
-        upvotes: 0,
         creator: 'Me',
         title: 'Default campus board',
         map: 'CAM',
         pins: []
       },
       {
-      upvotes: 20,
       creator: 'VanderGoosen',
       title: 'Private board',
       map: 'ECO',
@@ -78,7 +72,6 @@ const BoardScreen = (props) => {
     ]);
     setPublicBoards([
       {
-        upvotes: 20,
         creator: 'NoobIsNewbie',
         title: 'Public board',
         map: 'ECO',
@@ -102,7 +95,6 @@ const BoardScreen = (props) => {
         ]
       },
       {
-        upvotes: 1,
         creator: 'IAmPotato',
         title: 'Campus!',
         map: 'CAM',
@@ -128,25 +120,14 @@ const BoardScreen = (props) => {
     ]);
   }, []);
 
-  // Function handles a click on the public/private bar
-  const clickPublicOrPrivate = () => {
-    if (publicOrPrivate === 'Public') {
-      setPublicOrPrivate('Private');
-      setBoardsType('My');
-    } else {
-      setPublicOrPrivate('Public');
-      setBoardsType('Public');
-    }
-  }
-
-  // Function handles displaying, hiding a menu of board options
-  const handleModal = () => {
-    setIsModalVisible(!isModalVisible);
+  const deleteBoard = (board) => {
+    setPublicBoards(publicBoards.filter(b => b !== board));
+    setPrivateBoards(privateBoards.filter(b => b !== board));
   }
 
   const clickAddBoard = (title, type) => {
     if (title) {
-      setPrivateBoards(privateBoards.concat({ title: title, upvotes: 0, creator: 'BradenTheDude', map: type, pins: [] }));
+      setPrivateBoards(privateBoards.concat({ title: title, creator: 'BradenTheDude', map: type, pins: [] }));
     }
     setAddBoardModal(false);
   }
@@ -171,31 +152,47 @@ const BoardScreen = (props) => {
       else if (searchType === 'creator' && !board.creator.toLowerCase().includes(searchValue.toLowerCase())) return;
     }
     return (
-      <TouchableOpacity onLongPress={() => {handleModal(); setBoardPressed(board)}} key={String(privateBoards.indexOf(board)).concat(board.title)}>
-        <Board boardType={boardsType} navigator={props.navigator} setBoard={props.setBoard} board={board} setCreator={props.setCreator}/>
-
-      </TouchableOpacity>
+        <Board
+          key={String(privateBoards.indexOf(board)).concat(board.title)}
+          board={board}
+          boardType={publicOrPrivate}
+          navigator={props.navigator}
+          setBoard={props.setBoard}
+          setCreator={props.setCreator}
+          deleteBoard={deleteBoard}
+        />
     )
   }
 
   return (
     <View style={{ alignItems: 'center', position: 'relative' }}>
       <View style={styles.boardHeadingContainer}>
-        <PublicPrivateBar type={publicOrPrivate} onClick={clickPublicOrPrivate} />
-        {boardsType === 'My' && addBoardIcon()}
+        <View style={{flexDirection: 'row'}}>
+          <TouchableOpacity
+            style={[styles.boardType, publicOrPrivate === 'Private' ? styles.boardTypeChosen : {}]}
+            onPress={() => setPublicOrPrivate('Private')}
+          >
+            <Text style={styles.boardTypeText}>Private</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[styles.boardType, publicOrPrivate === 'Public' ? styles.boardTypeChosen : {}]}
+            onPress={() => {setPublicOrPrivate('Public')}}
+          >
+            <Text style={styles.boardTypeText}>Public</Text>
+          </TouchableOpacity>
+        </View>
+        {publicOrPrivate === 'Private' && addBoardIcon()}
       </View>
       <SafeAreaView style={{ height: Dimensions.get('window').height - 210 }}>
         <ScrollView style={styles.boardScrollContainer}>
           <View style={styles.boardContainer}>
             {publicOrPrivate === 'Private' && privateBoards.map((board) => showBoard(board))}
             {publicOrPrivate === 'Public' && publicBoards.map((board) => showBoard(board))}
-            <BoardMenu state={isModalVisible} boardsType={boardsType} onClick={() => setIsModalVisible()} boardPressed={boardPressed} />
           </View>
         </ScrollView>
       </SafeAreaView>
       <UserBar
         navigator={props.navigator}
-        setBoardsType={(type) => setBoardsType(type)}
         boardScreen={true}
         userPhoto={props.userPhoto}
         setSearchType={setSearchType}
@@ -234,6 +231,21 @@ const styles = StyleSheet.create({
   },
   boardContainer: {
     alignItems: 'center',
+  },
+  boardType: {
+    marginTop: 5,
+    marginRight: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: 35,
+    width: 90,
+    borderRadius: 10,
+  },
+  boardTypeChosen: {
+    backgroundColor: '#F9D01E',
+  },
+  boardTypeText: {
+    fontSize: 20,
   }
 });
 

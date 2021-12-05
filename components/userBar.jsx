@@ -3,6 +3,8 @@ import { Platform, Image, View, Text, StyleSheet, TouchableOpacity, TouchableWit
 import * as Location from 'expo-location';
 
 const UserBar = (props) => {
+  this.textInput = '';
+
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showSearchMenu, setShowSearchMenu] = useState(false);
   // Initial state depends on whether it is on the map screen or the board screen
@@ -14,9 +16,10 @@ const UserBar = (props) => {
     return response.granted;
   }
 
-  const clickSettings = async () => {
+  const clickProfile = async () => {
     setShowUserMenu(false);
-    props.setResetMap();
+    // setResetMap is called only on the map screen, so this handles a call from the board screen as well
+    props.setResetMap && props.setResetMap();
     const response = await getLocationPermissions();
     props.navigator.navigate('Settings', {locationPermission: response});
   }
@@ -25,8 +28,8 @@ const UserBar = (props) => {
   const userMenu = (navigator) => {
     return (
       <View style={styles.userMenu}>
-        <TouchableOpacity style={styles.menuButton} onPress={clickSettings}>
-          <Text style={styles.menuButtonText}>Settings</Text>
+        <TouchableOpacity style={styles.menuButton} onPress={clickProfile}>
+          <Text style={styles.menuButtonText}>Profile</Text>
         </TouchableOpacity>
         <View style={styles.menuDivider} />
         <TouchableOpacity style={styles.menuButton} onPress={() => props.navigator.navigate('Login')}>
@@ -71,7 +74,10 @@ const UserBar = (props) => {
   // the type in this case is either "My" or "Public"
   const clickBoards = (navigator) => {
     setSearchType('board');
-    props.setResetMap();
+    props.setSearchValue('');
+    this.textInput && this.textInput.clear();
+    // setResetMap is called only on the map screen, so this handles a call from the board screen as well
+    props.setResetMap && props.setResetMap();
     navigator.navigate('Boards', {setBoard: props.setBoard, setCreator: props.setCreator});
   }
 
@@ -122,7 +128,12 @@ const UserBar = (props) => {
           {/* This extra view wrapper allows me to specificy the width I want the textInput */}
           <View style={styles.userInputWidth}>
             <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-              <TextInput style={styles.inputText} placeholder={searchPlaceholder()} onChangeText={(text) => props.setSearchValue(text)} />
+              <TextInput
+                style={styles.inputText}
+                placeholder={searchPlaceholder()}
+                onChangeText={(text) => props.setSearchValue(text)}
+                ref={input => { this.textInput = input }}
+              />
             </KeyboardAvoidingView>
           </View>
           {/* Search options icon */}
@@ -130,7 +141,7 @@ const UserBar = (props) => {
         </View>
         {/*Options icon*/}
         <TouchableOpacity
-          style={[styles.userOptions, props.optionsMenuShowing ? styles.userOptionsPressed : {}]}
+          style={styles.userOptions}
           onPress={() => clickBoards(props.navigator)}
         >
           <Image source={require('../assets/board-menu.png')} style={styles.boardMenuIcon} />

@@ -352,6 +352,8 @@ const MapScreen = ({ route, navigation }) => {
         panToMove={true}
         centerOn={panTo}
         minScale={0.3}
+        maxScale={5.0}
+        onLongPress={handlePlacePin}
         enableCenterFocus={false}
         onMove={(event) => handleSetMapPosition(event)}
       >

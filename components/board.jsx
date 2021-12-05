@@ -1,23 +1,16 @@
-import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Image, Dimensions } from 'react-native'
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Image, Dimensions } from 'react-native';
+import Modal from 'react-native-modal';
 
 const Board = (props) => {
+    const [showDeleteBoardModal, setShowDeleteBoardModal] = useState(false);
+
     const { board } = props;
     const mapIsEcosystem = board.map === 'ECO';
 
     const MAPS = {
         ECO: require('../assets/mapEcoPreserve.png'),
         CAM: require('../assets/CampusFinal.png')
-    }
-
-    // This button allows the user to change a board between public and private
-    // It is only visible on "My boards"
-    const publicPrivateButton = () => {
-        return (
-            <TouchableOpacity style={styles.boardButton}>
-                <Text>Public</Text>
-            </TouchableOpacity>
-        )
     }
 
     const showPin = (pin) => {
@@ -36,28 +29,57 @@ const Board = (props) => {
         return name.length > 23 ? name.slice(0, 23) + '...' : name;
     }
 
+    const getColor = (type) => {
+        return props.boardType === 'Private' ? (type === 'primary' ? styles.privateColor : styles.privateColor2) : (type === 'primary' ? styles.publicColor : styles.publicColor2);
+    }
+
+    const deleteBoardModal = () => {
+        return (
+          <Modal isVisible={true}>
+            <View style={styles.deleteBoardModal}>
+              <Text style={{alignSelf: 'center', fontSize: 25, margin: 10,}}>Delete board?</Text>
+              <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
+                <TouchableOpacity style={styles.deleteBoardModalButton} onPress={() => props.deleteBoard(board)}>
+                  <Text>Yes</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.deleteBoardModalButton} onPress={() => setShowDeleteBoardModal(null)}>
+                  <Text>No</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Modal>
+        )
+      }
+
     return(
-        <View style={styles.boardView}>
+        <>
+        <View style={[styles.boardView, getColor('primary')]}>
             {/* Text to the left of the map image */}
             <View style={styles.boardText}>
                 <Text style={styles.boardTitle}>{board.title}</Text>
                 <View style={styles.boardDivider} />
-                <Text style={styles.boardInfoText}>Pins: {board.pins.length}</Text>
-                <Text style={styles.boardInfoText}>Upvotes: {board.upvotes}</Text>
-                {/* Only render public/private button if it is personal boards, not public */}
-                {props.boardType === 'My' && publicPrivateButton()}
+                <View style={{flexDirection: 'row'}}>
+                    <TouchableOpacity style={[styles.boardButton, getColor('secondary')]}>
+                        <Text>Make{'\n'}{props.boardType === 'Private' ? 'Public' : 'Private'}</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={[styles.boardButton2, getColor('secondary')]} onPress={() => setShowDeleteBoardModal(true)}>
+                        <Image source={require('../assets/trash.png')} style={styles.trashIcon} />
+                    </TouchableOpacity>
+                </View>
                 {/* This makes sure there is room for the creator name */}
                 <View style={{height: 40}}/>
                 <Text style={styles.boardCreatorText}>{displayName(board.creator)}</Text>
             </View>
             {/* Image is wrapped in a button that takes user back to the map screen */}
             <View style={mapIsEcosystem ? styles.imageBorderEco : styles.imageBorderCam}>
-                <TouchableOpacity style={mapIsEcosystem ? styles.boardImageWrapperEco : styles.boardImageWrapperCam} onPress={() => {props.setBoard(props.board); props.setCreator(props.board.creator); props.navigator.navigate('Map')}}>
+                <TouchableOpacity style={mapIsEcosystem ? styles.boardImageWrapperEco : styles.boardImageWrapperCam} onPress={() => {props.setBoard(board); props.setCreator(board.creator); props.navigator.navigate('Map')}}>
                     <Image source={mapIsEcosystem ? MAPS.ECO : MAPS.CAM} style={board.map === 'ECO' ? styles.ecoImage : styles.camImage}/>
                     {board.pins.map((pin) => showPin(pin))}
                 </TouchableOpacity>
             </View>
         </View>
+        {showDeleteBoardModal && deleteBoardModal()}
+        </>
     )
 }
 
@@ -69,7 +91,6 @@ const styles = StyleSheet.create({
         marginTop: 10,
         marginLeft: 10,
         marginRight: 10,
-        backgroundColor: 'lightgray',
         flexDirection: 'row',
         elevation: 10,
         alignItems: 'center',
@@ -119,14 +140,25 @@ const styles = StyleSheet.create({
         width: 140,
         height: 3,
         marginTop: 7,
-        backgroundColor: 'gray',
+        backgroundColor: 'black',
         marginBottom: 5,
     },
     boardButton: {
         width: 60,
-        height: 27,
+        height: 50,
         borderRadius: 5,
-        backgroundColor: 'gray',
+        backgroundColor: '#909090',
+        marginTop: 10,
+        alignItems: 'center',
+        justifyContent: 'center',
+        elevation: 10,
+        marginRight: 20,
+    },
+    boardButton2: {
+        width: 50,
+        height: 50,
+        borderRadius: 5,
+        backgroundColor: '#909090',
         marginTop: 10,
         alignItems: 'center',
         justifyContent: 'center',
@@ -134,7 +166,6 @@ const styles = StyleSheet.create({
     },
     boardCreatorText: {
         fontSize: 10,
-        color: '#6e6e6e',
         width: '100%',
         position: 'absolute',
         bottom: 13,
@@ -159,6 +190,36 @@ const styles = StyleSheet.create({
         marginTop: 20,
         marginBottom: 20,
         right: -20,
+    },
+    trashIcon: {
+        width: 40,
+        height: 40,
+    },
+    privateColor: {
+        backgroundColor: '#78beeb',
+    },
+    privateColor2: {
+        backgroundColor: '#b4cfe0',
+    },
+    publicColor: {
+        backgroundColor: '#6CC071',
+    },
+    publicColor2: {
+        backgroundColor: '#b4ccb4',
+    },
+    deleteBoardModal: {
+        backgroundColor: '#F2F2F2',
+        width: 200,
+        height: 120,
+        alignSelf: 'center'
+    },
+    deleteBoardModalButton: {
+        marginTop: 10,
+        width: 50,
+        height: 33,
+        backgroundColor: '#C4C4C4',
+        alignItems: 'center',
+        justifyContent: 'center'
     }
 });
 
