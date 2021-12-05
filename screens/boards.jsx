@@ -16,35 +16,6 @@ const BoardScreen = (props) => {
   const [searchValue, setSearchValue] = useState('');
   const [boardPressed, setBoardPressed] = useState(null);
   const [addBoardModal, setAddBoardModal] = useState(false);
-<<<<<<< HEAD
-  const [publicBoards, setPublicBoards] = useState([
-    {
-      upvotes: 20,
-      creator: 'NoobIsNewbie',
-      title: 'Public board',
-      pins: [
-        {
-          x: -85.580675,
-          y: 42.932581,
-          title: 'A spot on the map',
-          tags: 'map, the',
-          notes: 'This is a public spot!',
-          pinid: 483,
-        },
-        {
-          x: -85.583224,
-          y: 42.933247,
-          title: 'Near the edge',
-          tags: 'Edge',
-          notes: 'This is near the edge',
-          pinid: 484,
-        },
-      ]
-    }
-  ])
-  const [privateBoards, setPrivateBoards] = useState([
-    {
-=======
   const [publicBoards, setPublicBoards] = useState([]);
   const [privateBoards, setPrivateBoards] = useState([]);
 
@@ -65,7 +36,6 @@ const BoardScreen = (props) => {
         pins: []
       },
       {
->>>>>>> eb2491867b1fa328b4ae668fc6ac4318da785121
       upvotes: 20,
       creator: 'VanderGoosen',
       title: 'Private board',

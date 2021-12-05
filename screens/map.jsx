@@ -417,48 +417,6 @@ const MapScreen = ({ route, navigation }) => {
 
   return (
     <View style={globalStyles.container} onResponderReject>
-<<<<<<< HEAD
-      {/* I added an isLoading check to keep it from trying to display the pins
-          before they'd been retrieved from the server. It didn't really help.*/}
-      {isLoading ? <ActivityIndicator/> : (
-        // The map
-        <ImageZoom
-          cropWidth={Dimensions.get('window').width}
-          cropHeight={Dimensions.get('window').height}
-          imageWidth={MAPWIDTH + Dimensions.get('window').width * (1/mapPosition.zoom)}
-          imageHeight={MAPHEIGHT + Dimensions.get('window').height * (1/mapPosition.zoom)}
-          pinchToZoom={true}
-          panToMove={true}
-          centerOn={panTo}
-          minScale={0.4}
-          onClick={() => {getLocation(); setShowLocation(!showLocation); setPinModal(null);}}
-          enableCenterFocus={false}
-          onMove={(event) => handleSetMapPosition(event, MAPWIDTH, MAPHEIGHT)}
-        >
-          <Image
-            source={require('../assets/mapEcoPreserve.png')}
-            style={mapStyle}
-          />
-         {/* I also tried displaying the pins using a FlatList...
-         <FlatList
-                    data={pins}
-                    keyExtractor={({ pinid }, index) => pinid.toString()}
-                    renderItem={({ item }) => (
-                      <View key={item.pinName + String(item.pinid)} style={styles.mapPin}>
-                        <TouchableOpacity onPress={() => clickPin(item)} style={{
-                                          left: (item.longitude - mapPosition.x) * mapPosition.zoom,
-                                          top: (item.latitude - mapPosition.y) * mapPosition.zoom + Dimensions.get('window').height / 2 - PINHEIGHT + 5,
-                                            }}>
-                            <Image source={require('../assets/gem.png')} style={pinImage} />
-                        </TouchableOpacity>
-                       </View>
-                        )}
-                                          />*/}
-        </ImageZoom>
-        )}
-
-    {/* User bar at top of the screen */}
-=======
       {/* The map */}
       <ImageZoom
         cropWidth={Dimensions.get('window').width}
@@ -479,31 +437,22 @@ const MapScreen = ({ route, navigation }) => {
       </ImageZoom>
 
       {/* User bar at top of the screen */}
->>>>>>> eb2491867b1fa328b4ae668fc6ac4318da785121
       <UserBar
         userPhoto={userPhoto}
         navigator={navigation}
         boardScreen={false}
-<<<<<<< HEAD
-        setBoard={(board) => setPins(board)}
-=======
         setBoard={(board) => setBoard(board)}
         setSearchType={setSearchType}
         setSearchValue={setSearchValue}
         setCreator = {setCreator}
         setResetMap={() => {setSettingPin(false); setPinModal(null)}}
->>>>>>> eb2491867b1fa328b4ae668fc6ac4318da785121
       />
 
       {/* Drop pin button on map */}
       {settingPin ? placingPinButtons() : pinButton()}
       {settingPin && ghostPin()}
 
-<<<<<<< HEAD
-      {isLoading ? <ActivityIndicator/> : (pins.map((pin) => showPin(pin)))}
-=======
-      {board.pins.map((pin) => showPin(pin))}
->>>>>>> eb2491867b1fa328b4ae668fc6ac4318da785121
+      {isLoading ? <ActivityIndicator/> : (board.pins.map((pin) => showPin(pin)))}
       {pinModal !== null && showPinModal()}
       {deletePinModal && showDeletePinModal()}
 
@@ -523,11 +472,8 @@ const styles = StyleSheet.create({
     borderWidth: 3,
     padding: 6,
     width: Dimensions.get('window').width - 40,
-<<<<<<< HEAD
-=======
     flexDirection: 'column',
     elevation: 10,
->>>>>>> eb2491867b1fa328b4ae668fc6ac4318da785121
   },
   pinModalTitle: {
     fontSize: 25,
@@ -537,9 +483,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     marginTop: 3,
     fontStyle: 'italic',
-<<<<<<< HEAD
-    textDecorationLine: 'underline'
-=======
     textDecorationLine: 'underline',
   },
   tag: {
@@ -558,14 +501,10 @@ const styles = StyleSheet.create({
     marginLeft: 3,
     fontSize: 15,
     bottom: 1,
->>>>>>> eb2491867b1fa328b4ae668fc6ac4318da785121
   },
   pinModalText: {
     marginRight: 6,
     fontSize: 20,
-<<<<<<< HEAD
-    marginTop: 3,
-=======
     backgroundColor: '#F2F2F2',
     marginTop: 10,
     padding: 10,
@@ -591,7 +530,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'black',
     marginTop: 15,
->>>>>>> eb2491867b1fa328b4ae668fc6ac4318da785121
   },
   pinIcon: {
     width: 40,
