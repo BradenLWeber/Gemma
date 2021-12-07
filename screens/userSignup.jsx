@@ -12,7 +12,6 @@ const UserSignupScreen = (props) => {
   const [userPassword, setUserPassword] = useState('');
   const [userCheckPassword, setUserCheckPassword] = useState('');
   const [userPhoto, setUserPhoto] = useState('../assets/defaultAvatar.png');
-  const [viewPublic, setViewPublic] = useState('PUB');
 
   const emailInputRef = createRef();
   const passwordInputRef = createRef();
@@ -49,7 +48,6 @@ const UserSignupScreen = (props) => {
         body: JSON.stringify({
           emailAddress: userEmail,
           passphrase: userPassword,
-          viewPublic: viewPublic,
         })
       });
       props.geoPermissions();
@@ -104,8 +102,7 @@ const UserSignupScreen = (props) => {
           onChangeText={(checkPassword) => setUserCheckPassword(checkPassword)}
           placeholder={'Confirm password'}
           ref={passwordCheckInputRef}
-          returnKeyType="next"
-          blurOnSubmit={false} />
+          blurOnSubmit={true} />
       </KeyboardAvoidingView>
       <TouchableOpacity onPress={handleSignupDone} style={styles.doneButton}>
         <Text style={styles.buttonText}>Done</Text>
