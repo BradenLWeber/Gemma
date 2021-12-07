@@ -39,8 +39,11 @@ const UserLoginScreen = (props) => {
         alert('Login failed');
         return;
       }
-      props.geoPermissions();
-      props.navigator.navigate('Map', userPhoto);
+      const json = await response.json();
+      console.log(json);
+      return json;
+      // props.geoPermissions();
+      // props.navigator.navigate('Map', userPhoto);
     } catch (error) {
       alert("Invalid email or password");
     }
@@ -79,7 +82,9 @@ const UserLoginScreen = (props) => {
         <Text style={styles.forgotButtonText}>Forgot password?</Text>
       </TouchableOpacity>
       <ForgotPassword state={isModalVisible} onClick={(button, userPassword) => handleForgotPassword(button, userPassword)} />
-      <TouchableOpacity onPress={handleLoginDone} style={styles.doneButton}>
+      <TouchableOpacity
+        onPress={() => handleLoginDone().then(value => props.navigator.navigate('Map', value.userid))}
+        style={styles.doneButton}>
         <Text style={styles.buttonText}>Done</Text>
       </TouchableOpacity>
     </View>

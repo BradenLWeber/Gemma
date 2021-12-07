@@ -7,6 +7,7 @@ import { Text, View, TouchableOpacity, StyleSheet, KeyboardAvoidingView, TextInp
 // and https://jasonwatmore.com/post/2020/02/01/react-fetch-http-post-request-examples
 
 const UserSignupScreen = (props) => {
+  const [userid, setUserid] = useState('');
   const [username, setUsername] = useState('');
   const [userEmail, setUserEmail] = useState('');
   const [userPassword, setUserPassword] = useState('');
@@ -39,7 +40,7 @@ const UserSignupScreen = (props) => {
       return;
     }
     try {
-      await fetch('https://still-retreat-52810.herokuapp.com/AUsers/', {
+      const response = await fetch('https://still-retreat-52810.herokuapp.com/AUsers/', {
         method: 'POST',
         headers: {
           Accept: 'application/json',
@@ -50,8 +51,9 @@ const UserSignupScreen = (props) => {
           passphrase: userPassword,
         })
       });
-      props.geoPermissions();
-      props.navigator.navigate('Map', userPhoto);
+      const json = await response.json();
+      console.log(json);
+      return json;
     } catch (error) {
       alert("Invalid email or password");
     }
@@ -104,7 +106,9 @@ const UserSignupScreen = (props) => {
           ref={passwordCheckInputRef}
           blurOnSubmit={true} />
       </KeyboardAvoidingView>
-      <TouchableOpacity onPress={handleSignupDone} style={styles.doneButton}>
+      <TouchableOpacity
+        onPress={() => handleSignupDone().then(value => props.navigator.navigate('Map', value))}
+        style={styles.doneButton}>
         <Text style={styles.buttonText}>Done</Text>
       </TouchableOpacity>
     </View>
