@@ -293,21 +293,6 @@ const MapScreen = ({ route, navigation }) => {
     });
   }
 
-  const handleGeoPermissions = async () => {
-    let { status } = await Location.requestForegroundPermissionsAsync();
-    if (status !== 'granted') {
-        alert("Location Permission has been denied!");
-    }
-  }
-
-  const getMapCoordinates = () => {
-    actualCoordinates = {
-      latitude: mapYToLat(mapPosition.x),
-      longitude: mapXToLong(mapPosition.y),
-    };
-    return actualCoordinates;
-  }
-
   const getMapCorners = () => {
     return board.map === 'ECO' ? MAPCORNERSECO : MAPCORNERSCAM;
   }
