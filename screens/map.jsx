@@ -56,7 +56,6 @@ const MapScreen = ({ route, navigation }) => {
   const getLocation = async () => {
     const response = await Location.getCurrentPositionAsync({accuracy: Location.Accuracy.Highest, enableHighAccuracy: true});
     const location = {latitude: response.coords.latitude, longitude: response.coords.longitude};
-    const status = await Location.getProviderStatusAsync();
     setMyLocation({ latitude: location.latitude, longitude: location.longitude, accuracy: response.coords.accuracy});
     return location;
   }
@@ -93,8 +92,12 @@ const MapScreen = ({ route, navigation }) => {
   }
 
   const handleGetMyLocation = async () => {
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== 'granted') {
+        alert("Location Permission has been denied! Activate location in the settings");
+        return;
+    }
     if (await getLocationPermissions() === false) {
-      alert('Location not turned on');
       return;
     }
     await getLocation();
@@ -288,6 +291,13 @@ const MapScreen = ({ route, navigation }) => {
       y: -event.positionY + getMapHeight() / 2,
       zoom: event.scale
     });
+  }
+
+  const handleGeoPermissions = async () => {
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== 'granted') {
+        alert("Location Permission has been denied!");
+    }
   }
 
   const getMapCoordinates = () => {
