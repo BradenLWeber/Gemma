@@ -1,6 +1,5 @@
 import React, { useState, useRef, createRef, useEffect } from 'react';
 import { Text, View, TouchableOpacity, StyleSheet, KeyboardAvoidingView, TextInput, Keyboard } from 'react-native';
-import ForgotPassword from '../components/forgotPassword';
 
 // useEffect code from https://github.com/calvin-cs262-organization/monopoly-client
 // login GET ideas from https://github.com/calvin-cs262-organization/monopoly-client
@@ -14,22 +13,6 @@ const UserLoginScreen = (props) => {
   const passwordInputRef = createRef();
   const emailInputRef = createRef();
   const passwordCheckInputRef = createRef();
-
-  const forgotPasswordModal = () => {
-    setisModalVisible(true);
-  }
-
-  const handleForgotPassword = (button, password) => {
-    if (button === 'cancel') {
-      setisModalVisible(false);
-    }
-    else if (button === 'change') {
-      setisModalVisible(false);
-      setUserPassword(password);
-      alert('Password has been changed successfully');
-      return;
-    }
-  }
 
   const handleLoginDone = async () => {
     try {
@@ -71,10 +54,6 @@ const UserLoginScreen = (props) => {
           // returnKeyType="next"
           blurOnSubmit={true} />
       </KeyboardAvoidingView>
-      <TouchableOpacity onPress={forgotPasswordModal} style={styles.forgotButton}>
-        <Text style={styles.forgotButtonText}>Forgot password?</Text>
-      </TouchableOpacity>
-      <ForgotPassword state={isModalVisible} onClick={(button, userPassword) => handleForgotPassword(button, userPassword)} />
       <TouchableOpacity
         onPress={handleLoginDone}
         style={styles.doneButton}>
@@ -122,7 +101,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#6CC071",
     width: 120,
-    marginTop: 80,
+    marginTop: 40,
     padding: 10,
     borderRadius: 10,
   },

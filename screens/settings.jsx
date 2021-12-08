@@ -53,15 +53,6 @@ const Settings = (props) => {
           />
         </View>
       </KeyboardAvoidingView>
-      <View style={styles.nameInput}>
-        <Text style={styles.nameLabel}>PIN COLOR</Text>
-        <View style={styles.colorPicker}>
-          <TouchableOpacity style={styles.colorDot1}></TouchableOpacity>
-          <TouchableOpacity style={styles.colorDot2}></TouchableOpacity>
-          <TouchableOpacity style={styles.colorDot3}></TouchableOpacity>
-          <TouchableOpacity style={styles.colorDot4}></TouchableOpacity>
-        </View>
-      </View>
       <View style={styles.gpsWrapper}>
         <Text style={styles.nameLabel}>GPS ON/OFF</Text>
         <Switch
@@ -76,7 +67,6 @@ const Settings = (props) => {
       <TouchableOpacity onPress={handleSettingsSave} style={styles.saveButton}>
         <Text style={styles.saveText}>Save</Text>
       </TouchableOpacity>
-      <Text>userID: {userID}</Text>
     </View >
   )
 };
@@ -120,37 +110,6 @@ const styles = StyleSheet.create({
   },
   nameInputText: {
     fontSize: 20,
-  },
-  colorPicker: {
-    flexDirection: 'row',
-  },
-  colorDot1: {
-    fontSize: 40,
-    backgroundColor: '#201E3C',
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-  },
-  colorDot2: {
-    fontSize: 40,
-    backgroundColor: '#6CC071',
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-  },
-  colorDot3: {
-    fontSize: 40,
-    backgroundColor: '#97CCEE',
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-  },
-  colorDot4: {
-    fontSize: 40,
-    backgroundColor: '#F9D01E',
-    width: 40,
-    height: 40,
-    borderRadius: 20,
   },
   gpsWrapper: {
     paddingTop: 20,
