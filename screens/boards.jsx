@@ -42,36 +42,20 @@ const BoardScreen = (props) => {
       map: 'ECO',
       pins: [
         {
-          x: 970,
-          y: 750,
-          title: 'The middle of the map',
-          tags: 'middle, map, the',
-          notes: 'This is exactly in the middle of the map! Imagine that.',
-          key: 983,
-        },
-        {
-          x: 460,
-          y: 636,
+          x: -85.581658,
+          y: 42.935014,
           title: 'Frog pond',
           tags: 'Frog',
           notes: 'This pond has tadpoles and frogs consistently every year',
-          key: 984,
+          pinid: 984,
         },
         {
-          x: 480,
-          y: 904,
-          title: 'Good spot to pray',
-          tags: 'Bridge, pray',
-          notes: 'I like to stand on this bridge and hear the water while I pray',
-          key: 985,
-        },
-        {
-          x: 701,
-          y: 760,
+          x: -85.580725,
+          y: 42.934221,
           title: 'Bird\'s nest!!!!',
           tags: 'Bird, nest, !!!',
           notes: 'I found a bird nest here the other day!!! The eggs had afros and I think one was doing the worm.',
-          key: 986,
+          pinid: 986,
         },
       ]
     }
