@@ -39,7 +39,6 @@ const UserLoginScreen = (props) => {
         return;
       }
       const json = await response.json();
-      props.geoPermissions();
       console.log(json);
       props.navigator.navigate('Map', json.userid)
     } catch (error) {

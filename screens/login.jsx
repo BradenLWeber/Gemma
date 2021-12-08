@@ -45,7 +45,6 @@ const Login = (props) => {
     }
 
     const handleGuestLogin = async () => {
-        handleGeoPermissions();
         props.navigator.navigate('Map', -1);
     }
 
