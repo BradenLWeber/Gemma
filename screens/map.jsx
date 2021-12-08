@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, FlatList, Text, View, TouchableOpacity, Image, StyleSheet, Dimensions } from 'react-native';
+import { ActivityIndicator, Text, View, TouchableOpacity, Image, StyleSheet, Dimensions } from 'react-native';
+
 import UserBar from '../components/userBar';
 import PinNote from '../components/pinNote';
 import { globalStyles } from '../styles/global';
@@ -17,9 +18,9 @@ const MapScreen = ({ route, navigation }) => {
   const PINWIDTH = 50;
   const MAPCORNERSECO = {
     NW: {latitude: 42.938853, longitude: -85.585157},
-    NE: {latitude: 42.938853, longitude: -85.573994},
+    NE: {latitude: 42.938853, longitude: -85.572192},
     SW: {latitude: 42.929539, longitude: -85.585157},
-    SE: {latitude: 42.929539, longitude: -85.573994},
+    SE: {latitude: 42.929539, longitude: -85.572192},
   };
   const MAPCORNERSCAM = {
     NW: {latitude: 42.937887, longitude: -85.594130},
@@ -73,6 +74,7 @@ const MapScreen = ({ route, navigation }) => {
       console.log(board.pins);
     }
     getData();
+    getLocation();
   }, []);
 
   const getLocationPermissions = async () => {
@@ -81,9 +83,8 @@ const MapScreen = ({ route, navigation }) => {
   }
 
   const getLocation = async () => {
-    const response = await Location.getCurrentPositionAsync({accuracy: Location.Accuracy.Highest});
+    const response = await Location.getCurrentPositionAsync({accuracy: Location.Accuracy.Highest, enableHighAccuracy: true});
     const location = {latitude: response.coords.latitude, longitude: response.coords.longitude};
-    const status = await Location.getProviderStatusAsync();
     setMyLocation({ latitude: location.latitude, longitude: location.longitude, accuracy: response.coords.accuracy});
     return location;
   }
@@ -104,17 +105,28 @@ const MapScreen = ({ route, navigation }) => {
 
   const pinButton = () => {
     return (
-      <TouchableOpacity style={globalStyles.PinButton} onPress={handlePlacePin}>
-        <View style={globalStyles.addWrapper}>
-          <Image source={require('../assets/gem.png')} style={styles.pinIcon} />
-        </View>
-      </TouchableOpacity>
+      <View style={globalStyles.PinButton}>
+        <TouchableOpacity style={styles.xButton} onPress={handleGetMyLocation}>
+          <View style={globalStyles.addWrapper}>
+            <Image source={require('../assets/blue-pin.png')} style={styles.checkIcon} />
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handlePlacePin}>
+          <View style={globalStyles.addWrapper}>
+            <Image source={require('../assets/gem.png')} style={styles.pinIcon} />
+          </View>
+        </TouchableOpacity>
+      </View>
     )
   }
 
   const handleGetMyLocation = async () => {
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== 'granted') {
+        alert("Location Permission has been denied! Activate location in the settings");
+        return;
+    }
     if (await getLocationPermissions() === false) {
-      alert('Location not turned on');
       return;
     }
     await getLocation();
@@ -125,10 +137,6 @@ const MapScreen = ({ route, navigation }) => {
       myLocation.latitude > MAPCORNERS.NE.latitude ||
       myLocation.latitude < MAPCORNERS.SW.latitude
     ) {
-      alert(`${myLocation.longitude} > ${MAPCORNERS.NE.longitude} ${myLocation.longitude > MAPCORNERS.SW.longitude} ||\n
-      ${myLocation.longitude} < ${MAPCORNERS.SW.longitude} ${myLocation.longitude < MAPCORNERS.NE.longitude} ||\n
-      ${myLocation.latitude} > ${MAPCORNERS.NE.latitude} ${myLocation.latitude > MAPCORNERS.NE.latitude} ||\n
-      ${myLocation.latitude} < ${MAPCORNERS.SW.latitude} ${myLocation.latitude < MAPCORNERS.SW.latitude} \n`);
       alert('You are not on the map');
       return;
     }
@@ -139,6 +147,8 @@ const MapScreen = ({ route, navigation }) => {
       scale: 1.0,
       duration: 0,
     };
+    // setPanTo(myPosition);
+    // setPanTo(null);
   }
 
   const placingPinButtons = () => {

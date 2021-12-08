@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
 import { ScrollView, StyleSheet, Text, TextInput, View, TouchableOpacity } from 'react-native';
+import React, { useState, createRef } from 'react';
 import Modal from 'react-native-modal';
 
 {/* Here's the tutorial I'm using to learn about Modals:
@@ -11,6 +11,9 @@ const PinNote = (props) => {
     const [title, setTitle] = useState(null);
     const [tags, setTags] = useState('');
     const [notes, setNotes] = useState('');
+
+    const tagsRef = createRef();
+    const notesRef = createRef();
 
     const handleClick = (type) => {
         if (type === 'cancel') {
@@ -35,9 +38,20 @@ const PinNote = (props) => {
             <ScrollView contentContainerStyle={styles.Modal} keyboardShouldPersistTaps='handled'>
                 <Text style={styles.Header}> Create a new pin </Text>
                 <View style={styles.InputView}>
-                    <TextInput placeholder={'Title'} style={styles.Title} onChangeText={(text) => setTitle(text)} />
-                    <TextInput placeholder={'Tags'} style={styles.Tags} onChangeText={(text) => setTags(text)} />
-                    <TextInput placeholder={'Notes'} style={styles.Notes} onChangeText={(text) => setNotes(text)} multiline={true} />
+                    <TextInput
+                        placeholder={'Title'}
+                        style={styles.Title}
+                        onChangeText={(text) => setTitle(text)} />
+                    <TextInput
+                        placeholder={'Tags'}
+                        style={styles.Tags}
+                        onChangeText={(text) => setTags(text)} />
+                    <TextInput
+                        placeholder={'Notes'}
+                        style={styles.Notes}
+                        onChangeText={(text) => setNotes(text)}
+                        multiline={true}
+                        blurOnSubmit={true} />
                 </View>
                 <View style={styles.modalButtons}>
                     <TouchableOpacity onPress={() => handleClick('cancel')} style={styles.modalButton}>
