@@ -1,6 +1,5 @@
 import React, { useState, useRef, createRef, useEffect } from 'react';
 import { Text, View, TouchableOpacity, StyleSheet, KeyboardAvoidingView, TextInput, Keyboard } from 'react-native';
-import ForgotPassword from '../components/forgotPassword';
 
 // useEffect code from https://github.com/calvin-cs262-organization/monopoly-client
 // login GET ideas from https://github.com/calvin-cs262-organization/monopoly-client
@@ -76,10 +75,6 @@ const UserLoginScreen = (props) => {
           }
           blurOnSubmit={false} />
       </KeyboardAvoidingView>
-      <TouchableOpacity onPress={forgotPasswordModal} style={styles.forgotButton}>
-        <Text style={styles.forgotButtonText}>Forgot password?</Text>
-      </TouchableOpacity>
-      <ForgotPassword state={isModalVisible} onClick={(button, userPassword) => handleForgotPassword(button, userPassword)} />
       <TouchableOpacity
         onPress={handleLoginDone}
         style={styles.doneButton}>
@@ -127,7 +122,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#6CC071",
     width: 120,
-    marginTop: 80,
+    marginTop: 40,
     padding: 10,
     borderRadius: 10,
   },
