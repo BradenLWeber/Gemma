@@ -45,6 +45,7 @@ const MapScreen = ({ route, navigation }) => {
   const [searchValue, setSearchValue] = useState('');
   const [creator, setCreator] = useState(null);
   const [deletePinModal, setDeletePinModal] = useState(false);
+  const [userID, setUserID] = useState(route.params);
 
   const getLocationPermissions = async () => {
     const response = await Location.getForegroundPermissionsAsync();
@@ -366,6 +367,7 @@ const MapScreen = ({ route, navigation }) => {
       {/* User bar at top of the screen */}
       <UserBar
         userPhoto={userPhoto}
+        userID={userID}
         navigator={navigation}
         boardScreen={false}
         setBoard={(board) => setBoard(board)}

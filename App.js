@@ -14,7 +14,7 @@ import { LogBox } from 'react-native';
 // This gets rid of the non-serialized warning when passing a function
 // through route.params
 LogBox.ignoreLogs([
- 'Non-serializable values were found in the navigation state',
+  'Non-serializable values were found in the navigation state',
 ]);
 
 export default function App() {
@@ -34,6 +34,7 @@ export default function App() {
     return (
       <BoardScreen
         setBoardsType={setBoardsType}
+        userID={route.params.userID}
         setCreator={route.params.setCreator}
         navigator={navigation}
         userPhoto={'default'}
@@ -72,6 +73,7 @@ export default function App() {
     return (
       <SettingScreen
         navigator={navigation}
+        userID={route.params.userID}
         userPhoto={userPhoto}
         locationPermission={route.params.locationPermission}
       />
