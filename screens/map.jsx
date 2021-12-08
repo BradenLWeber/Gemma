@@ -1,5 +1,6 @@
-import React, { useState } from 'react';
-import { Text, View, TouchableOpacity, Image, StyleSheet, Dimensions } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, Text, View, TouchableOpacity, Image, StyleSheet, Dimensions } from 'react-native';
+
 import UserBar from '../components/userBar';
 import PinNote from '../components/pinNote';
 import { globalStyles } from '../styles/global';
@@ -16,10 +17,10 @@ const MapScreen = ({ route, navigation }) => {
   const PINHEIGHT = 50;
   const PINWIDTH = 50;
   const MAPCORNERSECO = {
-    NW: { latitude: 42.938853, longitude: -85.585157 },
-    NE: { latitude: 42.938853, longitude: -85.573994 },
-    SW: { latitude: 42.929539, longitude: -85.585157 },
-    SE: { latitude: 42.929539, longitude: -85.573994 },
+    NW: {latitude: 42.938853, longitude: -85.585157},
+    NE: {latitude: 42.938853, longitude: -85.572434},
+    SW: {latitude: 42.929539, longitude: -85.585157},
+    SE: {latitude: 42.929539, longitude: -85.572434},
   };
   const MAPCORNERSCAM = {
     NW: { latitude: 42.937887, longitude: -85.594130 },
@@ -37,15 +38,45 @@ const MapScreen = ({ route, navigation }) => {
   const [myLocation, setMyLocation] = useState({});
   const [settingPin, setSettingPin] = useState(false);
   const [mapPosition, setMapPosition] = useState({ x: MAPWIDTHECO / 2, y: MAPHEIGHTECO / 2, zoom: 1 });
-  const [board, setBoard] = useState({ pins: [], map: 'ECO', creator: 'Me' });
-  const [key, setKey] = useState(0);
+  const [board, setBoard] = useState({ pins: [], map: 'ECO', creator: 'Me', title: 'default' });
+  const [key, setKey] = useState(10);
   const [pinModal, setPinModal] = useState(null);
   const [panTo, setPanTo] = useState(null);
   const [searchType, setSearchType] = useState('pin');
   const [searchValue, setSearchValue] = useState('');
   const [creator, setCreator] = useState(null);
+  const [isLoading, setLoading] = useState(true);
   const [deletePinModal, setDeletePinModal] = useState(false);
   const [userID, setUserID] = useState(route.params);
+
+  const getPins = async () => {
+      try {
+        console.log('waiting for data...');
+        const response = await fetch('https://still-retreat-52810.herokuapp.com/Pins');
+        const json = await response.json();
+        console.log(json);
+        return json;
+     } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+  }
+
+  useEffect(() => {
+    async function getData() {
+      console.log('use effect called!');
+      console.log('pins are');    // show pins before update
+      console.log(board.pins);
+      console.log('Getpins returns: ', (await getPins()));
+      setBoard({pins: (await getPins()), map: 'ECO', creator: 'Me'});
+
+      console.log('here are the pins (called from useEffect)');
+      console.log(board.pins);
+    }
+    getData();
+    getLocation();
+  }, []);
 
   const getLocationPermissions = async () => {
     const response = await Location.getForegroundPermissionsAsync();
@@ -53,9 +84,8 @@ const MapScreen = ({ route, navigation }) => {
   }
 
   const getLocation = async () => {
-    const response = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Highest });
+    const response = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Highest, enableHighAccuracy: true });
     const location = { latitude: response.coords.latitude, longitude: response.coords.longitude };
-    const status = await Location.getProviderStatusAsync();
     setMyLocation({ latitude: location.latitude, longitude: location.longitude, accuracy: response.coords.accuracy });
     return location;
   }
@@ -76,17 +106,28 @@ const MapScreen = ({ route, navigation }) => {
 
   const pinButton = () => {
     return (
-      <TouchableOpacity style={globalStyles.PinButton} onPress={handlePlacePin}>
-        <View style={globalStyles.addWrapper}>
-          <Image source={require('../assets/gem.png')} style={styles.pinIcon} />
-        </View>
-      </TouchableOpacity>
+      <View style={globalStyles.PinButton}>
+        <TouchableOpacity style={styles.xButton} onPress={handleGetMyLocation}>
+          <View style={globalStyles.addWrapper}>
+            <Image source={require('../assets/blue-pin.png')} style={styles.checkIcon} />
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handlePlacePin}>
+          <View style={globalStyles.addWrapper}>
+            <Image source={require('../assets/gem.png')} style={styles.pinIcon} />
+          </View>
+        </TouchableOpacity>
+      </View>
     )
   }
 
   const handleGetMyLocation = async () => {
+    let { status } = await Location.requestForegroundPermissionsAsync();
+    if (status !== 'granted') {
+        alert("Location Permission has been denied! Activate location in the settings");
+        return;
+    }
     if (await getLocationPermissions() === false) {
-      alert('Location not turned on');
       return;
     }
     await getLocation();
@@ -97,10 +138,6 @@ const MapScreen = ({ route, navigation }) => {
       myLocation.latitude > MAPCORNERS.NE.latitude ||
       myLocation.latitude < MAPCORNERS.SW.latitude
     ) {
-      alert(`${myLocation.longitude} > ${MAPCORNERS.NE.longitude} ${myLocation.longitude > MAPCORNERS.SW.longitude} ||\n
-      ${myLocation.longitude} < ${MAPCORNERS.SW.longitude} ${myLocation.longitude < MAPCORNERS.NE.longitude} ||\n
-      ${myLocation.latitude} > ${MAPCORNERS.NE.latitude} ${myLocation.latitude > MAPCORNERS.NE.latitude} ||\n
-      ${myLocation.latitude} < ${MAPCORNERS.SW.latitude} ${myLocation.latitude < MAPCORNERS.SW.latitude} \n`);
       alert('You are not on the map');
       return;
     }
@@ -137,25 +174,54 @@ const MapScreen = ({ route, navigation }) => {
     )
   }
 
-  const createPin = (button, title, tags, notes) => {
+  const createPin = async (button, title, tags, notes) => {
     if (button === 'create') {
       setisModalVisible(false);
       setSettingPin(false);
       setKey(key + 1);
+      var lat = mapYToLat(mapPosition.y);
+      var long = mapXToLong(mapPosition.x);
+
       setBoard({
-        upvotes: board.upvotes,
         creator: board.creator,
         title: board.title,
         map: board.map,
-        pins: board.pins.concat({
-          x: mapPosition.x,
-          y: mapPosition.y,
-          title: title,
-          tags: tags,
-          notes: notes,
-          key: key,
-        }),
+        pins: board.pins.concat([{
+          boardid: 2,
+          longitude: long,
+          latitude: lat,
+          pinname: title,
+          pintag: tags,
+          pinnotes: notes,
+          pinid: key,
+        }]),
       });
+
+      // Post coordinate data to Heroku app
+      try {
+        const response = await fetch('https://still-retreat-52810.herokuapp.com/Pins', {
+          method: 'post',
+          headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            boardID: 2,      // we need to work BoardID in here as a prop sometime
+            pinid: String(key),
+            pinName: title,
+            pinNotes: notes,
+            pinTag: tags,
+            longitude: long.toFixed(14),
+            latitude: lat.toFixed(14),
+            })
+          });
+          if (response.status !== 200) {
+            alert('Pin could not be placed with status: ' + response.status);
+            return;
+          } 
+      } catch (error) {
+            alert('Something went wrong:', error);
+      }
     } else {
       setisModalVisible(false);
       setSettingPin(false);
@@ -177,11 +243,13 @@ const MapScreen = ({ route, navigation }) => {
     }
 
     const pinPosition = {
-      left: (pin.x - mapPosition.x) * mapPosition.zoom,
-      top: (pin.y - mapPosition.y) * mapPosition.zoom + Dimensions.get('window').height / 2 - PINHEIGHT + 5,
+      left: (mapLongToCenterX(parseFloat(pin.longitude)) - mapPosition.x) * mapPosition.zoom,
+      top: (mapLatToCenterY(parseFloat(pin.latitude)) - mapPosition.y) * mapPosition.zoom + Dimensions.get('window').height / 2 - PINHEIGHT + 5,
     }
+    console.log(pin.pinname +':');
+    console.log(pinPosition);
     return (
-      <View key={pin.title + String(pin.key)} style={styles.mapPin}>
+      <View key={pin.pinName + String(pin.pinid)} style={styles.mapPin}>
         <TouchableOpacity onPress={() => clickPin(pin)} style={pinPosition}>
           <Image source={require('../assets/gem.png')} style={[pinImage, { opacity: pin === pinModal ? 1.0 : 0.4 }]} />
         </TouchableOpacity>
@@ -217,13 +285,13 @@ const MapScreen = ({ route, navigation }) => {
     }
 
     const modalPosition = {
-      left: (pinModal.x - mapPosition.x) * mapPosition.zoom + 90,
-      top: (pinModal.y - mapPosition.y) * mapPosition.zoom + Dimensions.get('window').height / 2 - PINHEIGHT + 60,
+      left: (mapLongToCenterX(parseFloat(pinModal.longitude)) - mapPosition.x) * mapPosition.zoom + 90,
+      top: (mapLatToCenterY(parseFloat(pinModal.latitude)) - mapPosition.y) * mapPosition.zoom + Dimensions.get('window').height / 2 - PINHEIGHT + 60,
     }
     return (
       <View style={[styles.pinModal, modalPosition]}>
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-          <Text style={styles.pinModalTitle}>{pinModal.title}</Text>
+        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+          <Text style={styles.pinModalTitle}>{pinModal.pinname}</Text>
           <TouchableOpacity onPress={() => setPinModal(null)}>
             <Text style={{ fontSize: 25, paddingRight: 5, }}>X</Text>
           </TouchableOpacity>
@@ -268,11 +336,10 @@ const MapScreen = ({ route, navigation }) => {
 
   const deletePin = () => {
     setBoard({
-      upvotes: board.upvotes,
       title: board.title,
       creator: board.creator,
       map: board.map,
-      pins: board.pins.filter((pin) => pin.title !== pinModal.title),
+      pins: board.pins.filter((pin) => pin.pinname !== pinModal.pinname),
     });
     setDeletePinModal(false);
     setPinModal(null);
@@ -305,19 +372,19 @@ const MapScreen = ({ route, navigation }) => {
 
   const mapYToLat = (y) => {
     const MAPCORNERS = getMapCorners();
-    return MAPCORNERS.NE.latitude - (y / getMapHeight()) * (MAPCORNERS.NE.latitude - MAPCORNERS.SW.latitude);
+    return MAPCORNERS.SW.latitude + (y / getMapHeight()) * (MAPCORNERS.NE.latitude - MAPCORNERS.SW.latitude);
   }
 
   // Calculates the Y coming from the center because that is the Y used in ImageZoom to center the map
   const mapLatToCenterY = (lat) => {
     const MAPCORNERS = getMapCorners();
-    return (lat - MAPCORNERS.SW.latitude) / (MAPCORNERS.NE.latitude - MAPCORNERS.SW.latitude) * getMapHeight() - getMapHeight() / 2;
+    return (lat - MAPCORNERS.SW.latitude) / (MAPCORNERS.NE.latitude - MAPCORNERS.SW.latitude) * getMapHeight();
   }
 
   // Calculates the X coming from the center because that is the X used in ImageZoom to center the map
   const mapLongToCenterX = (long) => {
     const MAPCORNERS = getMapCorners();
-    return - (long - MAPCORNERS.SW.longitude) / (MAPCORNERS.NE.longitude - MAPCORNERS.SW.longitude) * getMapWidth() + getMapWidth() / 2;
+    return (long - MAPCORNERS.SW.longitude) / (MAPCORNERS.NE.longitude - MAPCORNERS.SW.longitude) * getMapWidth();
   }
 
   // These styles require variable access, so they must be defined here
@@ -371,7 +438,7 @@ const MapScreen = ({ route, navigation }) => {
       {settingPin ? placingPinButtons() : pinButton()}
       {settingPin && ghostPin()}
 
-      {board.pins.map((pin) => showPin(pin))}
+      {isLoading ? <ActivityIndicator/> : (board.pins.map((pin) => showPin(pin)))}
       {pinModal !== null && showPinModal()}
       {deletePinModal && showDeletePinModal()}
 
@@ -397,6 +464,7 @@ const styles = StyleSheet.create({
   pinModalTitle: {
     fontSize: 25,
     fontWeight: 'bold',
+    width: '90%'
   },
   pinModalLabel: {
     fontSize: 20,

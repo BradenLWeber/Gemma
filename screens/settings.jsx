@@ -24,7 +24,7 @@ const Settings = (props) => {
         setGPS(true);
       }
     } else {
-      alert('Turn off permissions at settings -> apps -> Expo Go -> Permissions');
+      alert('Turn off permissions in the settings');
     }
   }
 
