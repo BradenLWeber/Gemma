@@ -52,7 +52,6 @@ const UserSignupScreen = (props) => {
           viewPublic: viewPublic,
         })
       });
-      // props.geoPermissions();
       props.navigator.navigate('Map', userPhoto);
     } catch (error) {
       alert("Invalid email or password");
@@ -104,8 +103,7 @@ const UserSignupScreen = (props) => {
           onChangeText={(checkPassword) => setUserCheckPassword(checkPassword)}
           placeholder={'Confirm password'}
           ref={passwordCheckInputRef}
-          returnKeyType="next"
-          blurOnSubmit={false} />
+          blurOnSubmit={true} />
       </KeyboardAvoidingView>
       <TouchableOpacity onPress={handleSignupDone} style={styles.doneButton}>
         <Text style={styles.buttonText}>Done</Text>

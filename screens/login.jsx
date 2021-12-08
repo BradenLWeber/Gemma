@@ -38,22 +38,14 @@ const Login = (props) => {
     }
 
     const handleLogin = () => {
-        props.navigator.navigate('User Login', {geoPermissions: handleGeoPermissions});
+        props.navigator.navigate('User Login');
     }
 
     const handleSignup = () => {
-        props.navigator.navigate('User Sign Up', { geoPermissions: handleGeoPermissions});
-    }
-
-    const handleGeoPermissions = async () => {
-        let { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== 'granted') {
-            alert("Location Permission has been denied!");
-        }
+        props.navigator.navigate('User Sign Up');
     }
 
     const handleGuestLogin = async () => {
-        // handleGeoPermissions();
         props.navigator.navigate('Map', userPhoto);
     }
 
