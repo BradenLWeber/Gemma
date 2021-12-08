@@ -40,7 +40,7 @@ const UserSignupScreen = (props) => {
       return;
     }
     try {
-      const response = await fetch('https://still-retreat-52810.herokuapp.com/AUsers/', {
+      await fetch('https://still-retreat-52810.herokuapp.com/AUsers/', {
         method: 'POST',
         headers: {
           Accept: 'application/json',
@@ -51,9 +51,11 @@ const UserSignupScreen = (props) => {
           passphrase: userPassword,
         })
       });
-      const json = await response.json();
-      console.log(json);
-      return json;
+      // const json = await response.json();
+      // console.log(json);
+      // return json;
+      alert("New profile create successfully");
+      props.navigator.navigate('Login');
     } catch (error) {
       alert("Invalid email or password");
     }
@@ -107,7 +109,7 @@ const UserSignupScreen = (props) => {
           blurOnSubmit={true} />
       </KeyboardAvoidingView>
       <TouchableOpacity
-        onPress={() => handleSignupDone().then(value => props.navigator.navigate('Map', value))}
+        onPress={handleSignupDone}
         style={styles.doneButton}>
         <Text style={styles.buttonText}>Done</Text>
       </TouchableOpacity>

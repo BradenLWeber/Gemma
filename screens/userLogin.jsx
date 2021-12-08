@@ -40,10 +40,9 @@ const UserLoginScreen = (props) => {
         return;
       }
       const json = await response.json();
+      props.geoPermissions();
       console.log(json);
       return json;
-      // props.geoPermissions();
-      // props.navigator.navigate('Map', userPhoto);
     } catch (error) {
       alert("Invalid email or password");
     }
