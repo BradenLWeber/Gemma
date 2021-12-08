@@ -238,8 +238,8 @@ const MapScreen = ({ route, navigation }) => {
 
   const showPin = (pin) => {
     if (searchValue !== '') {
-      if (searchType === 'pin' && !pin.title.toLowerCase().includes(searchValue.toLowerCase())) return;
-      if (searchType === 'tag' && !pin.tags.toLowerCase().includes(searchValue.toLowerCase())) return;
+      if (searchType === 'pin' && !pin.pinname.toLowerCase().includes(searchValue.toLowerCase())) return;
+      if (searchType === 'tag' && !pin.pintag.toLowerCase().includes(searchValue.toLowerCase())) return;
     }
 
     const pinPosition = {
