@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Text, View, TouchableOpacity, Image, StyleSheet, Dimensions } from 'react-native';
+
 import UserBar from '../components/userBar';
 import PinNote from '../components/pinNote';
 import { globalStyles } from '../styles/global';
