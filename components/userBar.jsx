@@ -125,8 +125,6 @@ const UserBar = (props) => {
             <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
               <TextInput style={styles.inputText} placeholder={searchPlaceholder()} onChangeText={(text) => props.setSearchValue(text)} />
             </KeyboardAvoidingView>
-            {/* text below used for testing purposes will remove */}
-            <Text>userid: {userID}</Text>
           </View>
           {/* Search options icon */}
           {searchDropdown(props.boardScreen)}

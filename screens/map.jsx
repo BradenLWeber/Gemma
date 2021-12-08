@@ -286,14 +286,6 @@ const MapScreen = ({ route, navigation }) => {
     });
   }
 
-  const getMapCoordinates = () => {
-    actualCoordinates = {
-      latitude: mapYToLat(mapPosition.x),
-      longitude: mapXToLong(mapPosition.y),
-    };
-    return actualCoordinates;
-  }
-
   const getMapCorners = () => {
     return board.map === 'ECO' ? MAPCORNERSECO : MAPCORNERSCAM;
   }
@@ -344,8 +336,6 @@ const MapScreen = ({ route, navigation }) => {
   return (
     <View style={globalStyles.container} onResponderReject>
       {/* The map */}
-      {/* line below for testing purposes. will be removed */}
-      <Text>Your user id is {route.params}</Text>
       <ImageZoom
         cropWidth={Dimensions.get('window').width}
         cropHeight={Dimensions.get('window').height}
