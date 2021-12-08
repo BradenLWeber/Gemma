@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { StyleSheet, Text, TextInput, View, TouchableOpacity } from 'react-native';
+import { ScrollView, StyleSheet, Text, TextInput, View, TouchableOpacity } from 'react-native';
+import React, { useState, createRef } from 'react';
 import Modal from 'react-native-modal';
 
 {/* Here's the tutorial I'm using to learn about Modals:
@@ -9,15 +9,18 @@ Also using library 'react-native-modal'... y'all might need to run 'npm i react-
 
 const PinNote = (props) => {
     const [title, setTitle] = useState(null);
-    const [tags, setTags] = useState(null);
-    const [notes, setNotes] = useState(null);
+    const [tags, setTags] = useState('');
+    const [notes, setNotes] = useState('');
+
+    const tagsRef = createRef();
+    const notesRef = createRef();
 
     const handleClick = (type) => {
         if (type === 'cancel') {
             props.onClick('cancel');
             setTitle(null);
-            setTags(null);
-            setNotes(null);
+            setTags('');
+            setNotes('');
         } else {
             if (title === null) {
                 alert('Please fill title');
@@ -25,19 +28,30 @@ const PinNote = (props) => {
             }
             props.onClick('create', title, tags, notes);
             setTitle(null);
-            setTags(null);
-            setNotes(null);
+            setTags('');
+            setNotes('');
         }
     }
 
     return (
         <Modal isVisible={props.state}>
-            <View style={styles.Modal}>
+            <ScrollView contentContainerStyle={styles.Modal} keyboardShouldPersistTaps='handled'>
                 <Text style={styles.Header}> Create a new pin </Text>
                 <View style={styles.InputView}>
-                    <TextInput placeholder={'Title'} style={styles.Title} onChangeText={(text) => setTitle(text)} />
-                    <TextInput placeholder={'Tags'} style={styles.Tags} onChangeText={(text) => setTags(text)} />
-                    <TextInput placeholder={'Notes'} style={styles.Notes} onChangeText={(text) => setNotes(text)} multiline={true} />
+                    <TextInput
+                        placeholder={'Title'}
+                        style={styles.Title}
+                        onChangeText={(text) => setTitle(text)} />
+                    <TextInput
+                        placeholder={'Tags'}
+                        style={styles.Tags}
+                        onChangeText={(text) => setTags(text)} />
+                    <TextInput
+                        placeholder={'Notes'}
+                        style={styles.Notes}
+                        onChangeText={(text) => setNotes(text)}
+                        multiline={true}
+                        blurOnSubmit={true} />
                 </View>
                 <View style={styles.modalButtons}>
                     <TouchableOpacity onPress={() => handleClick('cancel')} style={styles.modalButton}>
@@ -47,7 +61,7 @@ const PinNote = (props) => {
                         <Text style={styles.modalText}>Create</Text>
                     </TouchableOpacity>
                 </View>
-            </View>
+            </ScrollView>
         </Modal>
     )
 

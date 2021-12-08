@@ -7,12 +7,12 @@ import { Text, View, TouchableOpacity, StyleSheet, KeyboardAvoidingView, TextInp
 // and https://jasonwatmore.com/post/2020/02/01/react-fetch-http-post-request-examples
 
 const UserSignupScreen = (props) => {
+  const [userid, setUserid] = useState('');
   const [username, setUsername] = useState('');
   const [userEmail, setUserEmail] = useState('');
   const [userPassword, setUserPassword] = useState('');
   const [userCheckPassword, setUserCheckPassword] = useState('');
   const [userPhoto, setUserPhoto] = useState('../assets/defaultAvatar.png');
-  const [viewPublic, setViewPublic] = useState('PUB');
 
   const emailInputRef = createRef();
   const passwordInputRef = createRef();
@@ -49,11 +49,13 @@ const UserSignupScreen = (props) => {
         body: JSON.stringify({
           emailAddress: userEmail,
           passphrase: userPassword,
-          viewPublic: viewPublic,
         })
       });
-      // props.geoPermissions();
-      props.navigator.navigate('Map', userPhoto);
+      // const json = await response.json();
+      // console.log(json);
+      // return json;
+      alert("New profile create successfully");
+      props.navigator.navigate('Login');
     } catch (error) {
       alert("Invalid email or password");
     }
@@ -104,10 +106,11 @@ const UserSignupScreen = (props) => {
           onChangeText={(checkPassword) => setUserCheckPassword(checkPassword)}
           placeholder={'Confirm password'}
           ref={passwordCheckInputRef}
-          returnKeyType="next"
-          blurOnSubmit={false} />
+          blurOnSubmit={true} />
       </KeyboardAvoidingView>
-      <TouchableOpacity onPress={handleSignupDone} style={styles.doneButton}>
+      <TouchableOpacity
+        onPress={handleSignupDone}
+        style={styles.doneButton}>
         <Text style={styles.buttonText}>Done</Text>
       </TouchableOpacity>
     </View>

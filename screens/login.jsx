@@ -5,7 +5,6 @@ import * as Google from 'expo-google-app-auth';
 
 const Login = (props) => {
     const [googleSubmitting, setGoogleSubmitting] = useState(false);
-    const [userPhoto, setUserPhoto] = useState('https://scontent-ort2-1.xx.fbcdn.net/v/t1.6435-1/p148x148/66809435_10156811580748462_298237271994269696_n.jpg?_nc_cat=100&ccb=1-5&_nc_sid=1eb0c7&_nc_ohc=3sDvYWe41uQAX9uBr7l&_nc_ht=scontent-ort2-1.xx&oh=94344cfc8b679f337a5480004463abb7&oe=61836442');
     const [demo, setDemo] = useState(false);
 
     const handleGoogleLogin = () => {
@@ -38,23 +37,15 @@ const Login = (props) => {
     }
 
     const handleLogin = () => {
-        props.navigator.navigate('User Login', {geoPermissions: handleGeoPermissions});
+        props.navigator.navigate('User Login');
     }
 
     const handleSignup = () => {
-        props.navigator.navigate('User Sign Up', { geoPermissions: handleGeoPermissions});
-    }
-
-    const handleGeoPermissions = async () => {
-        let { status } = await Location.requestForegroundPermissionsAsync();
-        if (status !== 'granted') {
-            alert("Location Permission has been denied!");
-        }
+        props.navigator.navigate('User Sign Up');
     }
 
     const handleGuestLogin = async () => {
-        // handleGeoPermissions();
-        props.navigator.navigate('Map', userPhoto);
+        props.navigator.navigate('Map', -1);
     }
 
     return (

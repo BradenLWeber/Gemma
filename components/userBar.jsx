@@ -3,8 +3,8 @@ import { Platform, Image, View, Text, StyleSheet, TouchableOpacity, TouchableWit
 import * as Location from 'expo-location';
 
 const UserBar = (props) => {
-  this.textInput = '';
 
+  const [userID, setUserID] = useState(props.userID);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showSearchMenu, setShowSearchMenu] = useState(false);
   // Initial state depends on whether it is on the map screen or the board screen
@@ -21,7 +21,7 @@ const UserBar = (props) => {
     // setResetMap is called only on the map screen, so this handles a call from the board screen as well
     props.setResetMap && props.setResetMap();
     const response = await getLocationPermissions();
-    props.navigator.navigate('Settings', {locationPermission: response});
+    props.navigator.navigate('Settings', { locationPermission: response, userID: userID });
   }
 
   // The popup when pressing the user icon
@@ -49,7 +49,7 @@ const UserBar = (props) => {
             <Text style={styles.menuButtonText}>Board name</Text>
           </TouchableOpacity>
           <View style={styles.menuDivider} />
-          <TouchableOpacity style={styles.menuButton} onPress={() => { setSearchType('creator'); setShowSearchMenu(false); props.setSearchType('creator')}}>
+          <TouchableOpacity style={styles.menuButton} onPress={() => { setSearchType('creator'); setShowSearchMenu(false); props.setSearchType('creator') }}>
             <Text style={styles.menuButtonText}>Creator name</Text>
           </TouchableOpacity>
         </View>
@@ -58,11 +58,11 @@ const UserBar = (props) => {
     } else {
       return (
         <View style={[styles.searchMenu, styles.searchMenuMap]}>
-          <TouchableOpacity style={styles.menuButton} onPress={() => { setSearchType('pin'); setShowSearchMenu(false); props.setSearchType('pin')}}>
+          <TouchableOpacity style={styles.menuButton} onPress={() => { setSearchType('pin'); setShowSearchMenu(false); props.setSearchType('pin') }}>
             <Text style={styles.menuButtonText}>Pin name</Text>
           </TouchableOpacity>
           <View style={styles.menuDivider} />
-          <TouchableOpacity style={styles.menuButton} onPress={() => { setSearchType('tag'); setShowSearchMenu(false); props.setSearchType('tag')}}>
+          <TouchableOpacity style={styles.menuButton} onPress={() => { setSearchType('tag'); setShowSearchMenu(false); props.setSearchType('tag') }}>
             <Text style={styles.menuButtonText}>Tag name</Text>
           </TouchableOpacity>
         </View>
@@ -110,7 +110,7 @@ const UserBar = (props) => {
   // from the boards to the maps
   const searchPlaceholder = () => {
     if (searchType === 'board' && !props.boardScreen ||
-        searchType === 'creator' && !props.boardScreen) {
+      searchType === 'creator' && !props.boardScreen) {
       setSearchType('pin');
     }
     return 'Filter by ' + searchType + '...';
