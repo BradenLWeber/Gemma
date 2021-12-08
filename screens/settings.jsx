@@ -4,6 +4,7 @@ import * as Location from 'expo-location';
 
 const Settings = (props) => {
 
+  const [userID, setUserID] = useState(props.userID);
   const [userPhotoList, setUserPhotoList] = useState({ default: require('../assets/defaultAvatar.png') })
   const [username, setUsername] = useState('FuriousFive5');
   const [GPS, setGPS] = useState(props.locationPermission);
@@ -19,9 +20,9 @@ const Settings = (props) => {
   const setPermissions = async (value) => {
     if (value === true) {
       let { status } = await Location.requestForegroundPermissionsAsync();
-        if (status === 'granted') {
-            setGPS(true);
-        }
+      if (status === 'granted') {
+        setGPS(true);
+      }
     } else {
       alert('Turn off permissions in the settings');
     }
@@ -75,6 +76,7 @@ const Settings = (props) => {
       <TouchableOpacity onPress={handleSettingsSave} style={styles.saveButton}>
         <Text style={styles.saveText}>Save</Text>
       </TouchableOpacity>
+      <Text>userID: {userID}</Text>
     </View >
   )
 };

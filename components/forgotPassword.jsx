@@ -7,12 +7,13 @@ const ForgotPassword = (props) => {
   const [changeUserPassword, setChangeUserPassword] = useState(null);
   const [changeUserCheckPassword, setChangeUserCheckPassword] = useState(null);
 
-  const handleClick = (type) => {
+  const handleClick = async (type) => {
     if (type === 'cancel') {
       props.onClick('cancel');
       setChangeUserPassword(null);
       setChangeUserCheckPassword(null);
     } else {
+      props.onClick('change', changeUserPassword);
       if (changeUserPassword === null) {
         alert('Please fill password');
         return;
@@ -25,21 +26,42 @@ const ForgotPassword = (props) => {
         alert('Passwords are not the same');
         return;
       }
-      props.onClick('change', changeUserPassword);
-      try {
-        fetch('https://still-retreat-52810.herokuapp.com/AUsers/', {
-          method: 'PUT',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            passphrase: changeUserPassword,
-          })
+      // try {
+      await fetch('https://still-retreat-52810.herokuapp.com/AUsers/' + userEmail, {
+        method: 'PUT',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          passphrase: changeUserPassword,
+        })
+      })
+        .then(async response => {
+          const data = await response.text();
+
+          if (!response.ok) {
+            const error = (data && data.message) || response.status;
+            return Promise.reject(error);
+          }
+        })
+        .catch(error => {
+          console.error('Invalid email', error);
+          return;
         });
-      } catch (error) {
-        alert("Invalid email or password");
-      }
+      // await fetch('https://still-retreat-52810.herokuapp.com/AUsers/' + userEmail, {
+      //   method: 'PUT',
+      //   headers: {
+      //     Accept: 'application/json',
+      //     'Content-Type': 'application/json'
+      //   },
+      //   body: JSON.stringify({
+      //     passphrase: changeUserPassword,
+      //   })
+      // });
+      // } catch (error) {
+      //   alert("Invalid email");
+      // }
       setChangeUserPassword(null);
       setChangeUserCheckPassword(null);
     }
@@ -50,9 +72,13 @@ const ForgotPassword = (props) => {
       <View style={styles.Modal}>
         <Text style={styles.Header}> Change Password </Text>
         <View style={styles.InputView}>
-          <TextInput placeholder={'Email'} style={styles.password} onChangeText={(text) => setUserEmail(text)} />
-          <TextInput placeholder={'Password'} secureTextEntry={true} style={styles.password} onChangeText={(text) => setChangeUserPassword(text)} />
-          <TextInput placeholder={'Confirm Password'} secureTextEntry={true} style={styles.confirmPassword} onChangeText={(text) => setChangeUserCheckPassword(text)} />
+          <TextInput
+            placeholder={'Email'}
+            style={styles.password}
+            keyboardType="email-address"
+            onChangeText={(text) => setUserEmail(text)} />
+          <TextInput placeholder={'New Password'} secureTextEntry={true} style={styles.password} onChangeText={(text) => setChangeUserPassword(text)} />
+          <TextInput placeholder={'Confirm New Password'} secureTextEntry={true} style={styles.confirmPassword} onChangeText={(text) => setChangeUserCheckPassword(text)} />
         </View>
         <View style={styles.modalButtons}>
           <TouchableOpacity onPress={() => handleClick('cancel')} style={styles.modalButton}>
