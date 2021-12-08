@@ -18,15 +18,15 @@ const MapScreen = ({ route, navigation }) => {
   const PINWIDTH = 50;
   const MAPCORNERSECO = {
     NW: {latitude: 42.938853, longitude: -85.585157},
-    NE: {latitude: 42.938853, longitude: -85.572192},
+    NE: {latitude: 42.938853, longitude: -85.572434},
     SW: {latitude: 42.929539, longitude: -85.585157},
-    SE: {latitude: 42.929539, longitude: -85.572192},
+    SE: {latitude: 42.929539, longitude: -85.572434},
   };
   const MAPCORNERSCAM = {
-    NW: {latitude: 42.937887, longitude: -85.594130},
-    NE: {latitude: 42.937887, longitude: -85.579824},
-    SW: {latitude: 42.926867, longitude: -85.594130},
-    SE: {latitude: 42.926867, longitude: -85.579824},
+    NW: { latitude: 42.937887, longitude: -85.594130 },
+    NE: { latitude: 42.937887, longitude: -85.579824 },
+    SW: { latitude: 42.926867, longitude: -85.594130 },
+    SE: { latitude: 42.926867, longitude: -85.579824 },
   };
   const MAPS = {
     ECO: require('../assets/mapEcoPreserve.png'),
@@ -37,9 +37,9 @@ const MapScreen = ({ route, navigation }) => {
   const [userPhoto, setUserPhoto] = useState('default');
   const [myLocation, setMyLocation] = useState({});
   const [settingPin, setSettingPin] = useState(false);
-  const [mapPosition, setMapPosition] = useState({x: MAPWIDTHECO / 2, y: MAPHEIGHTECO / 2, zoom: 1});
-  const [board, setBoard] = useState({pins: [], map: 'ECO', creator: 'Me', title: 'default'});
-  const [key, setKey] = useState(5);
+  const [mapPosition, setMapPosition] = useState({ x: MAPWIDTHECO / 2, y: MAPHEIGHTECO / 2, zoom: 1 });
+  const [board, setBoard] = useState({ pins: [], map: 'ECO', creator: 'Me', title: 'default' });
+  const [key, setKey] = useState(10);
   const [pinModal, setPinModal] = useState(null);
   const [panTo, setPanTo] = useState(null);
   const [searchType, setSearchType] = useState('pin');
@@ -47,6 +47,7 @@ const MapScreen = ({ route, navigation }) => {
   const [creator, setCreator] = useState(null);
   const [isLoading, setLoading] = useState(true);
   const [deletePinModal, setDeletePinModal] = useState(false);
+  const [userID, setUserID] = useState(route.params);
 
   const getPins = async () => {
       try {
@@ -83,9 +84,9 @@ const MapScreen = ({ route, navigation }) => {
   }
 
   const getLocation = async () => {
-    const response = await Location.getCurrentPositionAsync({accuracy: Location.Accuracy.Highest, enableHighAccuracy: true});
-    const location = {latitude: response.coords.latitude, longitude: response.coords.longitude};
-    setMyLocation({ latitude: location.latitude, longitude: location.longitude, accuracy: response.coords.accuracy});
+    const response = await Location.getCurrentPositionAsync({ accuracy: Location.Accuracy.Highest, enableHighAccuracy: true });
+    const location = { latitude: response.coords.latitude, longitude: response.coords.longitude };
+    setMyLocation({ latitude: location.latitude, longitude: location.longitude, accuracy: response.coords.accuracy });
     return location;
   }
 
@@ -153,23 +154,23 @@ const MapScreen = ({ route, navigation }) => {
 
   const placingPinButtons = () => {
     return (
-        <View style={globalStyles.PinButton}>
-          <TouchableOpacity style={styles.xButton} onPress={handleX}>
-            <View style={globalStyles.addWrapper}>
-              <Image source={require('../assets/blue-x.png')} style={styles.checkIcon} />
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity onPress={handleCheck}>
-            <View style={globalStyles.addWrapper}>
-              <Image source={require('../assets/blue-check.png')} style={styles.checkIcon} />
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.myLocationButton} onPress={handleGetMyLocation}>
-            <View style={globalStyles.addWrapper}>
-              <Image source={require('../assets/blue-pin.png')} style={styles.checkIcon} />
-            </View>
-          </TouchableOpacity>
-        </View>
+      <View style={globalStyles.PinButton}>
+        <TouchableOpacity style={styles.xButton} onPress={handleX}>
+          <View style={globalStyles.addWrapper}>
+            <Image source={require('../assets/blue-x.png')} style={styles.checkIcon} />
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handleCheck}>
+          <View style={globalStyles.addWrapper}>
+            <Image source={require('../assets/blue-check.png')} style={styles.checkIcon} />
+          </View>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.myLocationButton} onPress={handleGetMyLocation}>
+          <View style={globalStyles.addWrapper}>
+            <Image source={require('../assets/blue-pin.png')} style={styles.checkIcon} />
+          </View>
+        </TouchableOpacity>
+      </View>
     )
   }
 
@@ -228,7 +229,7 @@ const MapScreen = ({ route, navigation }) => {
   }
 
   const ghostPin = () => {
-    return(
+    return (
       <View style={styles.ghostPin}>
         <Image source={require('../assets/gem.png')} style={pinImage} />
       </View>
@@ -250,7 +251,7 @@ const MapScreen = ({ route, navigation }) => {
     return (
       <View key={pin.pinName + String(pin.pinid)} style={styles.mapPin}>
         <TouchableOpacity onPress={() => clickPin(pin)} style={pinPosition}>
-          <Image source={require('../assets/gem.png')} style={[pinImage, pin !== pinModal ? {opacity: 0.5} : {}]} />
+          <Image source={require('../assets/gem.png')} style={[pinImage, { opacity: pin === pinModal ? 1.0 : 0.4 }]} />
         </TouchableOpacity>
       </View>
     )
@@ -268,7 +269,7 @@ const MapScreen = ({ route, navigation }) => {
     // The Set syntax gets rid of duplicates
     const tagList = [...new Set(tags.split(','))];
     return (
-      <View style={{flexDirection: 'row', flexWrap: 'wrap'}}>
+      <View style={{ flexDirection: 'row', flexWrap: 'wrap' }}>
         {tagList.map((tag) =>
           tag.trim() !== '' &&
           <Text style={styles.tagText} key={tag}>#{tag.trim()}</Text>
@@ -292,21 +293,21 @@ const MapScreen = ({ route, navigation }) => {
         <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
           <Text style={styles.pinModalTitle}>{pinModal.pinname}</Text>
           <TouchableOpacity onPress={() => setPinModal(null)}>
-            <Text style={{fontSize: 25, paddingRight: 5,}}>X</Text>
+            <Text style={{ fontSize: 25, paddingRight: 5, }}>X</Text>
           </TouchableOpacity>
         </View>
         {pinModal.tags && showTags(pinModal.tags)}
-        { pinModal.notes &&
-        <>
-          <View style={{flexDirection: 'row'}}>
-            <Image source={require('../assets/defaultAvatar.png')} style={styles.pinModalUserIcon}/>
-            <Text style={styles.pinModalCreator}>{board.creator}</Text>
-          </View>
-          <Text style={styles.pinModalText}>{pinModal.notes}</Text>
-        </>
+        {pinModal.notes &&
+          <>
+            <View style={{ flexDirection: 'row' }}>
+              <Image source={require('../assets/defaultAvatar.png')} style={styles.pinModalUserIcon} />
+              <Text style={styles.pinModalCreator}>{board.creator}</Text>
+            </View>
+            <Text style={styles.pinModalText}>{pinModal.notes}</Text>
+          </>
         }
-        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-          <Text style={styles.latLongText}>{pinModal.latitude}, {pinModal.longitude}</Text>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
+          <Text style={styles.latLongText}>{mapYToLat(pinModal.y).toFixed(12)}, {mapXToLong(pinModal.x).toFixed(12)}</Text>
           <TouchableOpacity style={styles.deletePin} onPress={() => setDeletePinModal(true)}>
             <Image source={require('../assets/trash.png')} style={styles.deletePinIcon}></Image>
           </TouchableOpacity>
@@ -319,8 +320,8 @@ const MapScreen = ({ route, navigation }) => {
     return (
       <Modal isVisible={true}>
         <View style={styles.deletePinModal}>
-          <Text style={{alignSelf: 'center', fontSize: 25, margin: 10,}}>Delete pin?</Text>
-          <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
+          <Text style={{ alignSelf: 'center', fontSize: 25, margin: 10, }}>Delete pin?</Text>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
             <TouchableOpacity style={styles.deletePinModalButton} onPress={() => deletePin()}>
               <Text>Yes</Text>
             </TouchableOpacity>
@@ -391,8 +392,8 @@ const MapScreen = ({ route, navigation }) => {
     position: 'absolute',
     height: getMapHeight(),
     width: getMapWidth(),
-    left: Dimensions.get('window').width * (1/mapPosition.zoom) / 2,
-    bottom: Dimensions.get('window').height * (1/mapPosition.zoom) / 2,
+    left: Dimensions.get('window').width * (1 / mapPosition.zoom) / 2,
+    bottom: Dimensions.get('window').height * (1 / mapPosition.zoom) / 2,
   };
   const pinImage = {
     width: PINWIDTH,
@@ -405,8 +406,8 @@ const MapScreen = ({ route, navigation }) => {
       <ImageZoom
         cropWidth={Dimensions.get('window').width}
         cropHeight={Dimensions.get('window').height}
-        imageWidth={getMapWidth() + Dimensions.get('window').width * (1/mapPosition.zoom)}
-        imageHeight={getMapHeight() + Dimensions.get('window').height * (1/mapPosition.zoom)}
+        imageWidth={getMapWidth() + Dimensions.get('window').width * (1 / mapPosition.zoom)}
+        imageHeight={getMapHeight() + Dimensions.get('window').height * (1 / mapPosition.zoom)}
         pinchToZoom={true}
         panToMove={true}
         centerOn={panTo}
@@ -425,13 +426,14 @@ const MapScreen = ({ route, navigation }) => {
       {/* User bar at top of the screen */}
       <UserBar
         userPhoto={userPhoto}
+        userID={userID}
         navigator={navigation}
         boardScreen={false}
         setBoard={(board) => setBoard(board)}
         setSearchType={setSearchType}
         setSearchValue={setSearchValue}
-        setCreator = {setCreator}
-        setResetMap={() => {setSettingPin(false); setPinModal(null)}}
+        setCreator={setCreator}
+        setResetMap={() => { setSettingPin(false); setPinModal(null) }}
       />
 
       {/* Drop pin button on map */}
