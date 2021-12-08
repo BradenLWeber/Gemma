@@ -14,22 +14,6 @@ const UserLoginScreen = (props) => {
   const emailInputRef = createRef();
   const passwordCheckInputRef = createRef();
 
-  const forgotPasswordModal = () => {
-    setisModalVisible(true);
-  }
-
-  const handleForgotPassword = (button, password) => {
-    if (button === 'cancel') {
-      setisModalVisible(false);
-    }
-    else if (button === 'change') {
-      setisModalVisible(false);
-      setUserPassword(password);
-      alert('Password has been changed successfully');
-      return;
-    }
-  }
-
   const handleLoginDone = async () => {
     try {
       const response = await fetch('https://still-retreat-52810.herokuapp.com/AUsers/' + userEmail + '/' + userPassword, { method: 'GET' });

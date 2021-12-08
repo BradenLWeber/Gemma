@@ -67,7 +67,6 @@ const Settings = (props) => {
       <TouchableOpacity onPress={handleSettingsSave} style={styles.saveButton}>
         <Text style={styles.saveText}>Save</Text>
       </TouchableOpacity>
-      <Text>userID: {userID}</Text>
     </View >
   )
 };
