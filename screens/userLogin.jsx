@@ -23,7 +23,7 @@ const UserLoginScreen = (props) => {
       }
       const json = await response.json();
       console.log(json);
-      props.navigator.navigate('Map', json.userid)
+      props.navigator.navigate('Map', { userid: json.userid, nickname: json.nickname, photo: json.photo })
     } catch (error) {
       alert("Invalid email or password");
     }

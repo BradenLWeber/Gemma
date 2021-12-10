@@ -73,6 +73,8 @@ export default function App() {
         navigator={navigation}
         userID={route.params.userID}
         userPhoto={userPhoto}
+        nickname={route.params.nickname}
+        photo={route.params.photo}
         locationPermission={route.params.locationPermission}
       />
     )
