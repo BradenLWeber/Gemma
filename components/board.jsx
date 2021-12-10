@@ -3,6 +3,21 @@ import { View, Text, StyleSheet, TouchableOpacity, Image, Dimensions } from 'rea
 import Modal from 'react-native-modal';
 
 const Board = (props) => {
+    const MAPCORNERSECO = {
+        NW: {latitude: 42.938853, longitude: -85.585157},
+        NE: {latitude: 42.938853, longitude: -85.572434},
+        SW: {latitude: 42.929539, longitude: -85.585157},
+        SE: {latitude: 42.929539, longitude: -85.572434},
+    };
+    const MAPCORNERSCAM = {
+        // The north and south are reversed because for some unknown reason,
+        // That makes it work. I'm still baffled as to why
+        SW: { latitude: 42.937887, longitude: -85.594130 },
+        SE: { latitude: 42.937887, longitude: -85.579824 },
+        NW: { latitude: 42.926867, longitude: -85.594130 },
+        NE: { latitude: 42.926867, longitude: -85.579824 },
+    };
+
     const [showDeleteBoardModal, setShowDeleteBoardModal] = useState(false);
 
     const { board } = props;
@@ -13,13 +28,29 @@ const Board = (props) => {
         CAM: require('../assets/CampusFinal.png')
     }
 
+    const ecoTop = (pin) => {
+        return (pin.latitude - MAPCORNERSECO.SW.latitude) / (MAPCORNERSECO.NE.latitude - MAPCORNERSECO.SW.latitude) * 126 - 10;
+    }
+
+    const ecoLeft = (pin) => {
+        return (pin.longitude - MAPCORNERSECO.SW.longitude) / (MAPCORNERSECO.NE.longitude - MAPCORNERSECO.SW.longitude) * 160 - 5;
+    }
+
+    const camTop = (pin) => {
+        return (pin.latitude - MAPCORNERSCAM.SW.latitude) / (MAPCORNERSCAM.NE.latitude - MAPCORNERSCAM.SW.latitude) * 154 - 10;
+    }
+
+    const camLeft = (pin) => {
+        return (pin.longitude - MAPCORNERSCAM.SW.longitude) / (MAPCORNERSCAM.NE.longitude - MAPCORNERSCAM.SW.longitude) * 144 - 5;
+    }
+
     const showPin = (pin) => {
         const pos = {
-            left: mapIsEcosystem ? pin.x / 1940 * 160 - 5 : pin.x / 1850 * 144 - 5,
-            top: mapIsEcosystem ? pin.y / 1500 * 126 - 10 : pin.y / 1965 * 154 - 10,
+            left: mapIsEcosystem ? ecoLeft(pin) : camLeft(pin),
+            top: mapIsEcosystem ? ecoTop(pin) : camTop(pin),
         }
         return (
-            <View key={pin.title + String(pin.key)} style={{position: 'absolute'}}>
+            <View key={pin.pinname + String(pin.pinid)} style={{position: 'absolute'}}>
                 <Image source={require('../assets/gem.png')} style={[styles.mapPin, pos]}/>
             </View>
         )

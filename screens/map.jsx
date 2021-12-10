@@ -23,10 +23,12 @@ const MapScreen = ({ route, navigation }) => {
     SE: {latitude: 42.929539, longitude: -85.572434},
   };
   const MAPCORNERSCAM = {
-    NW: { latitude: 42.937887, longitude: -85.594130 },
-    NE: { latitude: 42.937887, longitude: -85.579824 },
-    SW: { latitude: 42.926867, longitude: -85.594130 },
-    SE: { latitude: 42.926867, longitude: -85.579824 },
+    // The north and south are reversed because for some unknown reason,
+    // That makes it work. I'm still baffled as to why
+    SW: { latitude: 42.937887, longitude: -85.594130 },
+    SE: { latitude: 42.937887, longitude: -85.579824 },
+    NW: { latitude: 42.926867, longitude: -85.594130 },
+    NE: { latitude: 42.926867, longitude: -85.579824 },
   };
   const MAPS = {
     ECO: require('../assets/mapEcoPreserve.png'),
@@ -227,6 +229,16 @@ const MapScreen = ({ route, navigation }) => {
     }
   }
 
+  const getPanTo = () => {
+    if (panTo !== null) return panTo;
+    const filtered = board.pins.filter((pin) =>
+      !((searchType === 'pin' && !pin.pinname.toLowerCase().includes(searchValue.toLowerCase())) ||
+      (searchType === 'tag' && !pin.pintag.toLowerCase().includes(searchValue.toLowerCase())))
+    );
+    if (filtered.length === 1) return {x: -mapLongToCenterX(filtered[0].longitude) + getMapWidth()/2, y: -mapLatToCenterY(filtered[0].latitude) + getMapHeight()/2, scale: 2.0, duration: 0}
+    return null;
+  }
+
   const ghostPin = () => {
     return (
       <View style={styles.ghostPin}>
@@ -241,14 +253,14 @@ const MapScreen = ({ route, navigation }) => {
       if (searchType === 'tag' && !pin.pintag.toLowerCase().includes(searchValue.toLowerCase())) return;
     }
 
-    const pinPosition = {
+    let pinPosition = {
       left: (mapLongToCenterX(parseFloat(pin.longitude)) - mapPosition.x) * mapPosition.zoom,
       top: (mapLatToCenterY(parseFloat(pin.latitude)) - mapPosition.y) * mapPosition.zoom + Dimensions.get('window').height / 2 - PINHEIGHT + 5,
     }
     console.log(pin.pinname +':');
     console.log(pinPosition);
     return (
-      <View key={pin.pinName + String(pin.pinid)} style={styles.mapPin}>
+      <View key={pin.pinname + String(pin.pinid)} style={styles.mapPin}>
         <TouchableOpacity onPress={() => clickPin(pin)} style={pinPosition}>
           <Image source={require('../assets/gem.png')} style={[pinImage, { opacity: pin === pinModal ? 1.0 : 0.4 }]} />
         </TouchableOpacity>
@@ -279,8 +291,8 @@ const MapScreen = ({ route, navigation }) => {
 
   const showPinModal = () => {
     if (searchValue !== '') {
-      if (searchType === 'pin' && !pinModal.title.toLowerCase().includes(searchValue.toLowerCase())) setPinModal(null);
-      if (searchType === 'tag' && !pinModal.tags.toLowerCase().includes(searchValue.toLowerCase())) setPinModal(null);
+      if (searchType === 'pin' && !pinModal.pinname.toLowerCase().includes(searchValue.toLowerCase())) setPinModal(null);
+      if (searchType === 'tag' && !pinModal.pintag.toLowerCase().includes(searchValue.toLowerCase())) setPinModal(null);
     }
 
     const modalPosition = {
@@ -409,7 +421,7 @@ const MapScreen = ({ route, navigation }) => {
         imageHeight={getMapHeight() + Dimensions.get('window').height * (1 / mapPosition.zoom)}
         pinchToZoom={true}
         panToMove={true}
-        centerOn={panTo}
+        centerOn={getPanTo()}
         minScale={0.3}
         maxScale={5.0}
         onLongPress={handlePlacePin}

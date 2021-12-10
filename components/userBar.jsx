@@ -74,7 +74,6 @@ const UserBar = (props) => {
   const clickBoards = (navigator) => {
     setSearchType('board');
     props.setSearchValue('');
-    this.textInput && this.textInput.clear();
     // setResetMap is called only on the map screen, so this handles a call from the board screen as well
     props.setResetMap && props.setResetMap();
     navigator.navigate('Boards', {setBoard: props.setBoard, setCreator: props.setCreator});
@@ -131,7 +130,6 @@ const UserBar = (props) => {
                 style={styles.inputText}
                 placeholder={searchPlaceholder()}
                 onChangeText={(text) => props.setSearchValue(text)}
-                ref={input => { this.textInput = input }}
               />
             </KeyboardAvoidingView>
           </View>
