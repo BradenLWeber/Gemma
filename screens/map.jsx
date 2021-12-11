@@ -206,19 +206,18 @@ const MapScreen = ({ route, navigation }) => {
               'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            boardID: 2,      // we need to work BoardID in here as a prop sometime
-            pinid: String(key),
+            boardID: 1,      // we need to work BoardID in here as a prop sometime
             pinName: title,
             pinNotes: notes,
             pinTag: tags,
             longitude: long.toFixed(14),
             latitude: lat.toFixed(14),
-            })
-          });
-          if (response.status !== 200) {
-            alert('Pin could not be placed with status: ' + response.status);
-            return;
-          } 
+          })
+        });
+        if (response.status !== 200) {
+          alert('Pin could not be placed with status: ' + response.status);
+          return;
+        }
       } catch (error) {
             alert('Something went wrong:', error);
       }
@@ -238,8 +237,8 @@ const MapScreen = ({ route, navigation }) => {
 
   const showPin = (pin) => {
     if (searchValue !== '') {
-      if (searchType === 'pin' && !pin.title.toLowerCase().includes(searchValue.toLowerCase())) return;
-      if (searchType === 'tag' && !pin.tags.toLowerCase().includes(searchValue.toLowerCase())) return;
+      if (searchType === 'pin' && !pin.pinname.toLowerCase().includes(searchValue.toLowerCase())) return;
+      if (searchType === 'tag' && !pin.pintag.toLowerCase().includes(searchValue.toLowerCase())) return;
     }
 
     const pinPosition = {
@@ -296,18 +295,18 @@ const MapScreen = ({ route, navigation }) => {
             <Text style={{ fontSize: 25, paddingRight: 5, }}>X</Text>
           </TouchableOpacity>
         </View>
-        {pinModal.tags && showTags(pinModal.tags)}
-        {pinModal.notes &&
+        {pinModal.pintag !== '' && showTags(pinModal.pintag)}
+        {pinModal.pinnotes !== '' &&
           <>
             <View style={{ flexDirection: 'row' }}>
               <Image source={require('../assets/defaultAvatar.png')} style={styles.pinModalUserIcon} />
               <Text style={styles.pinModalCreator}>{board.creator}</Text>
             </View>
-            <Text style={styles.pinModalText}>{pinModal.notes}</Text>
+            <Text style={styles.pinModalText}>{pinModal.pinnotes}</Text>
           </>
         }
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-          <Text style={styles.latLongText}>{mapYToLat(pinModal.y).toFixed(12)}, {mapXToLong(pinModal.x).toFixed(12)}</Text>
+          <Text style={styles.latLongText}>{parseFloat(pinModal.latitude).toFixed(12)}, {parseFloat(pinModal.longitude).toFixed(12)}</Text>
           <TouchableOpacity style={styles.deletePin} onPress={() => setDeletePinModal(true)}>
             <Image source={require('../assets/trash.png')} style={styles.deletePinIcon}></Image>
           </TouchableOpacity>
@@ -412,6 +411,8 @@ const MapScreen = ({ route, navigation }) => {
         panToMove={true}
         centerOn={panTo}
         minScale={0.3}
+        maxScale={5.0}
+        onLongPress={handlePlacePin}
         enableCenterFocus={false}
         onMove={(event) => handleSetMapPosition(event)}
       >
