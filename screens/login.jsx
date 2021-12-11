@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Button } from 'react-native';
+import { ImageBackground, View, Text, StyleSheet, TouchableOpacity, Button } from 'react-native';
 import * as Location from 'expo-location';
 import * as Google from 'expo-google-app-auth';
 
 const Login = (props) => {
     const [googleSubmitting, setGoogleSubmitting] = useState(false);
     const [demo, setDemo] = useState(false);
+
+    //const wallpaper = require('../assets/homescreen1.png') ;
 
     const handleGoogleLogin = () => {
         setGoogleSubmitting(true);
@@ -50,6 +52,7 @@ const Login = (props) => {
 
     return (
         <View style={styles.loginView}>
+            <ImageBackground source={require('../assets/homescreen1.png')} style={styles.wallpaper}>
             <Text style={styles.loginTitle}>Gemma</Text>
             {/* Sign up button */}
             <TouchableOpacity onPress={handleSignup} style={styles.signupButton}>
@@ -65,6 +68,7 @@ const Login = (props) => {
             {demo && <TouchableOpacity onPress={handleGoogleLogin} style={[styles.loginButton, { marginTop: 200 }]}>
                 <Text style={[styles.buttonText, { fontSize: 20 }]}>{googleSubmitting ? 'Working' : 'Login with Google'}</Text>
             </TouchableOpacity>}
+            </ImageBackground>
         </View>
     )
 };
@@ -79,7 +83,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 60,
         marginTop: 80,
-        color: '#201E3C',
+        color: '#DAD9D9',
         width: 500,
     },
     signupButton: {
@@ -96,7 +100,7 @@ const styles = StyleSheet.create({
     },
     guestButtonText: {
         fontSize: 20,
-        color: "black",
+        color: "#DAD9D9",
     },
     loginButton: {
         alignItems: "center",
@@ -112,6 +116,14 @@ const styles = StyleSheet.create({
         marginTop: 10,
         padding: 10,
         borderRadius: 10,
+    },
+    wallpaper: {
+        //flex: 1,
+        alignItems: 'center',
+        width: '100%',
+        height: '100%',
+        //resizeMode: 'cover',
+
     }
 });
 
