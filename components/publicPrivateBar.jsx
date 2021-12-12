@@ -1,5 +1,8 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+
+{/* This Public/Private bar design is no longer used. 
+    But the Public/Private toggle tells the user whether the boards screen is displaying public or private boards. */}
 
 const PublicPrivateBar = (props) => {
 
@@ -36,18 +39,6 @@ const styles = StyleSheet.create({
         borderRadius: 20,
         elevation: 8,
     },
-    textPrivate: {
-        paddingTop: 8,
-        paddingLeft: 11,
-        fontSize: 18,
-        color: 'gray',
-    },
-    textPublic: {
-        paddingTop: 8,
-        paddingLeft: 5,
-        fontSize: 18,
-        color: 'gray',
-    },
     privateSliderBox: {
         backgroundColor: 'white',
         borderColor: 'gray',
@@ -69,6 +60,18 @@ const styles = StyleSheet.create({
         marginTop: 5,
         borderBottomLeftRadius: 15,
         borderTopLeftRadius: 15,
+    },
+    textPrivate: {
+        paddingTop: 8,
+        paddingLeft: 11,
+        fontSize: 18,
+        color: 'gray',
+    },
+    textPublic: {
+        paddingTop: 8,
+        paddingLeft: 5,
+        fontSize: 18,
+        color: 'gray',
     },
 });
 
