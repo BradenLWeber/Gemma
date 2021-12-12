@@ -1,9 +1,11 @@
-import React, { useState, useRef, createRef, useEffect } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Switch, Image, KeyboardAvoidingView, TextInput } from 'react-native';
+import React, { createRef, useState, } from 'react';
+import { Image, KeyboardAvoidingView, StyleSheet, Switch, Text, TextInput, TouchableOpacity, View, } from 'react-native';
 import * as Location from 'expo-location';
 
-const Settings = (props) => {
+{/* The settings screen displays the user's avatar, nickname, and GPS preferences.
+*/}
 
+const Settings = (props) => {
   const [userID, setUserID] = useState(props.userID);
   const [userPhotoList, setUserPhotoList] = useState({ default: require('../assets/defaultAvatar.png') })
   const [photo, setPhoto] = useState(props.photo);
@@ -50,13 +52,16 @@ const Settings = (props) => {
   return (
     <View style={styles.settingsView}>
       <Text style={styles.settingsTitle}>Settings</Text>
+      {/* User avatar */}
       <TouchableOpacity onPress={handlePicture}>
         <View style={styles.photoSetting}>
           <Image source={userPhotoList[props.userPhoto]} style={styles.userImage} />
         </View>
-        <Text style={styles.imageText}>Click to Edit Photo</Text>
+        <Text style={styles.imageText}>Click avatar to edit</Text>
       </TouchableOpacity>
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+
+        {/* Nickname field */}
         <View style={styles.nameInput}>
           <Text style={styles.nameLabel}>USER DISPLAYED NAME</Text>
           <TextInput
@@ -67,6 +72,8 @@ const Settings = (props) => {
           />
         </View>
       </KeyboardAvoidingView>
+
+      {/* GPS on/off toggle */}
       <View style={styles.gpsWrapper}>
         <Text style={styles.nameLabel}>GPS ON/OFF</Text>
         <Switch
@@ -75,9 +82,11 @@ const Settings = (props) => {
           ios_backgroundColor="gray"
           onValueChange={(value) => setPermissions(value)}
           value={GPS}
-          style={{ transform: [{ scaleX: 1.3 }, { scaleY: 1.3 }] }}
+          style={{ transform: [{ scaleX: 1.3 }, { scaleY: 1.3 }], marginTop: 5 }}
         />
       </View>
+
+      {/* Save button */}
       <TouchableOpacity onPress={handleSettingsSave} style={styles.saveButton}>
         <Text style={styles.saveText}>Save</Text>
       </TouchableOpacity>
@@ -86,28 +95,10 @@ const Settings = (props) => {
 };
 
 const styles = StyleSheet.create({
-  settingsView: {
-    flexDirection: 'column',
-    padding: 10,
-  },
-  settingsTitle: {
-    textAlign: 'left',
-    fontWeight: 'bold',
-    fontSize: 50,
-    color: '#201E3C',
-    backgroundColor: '#6CC071',
-    paddingLeft: 10,
-  },
-  photoSetting: {
+  gpsWrapper: {
     paddingTop: 20,
-    alignItems: 'center',
-  },
-  userImage: {
-    width: 140,
-    height: 140,
-    borderRadius: 70,
-    borderWidth: 2,
-    borderColor: '#201E3C',
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
   },
   imageText: {
     color: '#201E3C',
@@ -118,19 +109,16 @@ const styles = StyleSheet.create({
   nameInput: {
     paddingTop: 20,
   },
+  nameInputText: {
+    fontSize: 20,
+  },
   nameLabel: {
     color: '#201E3C',
     fontSize: 14,
   },
-  nameInputText: {
-    fontSize: 20,
-  },
-  gpsWrapper: {
+  photoSetting: {
     paddingTop: 20,
-    justifyContent: 'flex-start',
-    alignItems: 'flex-start',
-  },
-  gpsToggle: {
+    alignItems: 'center',
   },
   saveButton: {
     alignItems: "center",
@@ -142,6 +130,25 @@ const styles = StyleSheet.create({
   },
   saveText: {
     fontSize: 20,
+  },
+  settingsTitle: {
+    textAlign: 'left',
+    fontWeight: 'bold',
+    fontSize: 50,
+    color: '#201E3C',
+    backgroundColor: '#6CC071',
+    paddingLeft: 10,
+  },
+  settingsView: {
+    flexDirection: 'column',
+    padding: 10,
+  },
+  userImage: {
+    width: 140,
+    height: 140,
+    borderRadius: 70,
+    borderWidth: 2,
+    borderColor: '#201E3C',
   },
 });
 

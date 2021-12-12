@@ -1,15 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Text, View, TouchableOpacity, Image, StyleSheet, Dimensions } from 'react-native';
-
-import UserBar from '../components/userBar';
-import PinNote from '../components/pinNote';
-import { globalStyles } from '../styles/global';
-import * as Location from 'expo-location';
+import { ActivityIndicator, Dimensions, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import ImageZoom from 'react-native-image-pan-zoom';
 import Modal from 'react-native-modal';
+import * as Location from 'expo-location';
+
+import { globalStyles } from '../styles/global';
+import UserBar from '../components/userBar';
+import PinNote from '../components/pinNote';
+
+{/* This screen displays a board: a set of pins on a map. 
+    Users can view, search, and create pins. 
+    They can also navigate to their profile information or to the boards screen. */}
 
 const MapScreen = ({ route, navigation }) => {
-
+  // Set constant map corners for the campus & ecosystem maps
   const MAPHEIGHTECO = 1500;
   const MAPWIDTHECO = 1940;
   const MAPHEIGHTCAM = 1965;
@@ -28,11 +32,13 @@ const MapScreen = ({ route, navigation }) => {
     SW: { latitude: 42.926867, longitude: -85.594130 },
     SE: { latitude: 42.926867, longitude: -85.579824 },
   };
+  // Load images of the maps
   const MAPS = {
     ECO: require('../assets/mapEcoPreserve.png'),
     CAM: require('../assets/CampusFinal.png')
   }
 
+  // Soo many useStates
   const [isModalVisible, setisModalVisible] = useState(false);
   const [userPhoto, setUserPhoto] = useState('default');
   const [myLocation, setMyLocation] = useState({});
@@ -51,6 +57,7 @@ const MapScreen = ({ route, navigation }) => {
   const [nickname, setNickname] = useState(route.params.nickname);
   const [photo, setPhoto] = useState(route.params.photo);
 
+  // Fetch board's pins from Heroku
   const getPins = async () => {
     try {
       //console.log('waiting for data...');
@@ -153,8 +160,6 @@ const MapScreen = ({ route, navigation }) => {
       scale: 1.0,
       duration: 0,
     };
-    // setPanTo(myPosition);
-    // setPanTo(null);
   }
 
   const placingPinButtons = () => {
@@ -211,8 +216,7 @@ const MapScreen = ({ route, navigation }) => {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            boardID: 2,      // we need to work BoardID in here as a prop sometime
-            pinid: String(key),
+            boardID: 1,      // we need to work BoardID in here as a prop sometime
             pinName: title,
             pinNotes: notes,
             pinTag: tags,
@@ -301,18 +305,18 @@ const MapScreen = ({ route, navigation }) => {
             <Text style={{ fontSize: 25, paddingRight: 5, }}>X</Text>
           </TouchableOpacity>
         </View>
-        {pinModal.tags && showTags(pinModal.tags)}
-        {pinModal.notes &&
+        {pinModal.pintag !== '' && showTags(pinModal.pintag)}
+        {pinModal.pinnotes !== '' &&
           <>
             <View style={{ flexDirection: 'row' }}>
               <Image source={require('../assets/defaultAvatar.png')} style={styles.pinModalUserIcon} />
               <Text style={styles.pinModalCreator}>{board.creator}</Text>
             </View>
-            <Text style={styles.pinModalText}>{pinModal.notes}</Text>
+            <Text style={styles.pinModalText}>{pinModal.pinnotes}</Text>
           </>
         }
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-          <Text style={styles.latLongText}>{mapYToLat(pinModal.y).toFixed(12)}, {mapXToLong(pinModal.x).toFixed(12)}</Text>
+          <Text style={styles.latLongText}>{parseFloat(pinModal.latitude).toFixed(12)}, {parseFloat(pinModal.longitude).toFixed(12)}</Text>
           <TouchableOpacity style={styles.deletePin} onPress={() => setDeletePinModal(true)}>
             <Image source={require('../assets/trash.png')} style={styles.deletePinIcon}></Image>
           </TouchableOpacity>
@@ -447,110 +451,32 @@ const MapScreen = ({ route, navigation }) => {
       {settingPin ? placingPinButtons() : pinButton()}
       {settingPin && ghostPin()}
 
+<<<<<<< HEAD
       {isLoading ? <ActivityIndicator /> : (board.pins.map((pin) => showPin(pin)))}
+=======
+      {/* Display pins */}
+      {isLoading ? <ActivityIndicator/> : (board.pins.map((pin) => showPin(pin)))}
+
+      {/* Display a pin's information */}
+>>>>>>> 11d444c535f61c92ca8e6b2e0d53ce13e627ac31
       {pinModal !== null && showPinModal()}
+
+      {/* Show delete pin message */}
       {deletePinModal && showDeletePinModal()}
 
       {/* Uncomment this and use it to show information on the map screen */}
       {/* <Text style = {{position: 'absolute', fontSize: 30, top: 100}}></Text> */}
 
+      {/* Drop a new pin */}
       <PinNote state={isModalVisible} onClick={(button, title, tags, notes) => createPin(button, title, tags, notes)} />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  pinModal: {
-    position: 'absolute',
-    backgroundColor: 'lightgray',
-    borderColor: 'gray',
-    borderWidth: 3,
-    padding: 6,
-    width: Dimensions.get('window').width - 40,
-    flexDirection: 'column',
-    elevation: 10,
-  },
-  pinModalTitle: {
-    fontSize: 25,
-    fontWeight: 'bold',
-    width: '90%'
-  },
-  pinModalLabel: {
-    fontSize: 20,
-    marginTop: 3,
-    fontStyle: 'italic',
-    textDecorationLine: 'underline',
-  },
-  tag: {
-    height: 30,
-    marginRight: 7,
-    marginTop: 4,
-    marginBottom: 4,
-    backgroundColor: '#a8a8a8',
-    borderRadius: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  tagText: {
-    margin: 7,
-    marginTop: 0,
-    marginLeft: 3,
-    fontSize: 15,
-    bottom: 1,
-  },
-  pinModalText: {
-    marginRight: 6,
-    fontSize: 20,
-    backgroundColor: '#F2F2F2',
-    marginTop: 10,
-    padding: 10,
-    borderColor: 'gray',
-    borderWidth: 1,
-    borderRadius: 10,
-  },
-  latLongText: {
-    marginRight: 6,
-    fontSize: 15,
-    marginTop: 20,
-    color: 'gray'
-  },
-  pinModalCreator: {
-    marginTop: 20,
-    marginLeft: 10,
-    fontSize: 15,
-  },
-  pinModalUserIcon: {
-    height: 30,
-    width: 30,
-    borderRadius: 15,
-    borderWidth: 1,
-    borderColor: 'black',
-    marginTop: 15,
-  },
-  pinIcon: {
-    width: 40,
-    height: 40,
-  },
   checkIcon: {
     width: 30,
     height: 30
-  },
-  ghostPin: {
-    position: 'absolute',
-    top: Dimensions.get('window').height / 2.26,
-    alignSelf: 'center',
-    elevation: 1,
-  },
-  mapPin: {
-    position: 'absolute'
-  },
-  xButton: {
-    position: 'absolute',
-    right: 70,
-  },
-  myLocationButton: {
-    position: 'absolute',
-    right: 141,
   },
   deletePinIcon: {
     width: 35,
@@ -575,7 +501,95 @@ const styles = StyleSheet.create({
     backgroundColor: '#C4C4C4',
     alignItems: 'center',
     justifyContent: 'center'
-  }
+  },
+  ghostPin: {
+    position: 'absolute',
+    top: Dimensions.get('window').height / 2.26,
+    alignSelf: 'center',
+    elevation: 1,
+  },
+  latLongText: {
+    marginRight: 6,
+    fontSize: 15,
+    marginTop: 20,
+    color: 'gray'
+  },
+  mapPin: {
+    position: 'absolute'
+  },
+  myLocationButton: {
+    position: 'absolute',
+    right: 141,
+  },
+  pinIcon: {
+    width: 40,
+    height: 40,
+  },
+  pinModal: {
+    position: 'absolute',
+    backgroundColor: 'lightgray',
+    borderColor: 'gray',
+    borderWidth: 3,
+    padding: 6,
+    width: Dimensions.get('window').width - 40,
+    flexDirection: 'column',
+    elevation: 10,
+  },
+  pinModalCreator: {
+    marginTop: 20,
+    marginLeft: 10,
+    fontSize: 15,
+  },
+  pinModalLabel: {
+    fontSize: 20,
+    marginTop: 3,
+    fontStyle: 'italic',
+    textDecorationLine: 'underline',
+  },
+  pinModalText: {
+    marginRight: 6,
+    fontSize: 20,
+    backgroundColor: '#F2F2F2',
+    marginTop: 10,
+    padding: 10,
+    borderColor: 'gray',
+    borderWidth: 1,
+    borderRadius: 10,
+  },
+  pinModalTitle: {
+    fontSize: 25,
+    fontWeight: 'bold',
+    width: '90%'
+  },
+  pinModalUserIcon: {
+    height: 30,
+    width: 30,
+    borderRadius: 15,
+    borderWidth: 1,
+    borderColor: 'black',
+    marginTop: 15,
+  },
+  tag: {
+    height: 30,
+    marginRight: 7,
+    marginTop: 4,
+    marginBottom: 4,
+    backgroundColor: '#a8a8a8',
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  tagText: {
+    margin: 7,
+    marginTop: 0,
+    marginLeft: 3,
+    fontSize: 15,
+    bottom: 1,
+  },
+  xButton: {
+    position: 'absolute',
+    right: 70,
+  },
 });
 
 export default MapScreen;

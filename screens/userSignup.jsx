@@ -1,12 +1,19 @@
-import React, { useState, useRef, createRef } from 'react';
-import { Text, View, TouchableOpacity, StyleSheet, KeyboardAvoidingView, TextInput } from 'react-native';
+import React, { createRef, useState } from 'react';
+import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
-// Sign-up input ideas from https://aboutreact.com/react-native-login-and-signup/
-// Info on useRef use from https://stackoverflow.com/questions/32748718/react-native-how-to-select-the-next-textinput-after-pressing-the-next-keyboar
-// Sign-up POST ideas from https://github.com/calvin-cs262-organization/monopoly-client
-// and https://jasonwatmore.com/post/2020/02/01/react-fetch-http-post-request-examples
+{/* userSignup.jsx allows users to create accounts with Gemma.
+  Gemma's user signup requires an email and a password.
+
+ Sign-up input ideas from https://aboutreact.com/react-native-login-and-signup/
+ Info on useRef use from https://stackoverflow.com/questions/32748718/react-native-how-to-select-the-next-textinput-after-pressing-the-next-keyboar
+ Sign-up POST ideas from https://github.com/calvin-cs262-organization/monopoly-client
+ and https://jasonwatmore.com/post/2020/02/01/react-fetch-http-post-request-examples
+
+*/}
+
 
 const UserSignupScreen = (props) => {
+  // useStates to handle user information and attributes
   const [userid, setUserid] = useState('');
   const [username, setUsername] = useState(null);
   const [userEmail, setUserEmail] = useState('');
@@ -18,6 +25,7 @@ const UserSignupScreen = (props) => {
   const passwordInputRef = createRef();
   const passwordCheckInputRef = createRef();
 
+  // Make sure all required fields are filled in correctly
   const handleSignupDone = async () => {
     if (!username) {
       alert('Please fill Name');
@@ -39,6 +47,8 @@ const UserSignupScreen = (props) => {
       alert('Passwords are not the same');
       return;
     }
+
+    // Send new user info to the database
     try {
       await fetch('https://still-retreat-52810.herokuapp.com/AUsers/', {
         method: 'POST',
@@ -53,10 +63,9 @@ const UserSignupScreen = (props) => {
           photo: userPhoto,
         })
       });
-      // const json = await response.json();
-      // console.log(json);
-      // return json;
-      alert("New profile create successfully");
+
+      // Notify user of end result
+      alert("New profile created successfully");
       props.navigator.navigate('Login');
     } catch (error) {
       alert("Invalid email or password");
@@ -67,6 +76,8 @@ const UserSignupScreen = (props) => {
     <View style={styles.userSignupView}>
       <Text style={styles.userSignupTitle}>Sign Up</Text>
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+        
+        {/* First name field */}
         <TextInput
           style={styles.nameInputText}
           onChangeText={(name) => setUsername(name)}
@@ -77,6 +88,8 @@ const UserSignupScreen = (props) => {
             emailInputRef.current.focus()
           }
           blurOnSubmit={false} />
+
+          {/* Email address field */}
         <TextInput
           style={styles.emailInputText}
           onChangeText={(email) => setUserEmail(email)}
@@ -90,6 +103,8 @@ const UserSignupScreen = (props) => {
           }
           blurOnSubmit={false}
         />
+
+        {/* Password (first time) */}
         <TextInput
           secureTextEntry={true}
           style={styles.passwordInputText}
@@ -102,6 +117,8 @@ const UserSignupScreen = (props) => {
             passwordCheckInputRef.current.focus()
           }
           blurOnSubmit={false} />
+
+          {/* Password (confirmation) */}
         <TextInput
           secureTextEntry={true}
           style={styles.passwordInputText}
@@ -110,39 +127,19 @@ const UserSignupScreen = (props) => {
           ref={passwordCheckInputRef}
           blurOnSubmit={true} />
       </KeyboardAvoidingView>
+
+      {/* Done button */}
       <TouchableOpacity
         onPress={handleSignupDone}
         style={styles.doneButton}>
         <Text style={styles.buttonText}>Done</Text>
       </TouchableOpacity>
     </View>
-
   )
 }
 
 const styles = StyleSheet.create({
-  userSignupView: {
-    flexDirection: 'column',
-    padding: 10,
-  },
-  userSignupTitle: {
-    textAlign: 'left',
-    fontWeight: 'bold',
-    fontSize: 50,
-    color: '#201E3C',
-    backgroundColor: '#97CCEE',
-    paddingLeft: 10,
-  },
-  nameInputText: {
-    paddingTop: 50,
-    fontSize: 30,
-  },
-  emailInputText: {
-    paddingTop: 30,
-    fontSize: 30,
-  },
-  passwordInputText: {
-    paddingTop: 30,
+  buttonText: {
     fontSize: 30,
   },
   doneButton: {
@@ -153,8 +150,29 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 10,
   },
-  buttonText: {
+  emailInputText: {
+    paddingTop: 30,
     fontSize: 30,
+  },
+  nameInputText: {
+    paddingTop: 50,
+    fontSize: 30,
+  },
+  passwordInputText: {
+    paddingTop: 30,
+    fontSize: 30,
+  },
+  userSignupTitle: {
+    textAlign: 'left',
+    fontWeight: 'bold',
+    fontSize: 50,
+    color: '#201E3C',
+    backgroundColor: '#97CCEE',
+    paddingLeft: 10,
+  },
+  userSignupView: {
+    flexDirection: 'column',
+    padding: 10,
   },
 });
 
