@@ -55,9 +55,12 @@ const MapScreen = ({ route, navigation }) => {
   const [creator, setCreator] = useState(null);
   const [isLoading, setLoading] = useState(true);
   const [deletePinModal, setDeletePinModal] = useState(false);
-  const [userID, setUserID] = useState(route.params.userid);
-  const [nickname, setNickname] = useState(route.params.nickname);
-  const [photo, setPhoto] = useState(route.params.photo);
+  // const [userID, setUserID] = useState(route.params.userid);
+  // const [nickname, setNickname] = useState(route.params.nickname);
+  // const [photo, setPhoto] = useState(route.params.photo);
+  const [userID, setUserID] = useState(0);
+  const [nickname, setNickname] = useState('Me');
+  const [photo, setPhoto] = useState('default');
 
   // Fetch board's pins from Heroku
   const getPins = async () => {
@@ -89,7 +92,6 @@ const MapScreen = ({ route, navigation }) => {
       //console.log(board.pins);
     }
     getData();
-    getLocation();
   }, []);
 
   const getLocationPermissions = async () => {

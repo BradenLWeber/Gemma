@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { LogBox } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
@@ -31,7 +31,6 @@ export default function App() {
   function boardScreen({ route, navigation }) {
     return (
       <BoardScreen
-        setBoardsType={setBoardsType}
         userID={route.params.userID}
         setCreator={route.params.setCreator}
         navigator={navigation}

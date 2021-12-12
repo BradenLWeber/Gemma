@@ -105,7 +105,7 @@ const Board = (props) => {
             </View>
             {/* Image is wrapped in a button that takes user back to the map screen */}
             <View style={mapIsEcosystem ? styles.imageBorderEco : styles.imageBorderCam}>
-                <TouchableOpacity style={mapIsEcosystem ? styles.boardImageWrapperEco : styles.boardImageWrapperCam} onPress={() => {props.setBoard(board); props.setCreator(board.creator); props.navigator.navigate('Map')}}>
+                <TouchableOpacity style={mapIsEcosystem ? styles.boardImageWrapperEco : styles.boardImageWrapperCam} onPress={() => {props.setBoard(board); props.setCreator(board.creator); props.navigator.navigate('Map', -1)}}>
                     <Image source={mapIsEcosystem ? MAPS.ECO : MAPS.CAM} style={board.map === 'ECO' ? styles.ecoImage : styles.camImage}/>
                     {board.pins.map((pin) => showPin(pin))}
                 </TouchableOpacity>
