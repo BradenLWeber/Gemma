@@ -28,6 +28,8 @@ LogBox.ignoreLogs([
 ]);
 
 export default function App() {
+<<<<<<< HEAD
+=======
   const [username, setUsername] = useState('FuriousFive5');
   const [userEmail, setUserEmail] = useState('abc123@mail');
   const [boardsType, setBoardsType] = useState('My');
@@ -41,6 +43,7 @@ export default function App() {
   }
 
   // Import Boards screen
+>>>>>>> 11d444c535f61c92ca8e6b2e0d53ce13e627ac31
   function boardScreen({ route, navigation }) {
     return (
       <BoardScreen
@@ -63,8 +66,12 @@ export default function App() {
     )
   };
 
+<<<<<<< HEAD
+  function userLoginScreen({ navigation }) {
+=======
   // Import User Login screen
   function userLoginScreen({ route, navigation }) {
+>>>>>>> 11d444c535f61c92ca8e6b2e0d53ce13e627ac31
     return (
       <UserLoginScreen
         navigator={navigation}
@@ -72,8 +79,12 @@ export default function App() {
     )
   };
 
+<<<<<<< HEAD
+  function userSignupScreen({ navigation }) {
+=======
   // Import Sign Up screen
   function userSignupScreen({ route, navigation }) {
+>>>>>>> 11d444c535f61c92ca8e6b2e0d53ce13e627ac31
     return (
       <UserSignupScreen
         navigator={navigation}
@@ -87,7 +98,9 @@ export default function App() {
       <SettingScreen
         navigator={navigation}
         userID={route.params.userID}
-        userPhoto={userPhoto}
+        userPhoto={'default'}
+        nickname={route.params.nickname}
+        photo={route.params.photo}
         locationPermission={route.params.locationPermission}
       />
     )
