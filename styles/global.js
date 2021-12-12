@@ -1,5 +1,7 @@
 import {StyleSheet} from 'react-native';
 
+{/* global.js stores some common styles used throughout the app. */}
+
 export const globalStyles = StyleSheet.create({
     addWrapper: {
         width: 50,

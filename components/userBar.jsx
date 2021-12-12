@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
-import { Platform, Image, View, Text, StyleSheet, TouchableOpacity, TouchableWithoutFeedback, KeyboardAvoidingView, TextInput } from 'react-native'
+import { Image, KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View,} from 'react-native'
 import * as Location from 'expo-location';
+
+{/* The UserBar component is a yellow bar at the top of the screen. 
+It displays the user's avatar and a search/filter bar for boards or pins, respectively. 
+It also displays a button to navigate to the board screen. */}
 
 const UserBar = (props) => {
   const [userID, setUserID] = useState(props.userID);
@@ -122,8 +126,10 @@ const UserBar = (props) => {
         <TouchableOpacity style={styles.userIcon} onPress={() => setShowUserMenu(true)}>
           <Image source={userPhotoList[props.userPhoto]} style={styles.userImage} />
         </TouchableOpacity>
+
         {/*Search for pins input*/}
         <View style={styles.userInput}>
+
           {/* This extra view wrapper allows me to specificy the width I want the textInput */}
           <View style={styles.userInputWidth}>
             <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
@@ -135,9 +141,11 @@ const UserBar = (props) => {
               />
             </KeyboardAvoidingView>
           </View>
+
           {/* Search options icon */}
           {searchDropdown(props.boardScreen)}
         </View>
+
         {/*Options icon*/}
         <TouchableOpacity
           style={styles.userOptions}
@@ -146,6 +154,7 @@ const UserBar = (props) => {
           <Image source={require('../assets/board-menu.png')} style={styles.boardMenuIcon} />
         </TouchableOpacity>
       </View>
+
       {/* If there is a menu being displayed, this invisible view takes up the whole screen
       and will make sure if the user tries to click out of the menu, the menu will close */}
       {(showSearchMenu || showUserMenu) && invisibleBackground()}
@@ -158,6 +167,51 @@ const UserBar = (props) => {
 }
 
 const styles = StyleSheet.create({
+  boardMenuIcon: {
+    height: 40,
+    width: 40,
+    bottom: 3,
+  },
+  inputText: {
+    fontSize: 19,
+  },
+  menuButton: {
+    borderColor: '#201E3C',
+    justifyContent: 'center',
+    marginTop: 10,
+    marginBottom: 10,
+  },
+  menuButtonText: {
+    color: '#201E3C',
+    fontSize: 20,
+  },
+  menuDivider: {
+    width: '80%',
+    height: 2,
+    backgroundColor: '#201E3C',
+  },
+  optionsMenu: {
+    position: 'absolute',
+    right: 20,
+    top: 75,
+    width: 153,
+    height: 100,
+    backgroundColor: '#F9D01E',
+    alignItems: 'center',
+    marginTop: 20,
+    elevation: 21,
+  },
+  searchDropdown: {
+    right: 0,
+    marginLeft: 10,
+  },
+  searchDropdownText: {
+    width: 30,
+    height: 30,
+    fontSize: 60,
+    bottom: 8,
+    color: 'gray',
+  },
   userBar: {
     width: '90%',
     height: 60,
@@ -205,19 +259,16 @@ const styles = StyleSheet.create({
   userInputWidth: {
     flex: 1,
   },
-  inputText: {
-    fontSize: 19,
-  },
-  searchDropdown: {
-    right: 0,
-    marginLeft: 10,
-  },
-  searchDropdownText: {
-    width: 30,
-    height: 30,
-    fontSize: 60,
-    bottom: 8,
-    color: 'gray',
+  userMenu: {
+    position: 'absolute',
+    left: 20,
+    top: 75,
+    width: 110,
+    height: 100,
+    backgroundColor: '#F9D01E',
+    alignItems: 'center',
+    marginTop: 20,
+    elevation: 21,
   },
   userOptions: {
     width: 46,
@@ -230,22 +281,6 @@ const styles = StyleSheet.create({
   },
   userOptionsPressed: {
     backgroundColor: '#D4D8E5',
-  },
-  boardMenuIcon: {
-    height: 40,
-    width: 40,
-    bottom: 3,
-  },
-  userMenu: {
-    position: 'absolute',
-    left: 20,
-    top: 75,
-    width: 110,
-    height: 100,
-    backgroundColor: '#F9D01E',
-    alignItems: 'center',
-    marginTop: 20,
-    elevation: 21,
   },
   searchMenu: {
     position: 'absolute',
@@ -262,32 +297,6 @@ const styles = StyleSheet.create({
   },
   searchMenuMap: {
     width: 125,
-  },
-  optionsMenu: {
-    position: 'absolute',
-    right: 20,
-    top: 75,
-    width: 153,
-    height: 100,
-    backgroundColor: '#F9D01E',
-    alignItems: 'center',
-    marginTop: 20,
-    elevation: 21,
-  },
-  menuButton: {
-    borderColor: '#201E3C',
-    justifyContent: 'center',
-    marginTop: 10,
-    marginBottom: 10,
-  },
-  menuButtonText: {
-    color: '#201E3C',
-    fontSize: 20,
-  },
-  menuDivider: {
-    width: '80%',
-    height: 2,
-    backgroundColor: '#201E3C',
   },
 });
 

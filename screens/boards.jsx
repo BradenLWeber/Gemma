@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, Text, View, TouchableOpacity, Image, ScrollView, SafeAreaView, Dimensions } from 'react-native';
+
+import AddBoard from '../components/addBoard';
 import Board from '../components/board';
 import UserBar from '../components/userBar';
-import AddBoard from '../components/addBoard';
-import PublicPrivateBar from '../components/publicPrivateBar';
 
-import { StyleSheet, Text, View, TouchableOpacity, Image, ScrollView, SafeAreaView, Dimensions } from 'react-native';
+{/* This screen displays the boards available to the user. 
+It allows the user to toggle between public and private boards and to create a new board. */}
 
 const BoardScreen = (props) => {
 
@@ -152,6 +154,7 @@ const BoardScreen = (props) => {
     <View style={{ alignItems: 'center', position: 'relative' }}>
       <View style={styles.boardHeadingContainer}>
         <View style={{flexDirection: 'row'}}>
+          {/* Public/Private bar (new design!) */}
           <TouchableOpacity
             style={[styles.boardType, publicOrPrivate === 'Private' ? styles.boardTypeChosen : {}]}
             onPress={() => setPublicOrPrivate('Private')}
@@ -168,6 +171,8 @@ const BoardScreen = (props) => {
         {publicOrPrivate === 'Private' && addBoardIcon()}
       </View>
       <SafeAreaView style={{ height: Dimensions.get('window').height - 210 }}>
+
+        {/* Display boards */}
         <ScrollView style={styles.boardScrollContainer}>
           <View style={styles.boardContainer}>
             {publicOrPrivate === 'Private' && privateBoards.map((board) => showBoard(board))}
@@ -175,6 +180,8 @@ const BoardScreen = (props) => {
           </View>
         </ScrollView>
       </SafeAreaView>
+
+      {/* UserBar component (search boards, access user information) */}
       <UserBar
         navigator={props.navigator}
         boardScreen={true}
@@ -182,6 +189,8 @@ const BoardScreen = (props) => {
         setSearchType={setSearchType}
         setSearchValue={setSearchValue}
       />
+
+      {/* Add new board (private boards only) */}
       <AddBoard visibility={addBoardModal} makeBoard={clickAddBoard} exitModal={() => setAddBoardModal(false)} />
     </View>
   )
@@ -202,6 +211,9 @@ const styles = StyleSheet.create({
   addBoardText: {
     fontSize: 20,
   },
+  boardContainer: {
+    alignItems: 'center',
+  },
   boardHeadingContainer: {
     marginTop: 95,
     width: '90%',
@@ -212,9 +224,6 @@ const styles = StyleSheet.create({
   },
   boardScrollContainer: {
     height: '100%',
-  },
-  boardContainer: {
-    alignItems: 'center',
   },
   boardType: {
     marginTop: 5,
