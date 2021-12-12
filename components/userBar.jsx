@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { Image, KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View,} from 'react-native'
 import * as Location from 'expo-location';
 
-{/* The UserBar component is a yellow bar at the top of the screen. 
-It displays the user's avatar and a search/filter bar for boards or pins, respectively. 
+{/* The UserBar component is a yellow bar at the top of the screen.
+It displays the user's avatar and a search/filter bar for boards or pins, respectively.
 It also displays a button to navigate to the board screen. */}
 
 const UserBar = (props) => {
@@ -78,7 +78,6 @@ const UserBar = (props) => {
   const clickBoards = (navigator) => {
     setSearchType('board');
     props.setSearchValue('');
-    this.textInput && this.textInput.clear();
     // setResetMap is called only on the map screen, so this handles a call from the board screen as well
     props.setResetMap && props.setResetMap();
     navigator.navigate('Boards', {setBoard: props.setBoard, setCreator: props.setCreator});
@@ -137,7 +136,6 @@ const UserBar = (props) => {
                 style={styles.inputText}
                 placeholder={searchPlaceholder()}
                 onChangeText={(text) => props.setSearchValue(text)}
-                ref={input => { this.textInput = input }}
               />
             </KeyboardAvoidingView>
           </View>
