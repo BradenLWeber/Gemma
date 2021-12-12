@@ -2,10 +2,10 @@ import { ScrollView, StyleSheet, Text, TextInput, View, TouchableOpacity } from 
 import React, { useState, createRef } from 'react';
 import Modal from 'react-native-modal';
 
-{/* Here's the tutorial I'm using to learn about Modals:
-https://blog.logrocket.com/creating-a-pop-up-modal-in-react-native/
-
-Also using library 'react-native-modal'... y'all might need to run 'npm i react-native-modal'*/}
+{/* The pinNote modal displays a pin's title, tags, and notes when clicked.
+    
+    Tutorial used:
+    https://blog.logrocket.com/creating-a-pop-up-modal-in-react-native/ */}
 
 const PinNote = (props) => {
     const [title, setTitle] = useState(null);
@@ -64,7 +64,6 @@ const PinNote = (props) => {
             </ScrollView>
         </Modal>
     )
-
 };
 
 const styles = StyleSheet.create({
@@ -88,6 +87,26 @@ const styles = StyleSheet.create({
         backgroundColor: '#E5E5E5',
         justifyContent: 'space-around',
         flexDirection: 'column'
+    },
+    modalButton: {
+        height: 40,
+        width: 100,
+        marginLeft: 10,
+        marginRight: 10,
+        marginBottom: 10,
+        backgroundColor: 'lightgray',
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    modalButtons: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+    },
+    modalCreateButton: {
+        backgroundColor: '#6CC071',
+    },
+    modalText: {
+        fontSize: 20,
     },
     Notes: {
         marginTop: 5,
@@ -114,26 +133,6 @@ const styles = StyleSheet.create({
         backgroundColor: '#FFFFFF',
         padding: 5,
         marginBottom: 5,
-    },
-    modalButtons: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-    },
-    modalButton: {
-        height: 40,
-        width: 100,
-        marginLeft: 10,
-        marginRight: 10,
-        marginBottom: 10,
-        backgroundColor: 'lightgray',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    modalText: {
-        fontSize: 20,
-    },
-    modalCreateButton: {
-        backgroundColor: '#6CC071',
     },
 });
 
