@@ -10,8 +10,6 @@ const Settings = (props) => {
   const [nickname, setNickname] = useState(props.nickname);
   const [GPS, setGPS] = useState(props.locationPermission);
 
-  const nameInputRef = createRef();
-
   const handleSettingsSave = async () => {
     try {
       await fetch('https://still-retreat-52810.herokuapp.com/AUsers/' + userID, {
@@ -37,6 +35,7 @@ const Settings = (props) => {
   const handlePicture = () => {
 
   }
+
   const setPermissions = async (value) => {
     if (value === true) {
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -50,9 +49,6 @@ const Settings = (props) => {
 
   return (
     <View style={styles.settingsView}>
-      <Text>{photo}</Text>
-      <Text>{nickname}</Text>
-      <Text>{userID}</Text>
       <Text style={styles.settingsTitle}>Settings</Text>
       <TouchableOpacity onPress={handlePicture}>
         <View style={styles.photoSetting}>
@@ -66,7 +62,7 @@ const Settings = (props) => {
           <TextInput
             style={styles.nameInputText}
             onChangeText={(nickname) => setNickname(nickname)}
-            placeholder={nickname}
+            placeholder={'Name'}
             blurOnSubmit={true}
           />
         </View>
