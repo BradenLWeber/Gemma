@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, TextInput, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, TextInput, TouchableOpacity, View, } from 'react-native';
 import Modal from 'react-native-modal';
+
+{/* The AddBoard modal adds a board to the user's list of private boards.
+    It takes a title and a map to use (right now, campus map or ecosystem preserve map). */}
 
 const AddBoard = (props) => {
     const [title, setTitle] = useState(null);
