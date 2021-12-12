@@ -8,10 +8,16 @@ It also displays a button to navigate to the board screen. */}
 
 const UserBar = (props) => {
   const [userID, setUserID] = useState(props.userID);
+  const [nickname, setNickname] = useState(props.nickname);
+  const [photo, setPhoto] = useState(props.photo);
+  console.log('userID in UserBar: ' + userID);
+  console.log('nickname in UserBar: ' + nickname);
+  console.log('photo in UserBar: ' + photo);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showSearchMenu, setShowSearchMenu] = useState(false);
   // Initial state depends on whether it is on the map screen or the board screen
   const [searchType, setSearchType] = useState(props.boardScreen ? 'board' : 'pin');
+  //const [userPhotoList, setUserPhotoList] = useState({ default: require('../assets/defaultAvatar.png') })
   const [userPhotoList, setUserPhotoList] = useState({ default: require('../assets/defaultAvatar.png') })
 
   const getLocationPermissions = async () => {
@@ -24,7 +30,7 @@ const UserBar = (props) => {
     // setResetMap is called only on the map screen, so this handles a call from the board screen as well
     props.setResetMap && props.setResetMap();
     const response = await getLocationPermissions();
-    props.navigator.navigate('Settings', { locationPermission: response, userID: userID });
+    props.navigator.navigate('Settings', { locationPermission: response, userID: userID, nickname: nickname, photo: photo });
   }
 
   // The popup when pressing the user icon
@@ -80,7 +86,7 @@ const UserBar = (props) => {
     props.setSearchValue('');
     // setResetMap is called only on the map screen, so this handles a call from the board screen as well
     props.setResetMap && props.setResetMap();
-    navigator.navigate('Boards', {setBoard: props.setBoard, setCreator: props.setCreator});
+    navigator.navigate('Boards', { setBoard: props.setBoard, setCreator: props.setCreator });
   }
 
   // This handles any click not on a menu while a menu is open

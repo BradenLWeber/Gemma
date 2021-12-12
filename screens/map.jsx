@@ -8,8 +8,8 @@ import { globalStyles } from '../styles/global';
 import UserBar from '../components/userBar';
 import PinNote from '../components/pinNote';
 
-{/* This screen displays a board: a set of pins on a map. 
-    Users can view, search, and create pins. 
+{/* This screen displays a board: a set of pins on a map.
+    Users can view, search, and create pins.
     They can also navigate to their profile information or to the boards screen. */}
 
 const MapScreen = ({ route, navigation }) => {
@@ -21,10 +21,10 @@ const MapScreen = ({ route, navigation }) => {
   const PINHEIGHT = 50;
   const PINWIDTH = 50;
   const MAPCORNERSECO = {
-    NW: {latitude: 42.938853, longitude: -85.585157},
-    NE: {latitude: 42.938853, longitude: -85.572434},
-    SW: {latitude: 42.929539, longitude: -85.585157},
-    SE: {latitude: 42.929539, longitude: -85.572434},
+    NW: { latitude: 42.938853, longitude: -85.585157 },
+    NE: { latitude: 42.938853, longitude: -85.572434 },
+    SW: { latitude: 42.929539, longitude: -85.585157 },
+    SE: { latitude: 42.929539, longitude: -85.572434 },
   };
   const MAPCORNERSCAM = {
     // The north and south are reversed because for some unknown reason,
@@ -55,33 +55,38 @@ const MapScreen = ({ route, navigation }) => {
   const [creator, setCreator] = useState(null);
   const [isLoading, setLoading] = useState(true);
   const [deletePinModal, setDeletePinModal] = useState(false);
-  const [userID, setUserID] = useState(route.params);
+  const [userID, setUserID] = useState(route.params.userid);
+  const [nickname, setNickname] = useState(route.params.nickname);
+  const [photo, setPhoto] = useState(route.params.photo);
 
   // Fetch board's pins from Heroku
   const getPins = async () => {
-      try {
-        console.log('waiting for data...');
-        const response = await fetch('https://still-retreat-52810.herokuapp.com/Pins');
-        const json = await response.json();
-        console.log(json);
-        return json;
-     } catch (error) {
-        console.error(error);
-      } finally {
-        setLoading(false);
-      }
+    try {
+      //console.log('waiting for data...');
+      const response = await fetch('https://still-retreat-52810.herokuapp.com/Pins');
+      const json = await response.json();
+      //console.log(json);
+      console.log('userID on map screen: ' + userID);
+      console.log('nickname on map screen:' + nickname);
+      console.log('photo on map screen:' + photo);
+      return json;
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
   }
 
   useEffect(() => {
     async function getData() {
-      console.log('use effect called!');
-      console.log('pins are');    // show pins before update
-      console.log(board.pins);
-      console.log('Getpins returns: ', (await getPins()));
-      setBoard({pins: (await getPins()), map: 'ECO', creator: 'Me'});
+      //console.log('use effect called!');
+      //console.log('pins are');    // show pins before update
+      //console.log(board.pins);
+      //console.log('Getpins returns: ', (await getPins()));
+      setBoard({ pins: (await getPins()), map: 'ECO', creator: 'Me' });
 
-      console.log('here are the pins (called from useEffect)');
-      console.log(board.pins);
+      //console.log('here are the pins (called from useEffect)');
+      //console.log(board.pins);
     }
     getData();
     getLocation();
@@ -133,8 +138,8 @@ const MapScreen = ({ route, navigation }) => {
   const handleGetMyLocation = async () => {
     let { status } = await Location.requestForegroundPermissionsAsync();
     if (status !== 'granted') {
-        alert("Location Permission has been denied! Activate location in the settings");
-        return;
+      alert("Location Permission has been denied! Activate location in the settings");
+      return;
     }
     if (await getLocationPermissions() === false) {
       return;
@@ -209,8 +214,8 @@ const MapScreen = ({ route, navigation }) => {
         const response = await fetch('https://still-retreat-52810.herokuapp.com/Pins', {
           method: 'post',
           headers: {
-              'Accept': 'application/json',
-              'Content-Type': 'application/json'
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
           },
           body: JSON.stringify({
             boardID: 1,      // we need to work BoardID in here as a prop sometime
@@ -226,7 +231,7 @@ const MapScreen = ({ route, navigation }) => {
           return;
         }
       } catch (error) {
-            alert('Something went wrong:', error);
+        alert('Something went wrong:', error);
       }
     } else {
       setisModalVisible(false);
@@ -262,8 +267,8 @@ const MapScreen = ({ route, navigation }) => {
       left: (mapLongToCenterX(parseFloat(pin.longitude)) - mapPosition.x) * mapPosition.zoom,
       top: (mapLatToCenterY(parseFloat(pin.latitude)) - mapPosition.y) * mapPosition.zoom + Dimensions.get('window').height / 2 - PINHEIGHT + 5,
     }
-    console.log(pin.pinname +':');
-    console.log(pinPosition);
+    //console.log(pin.pinname +':');
+    //console.log(pinPosition);
     return (
       <View key={pin.pinname + String(pin.pinid)} style={styles.mapPin}>
         <TouchableOpacity onPress={() => clickPin(pin)} style={pinPosition}>
@@ -306,7 +311,7 @@ const MapScreen = ({ route, navigation }) => {
     }
     return (
       <View style={[styles.pinModal, modalPosition]}>
-        <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
+        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
           <Text style={styles.pinModalTitle}>{pinModal.pinname}</Text>
           <TouchableOpacity onPress={() => setPinModal(null)}>
             <Text style={{ fontSize: 25, paddingRight: 5, }}>X</Text>
@@ -442,6 +447,8 @@ const MapScreen = ({ route, navigation }) => {
       {/* User bar at top of the screen */}
       <UserBar
         userPhoto={userPhoto}
+        nickname={nickname}
+        photo={photo}
         userID={userID}
         navigator={navigation}
         boardScreen={false}

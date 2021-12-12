@@ -28,19 +28,6 @@ LogBox.ignoreLogs([
 ]);
 
 export default function App() {
-  const [username, setUsername] = useState('FuriousFive5');
-  const [userEmail, setUserEmail] = useState('abc123@mail');
-  const [boardsType, setBoardsType] = useState('My');
-  const [userPhoto, setUserPhoto] = useState('default');
-
-  // Used to store information from the google login
-  const setUserInfo = (name, email, photo) => {
-    setUsername(name);
-    setUserEmail(email);
-    setUserPhoto(photo);
-  }
-
-  // Import Boards screen
   function boardScreen({ route, navigation }) {
     return (
       <BoardScreen
@@ -63,8 +50,7 @@ export default function App() {
     )
   };
 
-  // Import User Login screen
-  function userLoginScreen({ route, navigation }) {
+  function userLoginScreen({ navigation }) {
     return (
       <UserLoginScreen
         navigator={navigation}
@@ -72,8 +58,7 @@ export default function App() {
     )
   };
 
-  // Import Sign Up screen
-  function userSignupScreen({ route, navigation }) {
+  function userSignupScreen({ navigation }) {
     return (
       <UserSignupScreen
         navigator={navigation}
@@ -87,7 +72,9 @@ export default function App() {
       <SettingScreen
         navigator={navigation}
         userID={route.params.userID}
-        userPhoto={userPhoto}
+        userPhoto={'default'}
+        nickname={route.params.nickname}
+        photo={route.params.photo}
         locationPermission={route.params.locationPermission}
       />
     )

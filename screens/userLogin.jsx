@@ -1,7 +1,7 @@
 import React, { createRef, useState } from 'react';
 import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
-{/* userLogin is the login screen. 
+{/* userLogin is the login screen.
 It allows users who have an account with Gemma to sign in using their email and password.
 
 // useEffect code from https://github.com/calvin-cs262-organization/monopoly-client

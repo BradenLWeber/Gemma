@@ -8,17 +8,36 @@ import * as Location from 'expo-location';
 const Settings = (props) => {
   const [userID, setUserID] = useState(props.userID);
   const [userPhotoList, setUserPhotoList] = useState({ default: require('../assets/defaultAvatar.png') })
-  const [username, setUsername] = useState('FuriousFive5');
+  const [photo, setPhoto] = useState(props.photo);
+  const [nickname, setNickname] = useState(props.nickname);
   const [GPS, setGPS] = useState(props.locationPermission);
 
-  const nameInputRef = createRef();
-
-  const handleSettingsSave = () => {
-    props.navigator.navigate('Map');
+  const handleSettingsSave = async () => {
+    try {
+      await fetch('https://still-retreat-52810.herokuapp.com/AUsers/' + userID, {
+        method: 'PUT',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          nickname: nickname,
+        })
+      });
+      const json = await response.json();
+      console.log(json);
+      // return json;
+      alert("Nickname changed successfully");
+      props.navigator.navigate('Map');
+    } catch (error) {
+      alert("Invalid nickname");
+    }
   }
+
   const handlePicture = () => {
 
   }
+
   const setPermissions = async (value) => {
     if (value === true) {
       let { status } = await Location.requestForegroundPermissionsAsync();
@@ -47,14 +66,9 @@ const Settings = (props) => {
           <Text style={styles.nameLabel}>USER DISPLAYED NAME</Text>
           <TextInput
             style={styles.nameInputText}
-            onChangeText={(username) => setUsername(username)}
-            placeholder={username}
-            returnKeyType="next"
-            onSubmitEditing={() =>
-              nameInputRef.current &&
-              nameInputRef.current.focus()
-            }
-            blurOnSubmit={false}
+            onChangeText={(nickname) => setNickname(nickname)}
+            placeholder={'Name'}
+            blurOnSubmit={true}
           />
         </View>
       </KeyboardAvoidingView>

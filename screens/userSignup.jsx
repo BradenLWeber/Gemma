@@ -15,7 +15,7 @@ import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, Vi
 const UserSignupScreen = (props) => {
   // useStates to handle user information and attributes
   const [userid, setUserid] = useState('');
-  const [username, setUsername] = useState('');
+  const [username, setUsername] = useState(null);
   const [userEmail, setUserEmail] = useState('');
   const [userPassword, setUserPassword] = useState('');
   const [userCheckPassword, setUserCheckPassword] = useState('');
@@ -59,6 +59,8 @@ const UserSignupScreen = (props) => {
         body: JSON.stringify({
           emailAddress: userEmail,
           passphrase: userPassword,
+          nickname: username,
+          photo: userPhoto,
         })
       });
 
@@ -79,7 +81,7 @@ const UserSignupScreen = (props) => {
         <TextInput
           style={styles.nameInputText}
           onChangeText={(name) => setUsername(name)}
-          placeholder={'First Name'}
+          placeholder={'Nick name'}
           returnKeyType="next"
           onSubmitEditing={() =>
             emailInputRef.current &&
