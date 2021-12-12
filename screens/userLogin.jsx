@@ -1,7 +1,7 @@
 import React, { createRef, useState } from 'react';
 import { KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
-{/* userLogin is the login screen. 
+{/* userLogin is the login screen.
 It allows users who have an account with Gemma to sign in using their email and password.
 
 // useEffect code from https://github.com/calvin-cs262-organization/monopoly-client
@@ -27,13 +27,9 @@ const UserLoginScreen = (props) => {
       }
       const json = await response.json();
       console.log(json);
-<<<<<<< HEAD
-      props.navigator.navigate('Map', { userid: json.userid, nickname: json.nickname, photo: json.photo })
-=======
 
       // If user enters correct information, continue to map screen
       props.navigator.navigate('Map', json.userid)
->>>>>>> 11d444c535f61c92ca8e6b2e0d53ce13e627ac31
     } catch (error) {
       alert("Invalid email or password");
     }

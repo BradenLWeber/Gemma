@@ -8,8 +8,8 @@ import { globalStyles } from '../styles/global';
 import UserBar from '../components/userBar';
 import PinNote from '../components/pinNote';
 
-{/* This screen displays a board: a set of pins on a map. 
-    Users can view, search, and create pins. 
+{/* This screen displays a board: a set of pins on a map.
+    Users can view, search, and create pins.
     They can also navigate to their profile information or to the boards screen. */}
 
 const MapScreen = ({ route, navigation }) => {
@@ -451,14 +451,10 @@ const MapScreen = ({ route, navigation }) => {
       {settingPin ? placingPinButtons() : pinButton()}
       {settingPin && ghostPin()}
 
-<<<<<<< HEAD
-      {isLoading ? <ActivityIndicator /> : (board.pins.map((pin) => showPin(pin)))}
-=======
       {/* Display pins */}
       {isLoading ? <ActivityIndicator/> : (board.pins.map((pin) => showPin(pin)))}
 
       {/* Display a pin's information */}
->>>>>>> 11d444c535f61c92ca8e6b2e0d53ce13e627ac31
       {pinModal !== null && showPinModal()}
 
       {/* Show delete pin message */}
