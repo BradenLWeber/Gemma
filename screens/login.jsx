@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import * as Google from 'expo-google-app-auth';
+import { globalStyles } from '../styles/global';
 
 {/* login is the first screen users see when they open the app.
 It displays the app's logo, and it gives users the option to log in, sign up, or continue as a guest. */}
@@ -53,7 +54,8 @@ const Login = (props) => {
     return (
         <View style={styles.loginView}>
             {/* Logo/wallpaper */}
-            <ImageBackground source={require('../assets/homescreen1.png')} style={styles.wallpaper}>
+            <ImageBackground source={require('../assets/homescreen1.png')} 
+            style={globalStyles.wallpaper}>
             <Text style={styles.loginTitle}>Gemma</Text>
 
             {/* Sign up button */}
@@ -124,11 +126,6 @@ const styles = StyleSheet.create({
         padding: 10,
         borderRadius: 10,
     },
-    wallpaper: {
-        alignItems: 'center',
-        width: '100%',
-        height: '100%',
-    }
 });
 
 export default Login;

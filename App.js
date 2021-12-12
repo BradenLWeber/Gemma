@@ -9,6 +9,10 @@ import MapScreen from './screens/map';
 import SettingScreen from './screens/settings';
 import UserLoginScreen from './screens/userLogin';
 import UserSignupScreen from './screens/userSignup';
+import AboutBoardScreen from "./screens/boardHelp";
+import AboutMapScreen from "./screens/mapHelp";
+import BoardsHeader from "./help/boardsHeader";
+import MapHeader from "./help/mapHeader";
 
 {/* This is the client application for Gemma, a geolocator service.
   Gemma is Team D's course project for CS262 at Calvin University.
@@ -96,11 +100,23 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Login">
         <Stack.Screen name="Login" component={loginScreen} />
-        <Stack.Screen name="Map" component={MapScreen} />
-        <Stack.Screen name="Boards" component={boardScreen} />
+        <Stack.Screen name="Map" component={MapScreen} 
+          options={({ navigation }) => ({
+            headerRight: () => (
+              <MapHeader navigation={navigation} />
+            )
+          })} />
+        <Stack.Screen name="Boards" component={boardScreen}
+          options={({ navigation }) => ({
+            headerRight: () => (
+              <BoardsHeader navigation={navigation} />
+            )
+          })}  />
         <Stack.Screen name="User Login" component={userLoginScreen} />
         <Stack.Screen name="User Sign Up" component={userSignupScreen} />
         <Stack.Screen name="Settings" component={settingsScreen} />
+        <Stack.Screen name="About Boards" component={AboutBoardScreen} />
+        <Stack.Screen name="About Map" component={AboutMapScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
