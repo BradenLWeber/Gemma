@@ -32,7 +32,6 @@ export default function App() {
     return (
       <BoardScreen
         userID={route.params.userID}
-        setCreator={route.params.setCreator}
         navigator={navigation}
         userPhoto={'default'}
         setBoard={route.params.setBoard}
@@ -86,7 +85,7 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Login">
         <Stack.Screen name="Login" component={loginScreen} />
-        <Stack.Screen name="Map" component={MapScreen} 
+        <Stack.Screen name="Map" component={MapScreen}
           options={({ navigation }) => ({
             headerRight: () => (
               <MapHeader navigation={navigation} />

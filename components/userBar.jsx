@@ -86,7 +86,7 @@ const UserBar = (props) => {
     props.setSearchValue('');
     // setResetMap is called only on the map screen, so this handles a call from the board screen as well
     props.setResetMap && props.setResetMap();
-    navigator.navigate('Boards', { setBoard: props.setBoard, setCreator: props.setCreator });
+    navigator.navigate('Boards', { setBoard: props.setBoard });
   }
 
   // This handles any click not on a menu while a menu is open
