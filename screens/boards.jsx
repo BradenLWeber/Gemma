@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Image, ScrollView, SafeAreaView, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ScrollView, SafeAreaView, Dimensions } from 'react-native';
 
 import AddBoard from '../components/addBoard';
 import Board from '../components/board';
@@ -11,7 +11,6 @@ It allows the user to toggle between public and private boards and to create a n
 const BoardScreen = (props) => {
 
   const [publicOrPrivate, setPublicOrPrivate] = useState('Private');
-  const [isModalVisible, setIsModalVisible] = useState(false);
   const [searchType, setSearchType] = useState('board');
   const [searchValue, setSearchValue] = useState('');
   const [addBoardModal, setAddBoardModal] = useState(false);
@@ -38,19 +37,35 @@ const BoardScreen = (props) => {
       map: 'ECO',
       pins: [
         {
-          x: -85.581658,
-          y: 42.935014,
-          title: 'Frog pond',
-          tags: 'Frog',
-          notes: 'This pond has tadpoles and frogs consistently every year',
+          longitude: -85.581606,
+          latitude: 42.935067,
+          pinname: 'Frog pond',
+          pintag: 'Frog',
+          pinnotes: 'This pond has tadpoles and frogs consistently every year',
           pinid: 984,
         },
         {
-          x: -85.580725,
-          y: 42.934221,
-          title: 'Bird\'s nest!!!!',
-          tags: 'Bird, nest, !!!',
-          notes: 'I found a bird nest here the other day!!! The eggs had afros and I think one was doing the worm.',
+          longitude: -85.580725,
+          latitude: 42.934221,
+          pinname: 'Bird\'s nest!!!!',
+          pintag: 'Bird, nest, !!!',
+          pinnotes: 'I found a bird nest here the other day!!! The eggs had afros and I think one was doing the worm.',
+          pinid: 986,
+        },
+        {
+          longitude: -85.585157,
+          latitude: 42.938853,
+          pinname: 'Corner',
+          pintag: 'Corn',
+          pinnotes: 'You\'r cornered',
+          pinid: 986,
+        },
+        {
+          longitude: -85.5787955,
+          latitude: 42.934196,
+          pinname: 'Middle of the map',
+          pintag: 'MIDDLEFORDAYS',
+          pinnotes: 'You have clicked on a pin. Congrats, you have a finger.',
           pinid: 986,
         },
       ]
@@ -63,19 +78,19 @@ const BoardScreen = (props) => {
         map: 'ECO',
         pins: [
           {
-            x: 900,
-            y: 650,
-            title: 'A spot on the map',
-            tags: 'map, the',
-            notes: 'This is a public spot!',
+            longitude: -85.580512,
+            latitude: 42.932655,
+            pinname: 'A spot on the map',
+            pintag: 'map, the',
+            pinnotes: 'This is a public spot!',
             key: 483,
           },
           {
-            x: 100,
-            y: 636,
-            title: 'Near the edge',
-            tags: 'Edge',
-            notes: 'This is near the edge',
+            longitude: -85.584557,
+            latitude: 42.935176,
+            pinname: 'Near the edge',
+            pintag: 'Edge',
+            pinnotes: 'This is near the edge',
             key: 484,
           },
         ]
@@ -86,19 +101,35 @@ const BoardScreen = (props) => {
         map: 'CAM',
         pins: [
           {
-            x: 260,
-            y: 520,
-            title: 'Baseball field',
-            tags: 'Baseball, base, ball, field, fun, woo hoo',
-            notes: 'Take me out to the ball game',
+            longitude: -85.592107,
+            latitude: 42.934988,
+            pinname: 'Baseball field',
+            pintag: 'Baseball, base, ball, field, fun, woo hoo',
+            pinnotes: 'Take me out to the ball game',
             key: 485,
           },
           {
-            x: 910,
-            y: 1210,
-            title: 'The best dining hall',
-            tags: 'In your face, commons is best',
-            notes: 'It has been long debated which dining hall is best. Put your questions to rest, it has finally been answered.',
+            longitude: -85.587391,
+            latitude: 42.931423,
+            pinname: 'The best dining hall',
+            pintag: 'In your face, commons is best',
+            pinnotes: 'It has been long debated which dining hall is best. Put your questions to rest, it has finally been answered.',
+            key: 486,
+          },
+          {
+            longitude: -85.594130,
+            latitude: 42.937887,
+            pinname: 'Corner',
+            pintag: 'tag, you\'re it',
+            pinnotes: 'Everybody has a water buffalo',
+            key: 485,
+          },
+          {
+            longitude: -85.586977,
+            latitude: 42.932377,
+            pinname: 'Middle',
+            pintag: 'Midelife crisis',
+            pinnotes: 'Middle Earth, Frodo',
             key: 486,
           },
         ],
@@ -137,6 +168,7 @@ const BoardScreen = (props) => {
       if (searchType === 'board' && !board.title.toLowerCase().includes(searchValue.toLowerCase())) return;
       else if (searchType === 'creator' && !board.creator.toLowerCase().includes(searchValue.toLowerCase())) return;
     }
+    console.log('Braden board', board);
     return (
         <Board
           key={String(privateBoards.indexOf(board)).concat(board.title)}
