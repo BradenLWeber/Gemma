@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Dimensions, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Modal from 'react-native-modal';
 
@@ -21,14 +21,33 @@ const Board = (props) => {
     };
 
     const [showDeleteBoardModal, setShowDeleteBoardModal] = useState(false);
-
+    const [creator, setCreator] = useState('');
+    const [pins, setPins] = useState([]);
+    const [makeBoard, setMakeBoard] = useState(null);
     const { board } = props;
-    const mapIsEcosystem = board.map === 'ECO';
+    const mapIsEcosystem = board.boardmap === 'ECO';
 
     const MAPS = {
         ECO: require('../assets/mapEcoPreserve.png'),
         CAM: require('../assets/CampusFinal.png')
     }
+
+    useEffect(() => {
+        async function getData() {
+            const response = await fetch('https://still-retreat-52810.herokuapp.com/Pins');
+            const responseJson = await response.json();
+            const pins = responseJson.filter((pin) => pin.boardid === board.boardid);
+            setPins(pins);
+
+            const response2 = await fetch('https://still-retreat-52810.herokuapp.com/AUsers');
+            const response2Json = await response2.json();
+            const theUser = response2Json.filter((user) => user.userid === board.userid);
+            setCreator(theUser.nickname || 'Me');
+
+            setMakeBoard({ pins: pins || [], map: board.boardmap, creator: theUser.nickname || '', boardid: board.boardid });
+        }
+        getData();
+    }, []);
 
     const ecoTop = (pin) => {
         return (pin.latitude - MAPCORNERSECO.SW.latitude) / (MAPCORNERSECO.NE.latitude - MAPCORNERSECO.SW.latitude) * 126 - 10;
@@ -66,13 +85,18 @@ const Board = (props) => {
         return props.boardType === 'Private' ? (type === 'primary' ? styles.privateColor : styles.privateColor2) : (type === 'primary' ? styles.publicColor : styles.publicColor2);
     }
 
+    const handleMakePublicOrPrivate = async () => {
+        if (props.boardType === 'Public') await props.makePrivate(board);
+        else await props.makePublic(board);
+    }
+
     const deleteBoardModal = () => {
         return (
           <Modal isVisible={true}>
             <View style={styles.deleteBoardModal}>
               <Text style={{alignSelf: 'center', fontSize: 25, margin: 10,}}>Delete board?</Text>
               <View style={{flexDirection: 'row', justifyContent: 'space-around'}}>
-                <TouchableOpacity style={styles.deleteBoardModalButton} onPress={() => props.deleteBoard(board)}>
+                <TouchableOpacity style={styles.deleteBoardModalButton} onPress={() => {props.deleteBoard(board); setShowDeleteBoardModal(false)}}>
                   <Text>Yes</Text>
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.deleteBoardModalButton} onPress={() => setShowDeleteBoardModal(null)}>
@@ -89,29 +113,32 @@ const Board = (props) => {
         <View style={[styles.boardView, getColor('primary')]}>
             {/* Text to the left of the map image */}
             <View style={styles.boardText}>
-                <Text style={styles.boardTitle}>{board.title}</Text>
+                <Text style={styles.boardTitle}>{board.boardname}</Text>
                 <View style={styles.boardDivider} />
                 <View style={{flexDirection: 'row'}}>
-                    <TouchableOpacity style={[styles.boardButton, getColor('secondary')]}>
-                        <Text>Make{'\n'}{props.boardType === 'Private' ? 'Public' : 'Private'}</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={[styles.boardButton2, getColor('secondary')]} onPress={() => setShowDeleteBoardModal(true)}>
-                        <Image source={require('../assets/trash.png')} style={styles.trashIcon} />
-                    </TouchableOpacity>
+                    {board.boardname !== 'Default Private' && board.boardname !== 'Default Public' &&
+                    <>
+                        <TouchableOpacity style={[styles.boardButton, getColor('secondary')]} onPress={handleMakePublicOrPrivate}>
+                            <Text>Make{'\n'}{props.boardType === 'Private' ? 'Public' : 'Private'}</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={[styles.boardButton2, getColor('secondary')]} onPress={() => setShowDeleteBoardModal(true)}>
+                            <Image source={require('../assets/trash.png')} style={styles.trashIcon} />
+                        </TouchableOpacity>
+                    </>}
                 </View>
                 {/* This makes sure there is room for the creator name */}
                 <View style={{height: 40}}/>
-                <Text style={styles.boardCreatorText}>{displayName(board.creator)}</Text>
+                <Text style={styles.boardCreatorText}>{displayName(creator)}</Text>
             </View>
             {/* Image is wrapped in a button that takes user back to the map screen */}
             <View style={mapIsEcosystem ? styles.imageBorderEco : styles.imageBorderCam}>
-                <TouchableOpacity style={mapIsEcosystem ? styles.boardImageWrapperEco : styles.boardImageWrapperCam} onPress={() => {props.setBoard(board); props.setCreator(board.creator); props.navigator.navigate('Map', -1)}}>
+                <TouchableOpacity style={mapIsEcosystem ? styles.boardImageWrapperEco : styles.boardImageWrapperCam} onPress={() => {props.setBoard(makeBoard); props.navigator.navigate('Map', -1)}}>
                     <Image source={mapIsEcosystem ? MAPS.ECO : MAPS.CAM} style={board.map === 'ECO' ? styles.ecoImage : styles.camImage}/>
-                    {board.pins.map((pin) => showPin(pin))}
+                    {pins.map((pin) => showPin(pin))}
                 </TouchableOpacity>
             </View>
         </View>
-        {showDeleteBoardModal && deleteBoardModal()}
+        {showDeleteBoardModal ? deleteBoardModal() : null}
         </>
     )
 }

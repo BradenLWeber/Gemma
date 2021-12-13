@@ -46,13 +46,11 @@ const MapScreen = ({ route, navigation }) => {
   const [myLocation, setMyLocation] = useState({});
   const [settingPin, setSettingPin] = useState(false);
   const [mapPosition, setMapPosition] = useState({ x: MAPWIDTHECO / 2, y: MAPHEIGHTECO / 2, zoom: 1 });
-  const [board, setBoard] = useState({ pins: [], map: 'ECO', creator: 'Me', title: 'default' });
-  const [key, setKey] = useState(10);
+  const [board, setBoard] = useState({ pins: [], map: 'ECO', creator: 'Me', title: 'default', boardid: 1 });
   const [pinModal, setPinModal] = useState(null);
   const [panTo, setPanTo] = useState(null);
   const [searchType, setSearchType] = useState('pin');
   const [searchValue, setSearchValue] = useState('');
-  const [creator, setCreator] = useState(null);
   const [isLoading, setLoading] = useState(true);
   const [deletePinModal, setDeletePinModal] = useState(false);
   // const [userID, setUserID] = useState(route.params.userid);
@@ -82,14 +80,7 @@ const MapScreen = ({ route, navigation }) => {
 
   useEffect(() => {
     async function getData() {
-      //console.log('use effect called!');
-      //console.log('pins are');    // show pins before update
-      //console.log(board.pins);
-      //console.log('Getpins returns: ', (await getPins()));
-      setBoard({ pins: (await getPins()), map: 'ECO', creator: 'Me' });
-
-      //console.log('here are the pins (called from useEffect)');
-      //console.log(board.pins);
+      setBoard({ pins: (await getPins()), map: 'ECO', creator: 'Me', boardid: 1 });
     }
     getData();
   }, []);
@@ -192,22 +183,21 @@ const MapScreen = ({ route, navigation }) => {
     if (button === 'create') {
       setisModalVisible(false);
       setSettingPin(false);
-      setKey(key + 1);
       var lat = mapYToLat(mapPosition.y);
       var long = mapXToLong(mapPosition.x);
+      console.log('Braden', board);
 
       setBoard({
         creator: board.creator,
-        title: board.title,
         map: board.map,
+        boardid: board.boardid,
         pins: board.pins.concat([{
-          boardid: 2,
+          boardid: board.boardid,
           longitude: long,
           latitude: lat,
           pinname: title,
           pintag: tags,
           pinnotes: notes,
-          pinid: key,
         }]),
       });
 
@@ -220,7 +210,7 @@ const MapScreen = ({ route, navigation }) => {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            boardID: 1,      // we need to work BoardID in here as a prop sometime
+            boardID: board.boardid,
             pinName: title,
             pinNotes: notes,
             pinTag: tags,
@@ -357,7 +347,7 @@ const MapScreen = ({ route, navigation }) => {
     )
   }
 
-  const deletePin = () => {
+  const deletePin = async () => {
     setBoard({
       title: board.title,
       creator: board.creator,
@@ -366,6 +356,8 @@ const MapScreen = ({ route, navigation }) => {
     });
     setDeletePinModal(false);
     setPinModal(null);
+    const response = await fetch(`https://still-retreat-52810.herokuapp.com/Pin/${pinModal.pinid}`, {method: 'DELETE'});
+    if (response.status !== 200) alert('Delete pin failed with status ' + response.status);
   }
 
   const handleSetMapPosition = (event) => {
@@ -457,7 +449,6 @@ const MapScreen = ({ route, navigation }) => {
         setBoard={(board) => setBoard(board)}
         setSearchType={setSearchType}
         setSearchValue={setSearchValue}
-        setCreator={setCreator}
         setResetMap={() => { setSettingPin(false); setPinModal(null) }}
       />
 

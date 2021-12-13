@@ -5,7 +5,7 @@ import AddBoard from '../components/addBoard';
 import Board from '../components/board';
 import UserBar from '../components/userBar';
 
-{/* This screen displays the boards available to the user. 
+{/* This screen displays the boards available to the user.
 It allows the user to toggle between public and private boards and to create a new board. */}
 
 const BoardScreen = (props) => {
@@ -18,135 +18,85 @@ const BoardScreen = (props) => {
   const [privateBoards, setPrivateBoards] = useState([]);
 
   useEffect(() => {
-    setPrivateBoards([
-      {
-        creator: 'Me',
-        title: 'Default ecosystem board',
-        map: 'ECO',
-        pins: []
-      },
-      {
-        creator: 'Me',
-        title: 'Default campus board',
-        map: 'CAM',
-        pins: []
-      },
-      {
-      creator: 'VanderGoosen',
-      title: 'Private board',
-      map: 'ECO',
-      pins: [
-        {
-          longitude: -85.581606,
-          latitude: 42.935067,
-          pinname: 'Frog pond',
-          pintag: 'Frog',
-          pinnotes: 'This pond has tadpoles and frogs consistently every year',
-          pinid: 984,
-        },
-        {
-          longitude: -85.580725,
-          latitude: 42.934221,
-          pinname: 'Bird\'s nest!!!!',
-          pintag: 'Bird, nest, !!!',
-          pinnotes: 'I found a bird nest here the other day!!! The eggs had afros and I think one was doing the worm.',
-          pinid: 986,
-        },
-        {
-          longitude: -85.585157,
-          latitude: 42.938853,
-          pinname: 'Corner',
-          pintag: 'Corn',
-          pinnotes: 'You\'r cornered',
-          pinid: 986,
-        },
-        {
-          longitude: -85.5787955,
-          latitude: 42.934196,
-          pinname: 'Middle of the map',
-          pintag: 'MIDDLEFORDAYS',
-          pinnotes: 'You have clicked on a pin. Congrats, you have a finger.',
-          pinid: 986,
-        },
-      ]
-    }
-    ]);
-    setPublicBoards([
-      {
-        creator: 'NoobIsNewbie',
-        title: 'Public board',
-        map: 'ECO',
-        pins: [
-          {
-            longitude: -85.580512,
-            latitude: 42.932655,
-            pinname: 'A spot on the map',
-            pintag: 'map, the',
-            pinnotes: 'This is a public spot!',
-            key: 483,
-          },
-          {
-            longitude: -85.584557,
-            latitude: 42.935176,
-            pinname: 'Near the edge',
-            pintag: 'Edge',
-            pinnotes: 'This is near the edge',
-            key: 484,
-          },
-        ]
-      },
-      {
-        creator: 'IAmPotato',
-        title: 'Campus!',
-        map: 'CAM',
-        pins: [
-          {
-            longitude: -85.592107,
-            latitude: 42.934988,
-            pinname: 'Baseball field',
-            pintag: 'Baseball, base, ball, field, fun, woo hoo',
-            pinnotes: 'Take me out to the ball game',
-            key: 485,
-          },
-          {
-            longitude: -85.587391,
-            latitude: 42.931423,
-            pinname: 'The best dining hall',
-            pintag: 'In your face, commons is best',
-            pinnotes: 'It has been long debated which dining hall is best. Put your questions to rest, it has finally been answered.',
-            key: 486,
-          },
-          {
-            longitude: -85.594130,
-            latitude: 42.937887,
-            pinname: 'Corner',
-            pintag: 'tag, you\'re it',
-            pinnotes: 'Everybody has a water buffalo',
-            key: 485,
-          },
-          {
-            longitude: -85.586977,
-            latitude: 42.932377,
-            pinname: 'Middle',
-            pintag: 'Midelife crisis',
-            pinnotes: 'Middle Earth, Frodo',
-            key: 486,
-          },
-        ],
-      }
-    ]);
+    getBoards();
   }, []);
 
-  const deleteBoard = (board) => {
-    setPublicBoards(publicBoards.filter(b => b !== board));
-    setPrivateBoards(privateBoards.filter(b => b !== board));
+  async function getBoards() {
+    const response = await fetch('https://still-retreat-52810.herokuapp.com/Boards');
+    const responseJson = await response.json();
+    setPrivateBoards(responseJson.filter((board) => board.boardtype === 'PRI'));
+    setPublicBoards(responseJson.filter((board) => board.boardtype === 'PUB'));
   }
 
-  const clickAddBoard = (title, type) => {
+  const deleteBoard = async (board) => {
+    setPublicBoards(publicBoards.filter(b => b !== board));
+    setPrivateBoards(privateBoards.filter(b => b !== board));
+    const response = await fetch('https://still-retreat-52810.herokuapp.com/Pins');
+    const responseJson = await response.json();
+    const pinsOnThisBoard = responseJson.filter((pin) => pin.boardid === board.boardid);
+    await deletePins(pinsOnThisBoard);
+    const response2 = await fetch(`https://still-retreat-52810.herokuapp.com/Board/${board.boardid}`, {method: 'DELETE'});
+    if (response2.status !== 200) alert('Delete board failed with status ' + response2.status);
+  }
+
+  const deletePins = async (pinList) => {
+    if (pinList.length === 0) return;
+    const response = await fetch(`https://still-retreat-52810.herokuapp.com/Pin/${pinList[pinList.length - 1].pinid}`, {method: 'DELETE'});
+    if (response.status !== 200) alert('Delete pin failed with status ' + response.status);
+    pinList.pop();
+    await deletePins(pinList);
+  }
+
+  const clickMakePublic = async (board) => {
+    console.log('clicked make public');
+    const response = await fetch(`https://still-retreat-52810.herokuapp.com/Board/${board.boardid}`, {
+      method: 'put',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        boardType: 'PUB'
+      })
+    })
+    if (response.status !== 200) alert('Make public failed with status ' + response.status);
+    await getBoards();
+  }
+
+  const clickMakePrivate = async (board) => {
+    const response = await fetch(`https://still-retreat-52810.herokuapp.com/Board/${board.boardid}`, {
+      method: 'put',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        boardType: 'PRI'
+      })
+    })
+    if (response.status !== 200) alert('Make private failed with status ' + response.status);
+    await getBoards();
+  }
+
+  const clickAddBoard = async (title, map) => {
     if (title) {
-      setPrivateBoards(privateBoards.concat({ title: title, creator: 'BradenTheDude', map: type, pins: [] }));
+      const response = await fetch(`https://still-retreat-52810.herokuapp.com/Boards`, {
+        method: 'post',
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          boardType: 'PRI',
+          boardName: title,
+          boardMap: map,
+          userID: 4,
+        })
+      });
+      if (response.status !== 200) alert('Add board failed with status ' + response.status);
     }
     setAddBoardModal(false);
+    getBoards();
   }
 
   const handleAddBoard = () => {
@@ -168,16 +118,16 @@ const BoardScreen = (props) => {
       if (searchType === 'board' && !board.title.toLowerCase().includes(searchValue.toLowerCase())) return;
       else if (searchType === 'creator' && !board.creator.toLowerCase().includes(searchValue.toLowerCase())) return;
     }
-    console.log('Braden board', board);
     return (
         <Board
-          key={String(privateBoards.indexOf(board)).concat(board.title)}
+          key={String(board.boardid)}
           board={board}
           boardType={publicOrPrivate}
           navigator={props.navigator}
           setBoard={props.setBoard}
-          setCreator={props.setCreator}
           deleteBoard={deleteBoard}
+          makePublic={clickMakePublic}
+          makePrivate={clickMakePrivate}
         />
     )
   }
