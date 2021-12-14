@@ -14,10 +14,15 @@ import AboutMapScreen from "./screens/mapHelp";
 import BoardsHeader from "./help/boardsHeader";
 import MapHeader from "./help/mapHeader";
 
-{/* This is the client application for Gemma, a geolocator service.
+{/* This is the client application for Gemma, an outdoor geolocator service.
   Gemma is Team D's course project for CS262 at Calvin University.
 
-  @authors: Braden Weber, Becca DiCosola, Eleanor Lee, Grace Jung, Oscar Schott
+  @authors: Braden Weber, 
+            Becca DiCosola, 
+            Eleanor Lee, 
+            Grace Jung, 
+            Oscar Schott
+
   Fall 2021
 */}
 

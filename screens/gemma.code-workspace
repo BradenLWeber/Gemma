@@ -1,0 +1,17 @@
+{
+	"folders": [
+		{
+			"path": ".."
+		},
+		{
+			"path": "../../Gemma-service"
+		},
+		{
+			"path": "../../Gemma-project"
+		},
+		{
+			"path": "../../cs262/homework02"
+		}
+	],
+	"settings": {}
+}

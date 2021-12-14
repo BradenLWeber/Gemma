@@ -3,6 +3,10 @@ import { TouchableOpacity, View, Text } from 'react-native';
 
 import { globalStyles } from '../styles/global';
 
+{/* The MapHeader goes at the top of the Map screen. 
+    It displays an 'i' that, when clicked, navigates to the map/pins help screen.
+*/}
+
 export default function MapHeader({ navigation }) {
     return (
         <View>

@@ -2,7 +2,7 @@ import React, { createRef, useState, } from 'react';
 import { Image, KeyboardAvoidingView, StyleSheet, Switch, Text, TextInput, TouchableOpacity, View, } from 'react-native';
 import * as Location from 'expo-location';
 
-{/* The settings screen displays the user's avatar, nickname, and GPS preferences.
+{/* The settings screen displays the user's avatar and name, as well as their GPS preferences.
 */}
 
 const Settings = (props) => {

@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Dimensions, Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import Modal from 'react-native-modal';
 
-{/* The Board component displays a collection of pins on a map. */}
+{/* The Board component displays a collection of pins on a map. 
+It does this by pulling the pin data for a certain board from the server. */}
 
 const Board = (props) => {
     const MAPCORNERSECO = {
@@ -13,7 +14,7 @@ const Board = (props) => {
     };
     const MAPCORNERSCAM = {
         // The north and south are reversed because for some unknown reason,
-        // That makes it work. I'm still baffled as to why
+        // that makes it work. I'm still baffled as to why.
         SW: { latitude: 42.937887, longitude: -85.594130 },
         SE: { latitude: 42.937887, longitude: -85.579824 },
         NW: { latitude: 42.926867, longitude: -85.594130 },

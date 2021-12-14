@@ -3,6 +3,10 @@ import { TouchableOpacity, View, Text } from 'react-native';
 
 import { globalStyles } from '../styles/global';
 
+{/* The BoardsHeader goes at the top of the Boards screen. 
+    It displays an 'i' that, when clicked, navigates to the boards help screen.
+*/}
+
 export default function BoardsHeader({ navigation }) {
     return (
         <View>
