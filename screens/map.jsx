@@ -140,21 +140,24 @@ const MapScreen = ({ route, navigation }) => {
     await getLocation();
     const MAPCORNERS = getMapCorners();
     if (
-      myLocation.longitude > MAPCORNERS.NE.longitude ||
-      myLocation.longitude < MAPCORNERS.SW.longitude ||
-      myLocation.latitude > MAPCORNERS.NE.latitude ||
-      myLocation.latitude < MAPCORNERS.SW.latitude
+      myLocation.longitude > MAPCORNERS.SE.longitude ||
+      myLocation.longitude < MAPCORNERS.NW.longitude ||
+      myLocation.latitude > MAPCORNERS.SE.latitude ||
+      myLocation.latitude < MAPCORNERS.NW.latitude
     ) {
       alert('You are not on the map');
       return;
     }
 
     const myPosition = {
-      x: mapLongToCenterX(myLocation.longitude),
-      y: mapLatToCenterY(myLocation.latitude),
+      x: -mapLongToCenterX(myLocation.longitude) + getMapWidth() / 2,
+      y: -mapLatToCenterY(myLocation.latitude) + getMapHeight() / 2,
       scale: 1.0,
       duration: 0,
     };
+
+    setPanTo(myPosition);
+    setPanTo(null);
   }
 
   const placingPinButtons = () => {
@@ -185,7 +188,6 @@ const MapScreen = ({ route, navigation }) => {
       setSettingPin(false);
       var lat = mapYToLat(mapPosition.y);
       var long = mapXToLong(mapPosition.x);
-      console.log('Braden', board);
 
       setBoard({
         creator: board.creator,
@@ -348,16 +350,21 @@ const MapScreen = ({ route, navigation }) => {
   }
 
   const deletePin = async () => {
+
     setBoard({
       title: board.title,
       creator: board.creator,
       map: board.map,
+      boardid: board.boardid,
       pins: board.pins.filter((pin) => pin.pinname !== pinModal.pinname),
     });
     setDeletePinModal(false);
     setPinModal(null);
-    const response = await fetch(`https://still-retreat-52810.herokuapp.com/Pin/${pinModal.pinid}`, {method: 'DELETE'});
-    if (response.status !== 200) alert('Delete pin failed with status ' + response.status);
+    const response = await fetch(`https://still-retreat-52810.herokuapp.com/Pins`);
+    const responseJson = await response.json();
+    const deleteIdOf = responseJson.filter((pin) => pin.pinname === pinModal.pinname)[0];
+    const response2 = await fetch(`https://still-retreat-52810.herokuapp.com/Pin/${deleteIdOf.pinid}`, {method: 'DELETE'});
+    if (response2.status !== 200) alert('Delete pin failed with status ' + response2.status);
   }
 
   const handleSetMapPosition = (event) => {
