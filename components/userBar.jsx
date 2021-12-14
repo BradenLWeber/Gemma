@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Image, KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View,} from 'react-native'
+import { Image, KeyboardAvoidingView, Platform, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View, } from 'react-native'
 import * as Location from 'expo-location';
 
 {/* The UserBar component is a yellow bar at the top of the screen.
@@ -10,9 +10,6 @@ const UserBar = (props) => {
   const [userID, setUserID] = useState(props.userID);
   const [nickname, setNickname] = useState(props.nickname);
   const [photo, setPhoto] = useState(props.photo);
-  console.log('userID in UserBar: ' + userID);
-  console.log('nickname in UserBar: ' + nickname);
-  console.log('photo in UserBar: ' + photo);
   const [showUserMenu, setShowUserMenu] = useState(false);
   const [showSearchMenu, setShowSearchMenu] = useState(false);
   // Initial state depends on whether it is on the map screen or the board screen
