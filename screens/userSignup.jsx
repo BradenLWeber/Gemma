@@ -81,7 +81,7 @@ const UserSignupScreen = (props) => {
         <TextInput
           style={styles.nameInputText}
           onChangeText={(name) => setUsername(name)}
-          placeholder={'Nick name'}
+          placeholder={'Nickname'}
           returnKeyType="next"
           onSubmitEditing={() =>
             emailInputRef.current &&
