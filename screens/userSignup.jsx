@@ -76,12 +76,12 @@ const UserSignupScreen = (props) => {
     <View style={styles.userSignupView}>
       <Text style={styles.userSignupTitle}>Sign Up</Text>
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-        
+
         {/* First name field */}
         <TextInput
           style={styles.nameInputText}
           onChangeText={(name) => setUsername(name)}
-          placeholder={'Nick name'}
+          placeholder={'Nickname'}
           returnKeyType="next"
           onSubmitEditing={() =>
             emailInputRef.current &&
@@ -89,10 +89,10 @@ const UserSignupScreen = (props) => {
           }
           blurOnSubmit={false} />
 
-          {/* Email address field */}
+        {/* Email address field */}
         <TextInput
           style={styles.emailInputText}
-          onChangeText={(email) => setUserEmail(email)}
+          onChangeText={(email) => setUserEmail(email.toLowerCase())}
           keyboardType="email-address"
           placeholder={'User email'}
           ref={emailInputRef}
@@ -118,7 +118,7 @@ const UserSignupScreen = (props) => {
           }
           blurOnSubmit={false} />
 
-          {/* Password (confirmation) */}
+        {/* Password (confirmation) */}
         <TextInput
           secureTextEntry={true}
           style={styles.passwordInputText}

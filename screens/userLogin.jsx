@@ -42,7 +42,7 @@ const UserLoginScreen = (props) => {
         {/* Email field */}
         <TextInput
           style={styles.emailInputText}
-          onChangeText={(email) => setUserEmail(email)}
+          onChangeText={(email) => setUserEmail(email.toLowerCase())}
           keyboardType="email-address"
           placeholder={'User email'}
           returnKeyType="next"
