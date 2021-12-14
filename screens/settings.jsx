@@ -57,7 +57,7 @@ const Settings = (props) => {
         <View style={styles.photoSetting}>
           <Image source={userPhotoList[props.userPhoto]} style={styles.userImage} />
         </View>
-        <Text style={styles.imageText}>Click avatar to edit</Text>
+        {/*<Text style={styles.imageText}>Click avatar to edit</Text>*/}
       </TouchableOpacity>
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
 
